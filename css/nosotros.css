@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400;900&family=Protest+Strike&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400;900&family=Open+Sans:wght@800&family=Protest+Strike&display=swap');
+*{
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+
+header {
+  background:linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.50)); 
+  width: 100%;
+  position: fixed;
+  z-index: 100;
+}
+.menu {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  justify-items: end;
+  margin-right: 500px;
+  align-items: center;
+  font-family: 'Protest Strike', sans-serif;
+}
+
+.menu a {
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.menu img {
+  width: 40%;
+}
+
+.menu a.seleccionado::after {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 50%; 
+  width: 50%;
+  height: 2px;
+  background-color: rgb(0, 0, 0);
+  transform: translateX(-50%);
+}
+
+.carousel-container {
+  position: relative;
+}
+
+.carousel-image {
+    margin-top: 70px;
+  width: 1000px;
+    height: 500px;
+}
+
+nav .indicador {
+  width: 70px;
+  height: 8px;
+  background-color: azure;
+  bottom: 10px;
+  right: 820px;
+  transition: .3s ease-out all;
+  transform: translateX(-50%); 
+  position: absolute;
+}
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.degradado-izquierdo
+{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px; 
+}
+
+.degradado-izquierdo {
+  left: 0;
+  bottom: 5px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
+}
+
+
+.footer {
+  background-color: black;
+  color: #fefefe;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer .heading {
+  color: #fefefe;
+  max-width: 1010px;
+  width: 90%;
+  text-transform: uppercase;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1.5rem;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content p {
+  margin-bottom: 1.3rem;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content a {
+  text-decoration: none;
+  color: #fefefe;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content a:hover {
+  border-bottom: 1px solid #cc8d10;
+}
+
+.footer .content h4 {
+  margin-bottom: 1.3rem;
+  font-size: 19px;
+}
+
+footer {
+  text-align: center;
+}
+
+footer hr {
+  margin: 2rem 0;
+}
+
+.texto {
+    background: white;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    left: 70%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    z-index: 1;
+}
+
+.container2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 40px;
+    justify-content: center;
+    padding: 30px;
+  }
+  
+  .texto-izquierda {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 100;
+  }
+  
+  .texto-izquierda h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .texto-izquierda p {
+    margin-bottom: 15px;
+  }
+  
+  .image-container-2 {
+    position: relative;
+    grid-column: 2;
+  }
+  
+  .image-left {
+    width: 900px;
+    height: auto;
+  }
+
+  .forma-7 {
+    position: absolute;
+    top: 40%;
+    left: -50px; 
+    width: 100%;
+    height: 100%;
+  }
+  
+  .paralelogramo {
+    width: 100px;
+    height: 100px;
+    background: rgb(255, 255, 255);
+    transform: rotate(45deg);
+  }
+  
+h1{
+    font-family: 'Protest Strike', sans-serif;;
+}
+p{
+    font-family: 'Blinker'; 
+}

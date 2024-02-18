@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="/css/form.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="menu">
+            <img src="/img/logo.png" alt="Logo" class="menu__logo">
+            <a href="/html/index.html" class="menu__link">Inicio</a>
+            <a href="#" class="menu__link">Menu</a>
+            <a href="#" class="menu__link">Ubicacion</a>
+            <a href="#" class="menu__link">Contacto</a>
+            <a href="/html/nosotros.html" class="menu__link">Nosotros</a>
+            <a href="/html/reservas.html" class="menu__link">Reservas<span class="indicador" id="indicador"></span></a>
+        </nav>
+    </header>
+<main>
+    <form id="msform">
+    <ul id="progressbar">
+      <li class="active">Datos Personales</li>
+      <li>Detalles de la reserva</li>
+      <li>Personal Details</li>
+    </ul>
+
+    <fieldset>
+        <h2 class="fs-title">Datos Personales</h2>
+        <h3 class="fs-subtitle">Rellene estos campos con su informacion personal</h3>
+        <input type="text" name="fname" pattern="[A-Za-zÑñÁáÉéÍíÓóÚú\s]+" placeholder="Nombre" />
+        <input type="text" name="lname" pattern="[A-Za-zÑñÁáÉéÍíÓóÚú\s]+" placeholder="Apellidos" />
+        <input type="text" name="phone" pattern="[0-9]{9}" placeholder="Numero de telefono de contacto" />
+      <input type="button" name="next" class="next action-button" value="Siguiente" />
+    </fieldset>
+    <fieldset>
+      <h2 class="fs-title">Detalles de la reserva</h2>
+      <h3 class="fs-subtitle">Rellene estos campos con la informacion de la reserva</h3>
+      <p>Fecha de la reserva</p>
+      <input type="date" name="fecha" />
+      <p>Numero de personas</p>
+      <input type="number" pattern="[1-9][0-9]*" name="numPersonas" placeholder="1" />
+      <p>Hora de la reserva</p>
+      <input type="time" name="hora" />
+      <input type="button" name="previous" class="previous action-button" value="Anterior" />
+      <input type="button" name="next" class="next action-button" value="Siguiente" />
+    </fieldset>
+    <fieldset>
+        <h2 class="fs-title">Detalles de pago</h2>
+        <h3 class="fs-subtitle">Se le recargara un importe de 10€ para asegurar que venga</h3>
+        <input type="text" name="numTarjeta" pattern="[0-9]{16}" placeholder="Numero de tarjeta" />
+        <input type="date" name="fechaTarjeta" />
+        <input type="number" name="cvvTarjeta" pattern="[0-9]{3}" placeholder="CVV" />
+        <input type="button" name="previous" class="previous action-button" value="Anterior" />
+        <a href="" class="submit action-button" target="_top">Reservar</a>
+      </fieldset>
+  </form>
+</main>
+
+    <div class="footer">
+        <div class="heading">
+          <h2>PRESTAURANTE<sup>™</sup></h2>
+        </div>
+        <div class="content">
+          <div class="services">
+            <h4>Servicios</h4>
+            <p><a href="#">Reservas</a></p>
+            <p><a href="#">Envio a domicilio</a></p>
+            <p><a href="#">Menu</a></p>
+          </div>
+          <div class="social-media">
+            <h4>Redes Sociales</h4>
+            <p>
+              <a href="#"
+                ><i class="fab fa-twitter"></i> Twitter</a
+              >
+            </p>
+            <p>
+              <a href="https://www.facebook.com/"
+                ><i class="fab fa-facebook"></i> Facebook</a
+              >
+            </p>
+            <p>
+              <a href="https://www.instagram.com/"
+                ><i class="fab fa-instagram"></i> Instagram</a
+              >
+            </p>
+          </div>
+          <div class="links">
+            <h4>Accesos Rapidos</h4>
+            <p><a href="#">Inicio</a></p>
+            <p><a href="#">Menu</a></p>
+            <p><a href="#">Ubicacion</a></p>
+            <p><a href="#">Contacto</a></p>
+            <p><a href="#">Nosotros</a></p>
+            <p><a href="#">Reservas</a></p>
+          </div>
+          <div class="details">
+            <h4 class="address">Direccion</h4>
+            <p>
+              Calle inventada,10
+            </p>
+            <h4 class="mobile">Telefono Movil</h4>
+            <p><a href="#">678475895</a></p>
+            <h4 class="mail">Correo Electronico</h4>
+            <p><a href="#">prestaurante@gmail.com</a></p>
+          </div>
+        </div>
+        <footer>
+          <hr />
+          © 2024 Prestaurante.
+        </footer>
+      </div>
+
+  <script src="/js/form.js"></script>
+  </body>
+  </html>

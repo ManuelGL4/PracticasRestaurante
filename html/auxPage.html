@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Practica Restaurante DOM</title>
+	<link rel="stylesheet" href="../css/css.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<header class="header">
+		<nav class="menu">
+			<img src="../img/logo.png" alt="Logo" class="menu__logo">
+			<a href="#" class="menu__link">Inicio<span class="indicador" id="indicador"></span></a>
+			<a href="#" class="menu__link">Menu</a>
+			<a href="#" class="menu__link">Ubicacion</a>
+			<a href="#" class="menu__link">Contacto</a>
+			<a href="./html/nosotros.html" class="menu__link">Nosotros</a>
+			<a href="./html/reservas.html" class="menu__link">Reservas</a>
+		</nav>
+	</header>
+
+	<main>
+		<div id="caja-plato">
+			<div id="dish-details-box">
+
+			</div>
+		</div>
+	</main>
+
+
+	<div class="footer">
+		<div class="heading">
+			<h2>PRESTAURANTE<sup>™</sup></h2>
+		</div>
+		<div class="content">
+			<div class="services">
+				<h4>Servicios</h4>
+				<p><a href="#">Reservas</a></p>
+				<p><a href="#">Envio a domicilio</a></p>
+				<p><a href="#">Menu</a></p>
+			</div>
+			<div class="social-media">
+				<h4>Redes Sociales</h4>
+				<p>
+					<a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+				</p>
+				<p>
+					<a href="https://www.facebook.com/"><i class="fab fa-facebook"></i> Facebook</a>
+				</p>
+				<p>
+					<a href="https://www.instagram.com/"><i class="fab fa-instagram"></i> Instagram</a>
+				</p>
+			</div>
+			<div class="links">
+				<h4>Accesos Rapidos</h4>
+				<p><a href="#">Inicio</a></p>
+				<p><a href="#">Menu</a></p>
+				<p><a href="#">Ubicacion</a></p>
+				<p><a href="#">Contacto</a></p>
+				<p><a href="#">Nosotros</a></p>
+				<p><a href="#">Reservas</a></p>
+			</div>
+			<div class="details">
+				<h4 class="address">Direccion</h4>
+				<p>
+					Calle inventada,10
+				</p>
+				<h4 class="mobile">Telefono Movil</h4>
+				<p><a href="#">678475895</a></p>
+				<h4 class="mail">Correo Electronico</h4>
+				<p><a href="#">prestaurante@gmail.com</a></p>
+			</div>
+		</div>
+		<footer>
+			<hr />
+			© 2024 Prestaurante.
+		</footer>
+	</div>
+	<script type="module" src="../js/clases/clases.js"></script>
+	<script type="module" src="../js/clases/resturantManager.js"></script>
+	<script type="module" src="../js/mvc/restaurantManagerView.js"></script>
+	<script type="module" src="../js/mvc/restaurantManagerController.js"></script>
+	<script type="module" src="../js/mvc/restaurantManagerApp.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

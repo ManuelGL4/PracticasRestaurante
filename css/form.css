@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400;900&family=Protest+Strike&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400;900&family=Open+Sans:wght@800&family=Protest+Strike&display=swap');
+
+* {margin: 0; padding: 0;}
+
+html {
+	height: 100%;
+    
+	background: 
+		linear-gradient(rgba(245, 133, 13, 0.6), rgba(124, 99, 134, 0.6));
+}
+
+body {
+	font-family: montserrat, arial, verdana;
+}
+
+#msform {
+    top: 50px;
+	width: 400px;
+    height: 600px;
+	margin: 50px auto;
+	text-align: center;
+	position: relative;
+}
+
+#msform fieldset {
+	background: white;
+	border: 0 none;
+	border-radius: 3px;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+	padding: 20px 30px;
+	box-sizing: border-box;
+	width: 80%;
+	margin: 0 10%;
+	
+	position: relative;
+}
+
+#msform fieldset:not(:first-of-type) {
+	display: none;
+}
+
+#msform input, #msform textarea {
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: montserrat;
+	color: #2C3E50;
+	font-size: 13px;
+}
+
+#msform .action-button {
+	width: 100px;
+	background: #ae9527;
+	font-weight: bold;
+	color: white;
+	border: 0 none;
+	border-radius: 1px;
+	cursor: pointer;
+	padding: 10px;
+	margin: 10px 5px;
+  text-decoration: none;
+  font-size: 14px;
+}
+#msform .action-button:hover, #msform .action-button:focus {
+	box-shadow: 0 0 0 2px white, 0 0 0 3px #050505;
+}
+
+.fs-title {
+	font-size: 15px;
+	text-transform: uppercase;
+	color: #2C3E50;
+	margin-bottom: 10px;
+}
+.fs-subtitle {
+	font-weight: normal;
+	font-size: 13px;
+	color: #666;
+	margin-bottom: 20px;
+}
+#progressbar {
+	margin-bottom: 30px;
+	overflow: hidden;
+
+	counter-reset: step;
+}
+#progressbar li {
+	list-style-type: none;
+	color: white;
+	text-transform: uppercase;
+	font-size: 9px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+#progressbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 20px;
+	line-height: 20px;
+	display: block;
+	font-size: 10px;
+	color: #333;
+	background: white;
+	border-radius: 3px;
+	margin: 0 auto 5px auto;
+}
+
+#progressbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: white;
+	position: absolute;
+	left: -50%;
+	top: 9px;
+	z-index: -1;
+}
+#progressbar li:first-child:after {
+	content: none; 
+}
+
+#progressbar li.active:before,  #progressbar li.active:after{
+	background: #ae9527;
+	color: white;
+}
+
+  header {
+    background:linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.50)); 
+    width: 100%;
+    position: sticky;
+    z-index: 100;
+
+  }
+  .menu {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 2px;
+    justify-items: end;
+    margin-right: 500px;
+    align-items: center;
+    font-family: 'Protest Strike', sans-serif;
+  }
+  
+  .menu a {
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .menu img {
+    width: 40%;
+  }
+  
+  .menu a.seleccionado::after {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%; 
+    width: 50%;
+    height: 2px;
+    background-color: rgb(0, 0, 0);
+    transform: translateX(-50%); 
+  }
+  .footer {
+    background-color: black;
+    color: #fefefe;
+    width: 100%;
+    bottom: 0;
+  }
+  
+  .footer .heading {
+    color: #fefefe;
+    max-width: 1010px;
+    width: 90%;
+    text-transform: uppercase;
+    margin: 0 auto;
+    margin-bottom: 3rem;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  }
+  
+  .footer .content {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1.5rem;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  }
+  
+  .footer .content p {
+    margin-bottom: 1.3rem;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  }
+  
+  .footer .content a {
+    text-decoration: none;
+    color: #fefefe;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  }
+  
+  .footer .content a:hover {
+    border-bottom: 1px solid #cc8d10;
+  }
+  
+  .footer .content h4 {
+    margin-bottom: 1.3rem;
+    font-size: 19px;
+  }
+  
+  footer {
+    text-align: center;
+  }
+  
+  footer hr {
+    margin: 2rem 0;
+  }
+
+  nav .indicador {
+    width: 80px;
+    height: 8px;
+    background-color: azure;
+    bottom: 10px;
+    right: 639px;
+    transition: .3s ease-out all;
+    transform: translateX(-50%);
+    position: absolute;
+  }
+  

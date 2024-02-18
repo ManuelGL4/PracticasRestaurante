@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400;900&family=Protest+Strike&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@200;300;400;900&family=Open+Sans:wght@800&family=Protest+Strike&display=swap');
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+}
+
+header {
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.50));
+	width: 100%;
+	position: sticky;
+	z-index: 100;
+}
+
+.menu {
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+	gap: 2px;
+	justify-items: end;
+	margin-right: 500px;
+	align-items: center;
+	font-family: 'Protest Strike', sans-serif;
+}
+
+.menu a {
+	text-decoration: none;
+	color: white;
+	text-align: center;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.menu img {
+	width: 40%;
+}
+
+.menu a.seleccionado::after {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 50%;
+	height: 2px;
+	background-color: rgb(0, 0, 0);
+	transform: translateX(-50%);
+}
+
+.footer {
+	background-color: black;
+	color: #fefefe;
+	width: 100%;
+	bottom: 0;
+}
+
+.footer .heading {
+	color: #fefefe;
+	max-width: 1010px;
+	width: 90%;
+	text-transform: uppercase;
+	margin: 0 auto;
+	margin-bottom: 3rem;
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content {
+	display: flex;
+	justify-content: space-evenly;
+	margin: 1.5rem;
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content p {
+	margin-bottom: 1.3rem;
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content a {
+	text-decoration: none;
+	color: #fefefe;
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.footer .content a:hover {
+	border-bottom: 1px solid #cc8d10;
+}
+
+.footer .content h4 {
+	margin-bottom: 1.3rem;
+	font-size: 19px;
+}
+
+footer {
+	text-align: center;
+}
+
+footer hr {
+	margin: 2rem 0;
+}
+
+#lista-container {
+	margin-top: 50px;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(1, auto);
+}
+
+#central-zone {
+	grid-column: 2;
+	grid-row: 1;
+}
+
+
+.lista {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+
+#random-dish {
+	margin-top: 10px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+#random-dish img {
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+	height: 200px;
+	border: 3px solid #cc8d10;
+}
+
+.dish-details-box {
+	margin-top: 10%;
+	border: 3px solid #cc8d10;
+	width: 800px;
+	margin: 50px auto 0;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	border-radius: 30px;
+	grid-template-rows: repeat(3, 90px);
+}
+
+.dish-details-box h1 {
+	grid-column: 2 / span 3;
+}
+
+.dish-details-box img {
+	margin-left: 30px;
+	grid-row: 2;
+	width: 80%;
+	height: auto;
+}
+
+.dish-details-box p {
+	grid-column: 2 / span 3;
+}
+
+h1 {
+	text-align: center;
+}
+
+#caja-plato {
+	margin: 0 auto;
+	width: 1000px;
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));
+	padding: 20px;
+	border: 2px solid #ccc;
+	border-radius: 10px;
+}
+
+#caja-plato h1 {
+	margin-left: -259px;
+	color: white;
+}
+
+#caja-plato p {
+	margin-left: 79px;
+	color: white;
+}
+
+.lista {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.lista li {
+	padding: 10px 0;
+	border-bottom: 1px solid #ccc;
+	margin: 0 auto;
+	max-width: 80%;
+}
+
+.lista li:last-child {
+	border-bottom: none;
+}
+
+.lista li:hover {
+	background-color: #f0f0f0;
+}
+
+.lista a {
+	text-decoration: none;
+	background-color: transparent;
+	padding: 5px;
+	display: inline-block;
+}
+
+#central-zone {
+	padding: 10px 0;
+}
+
+#central-zone>div {
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+#central-zone>div:last-child {
+	border-bottom: none;
+}
+
+#central-zone>div:hover {
+	background-color: #f0f0f0;
+}
+
+.separator {
+	height: 2px;
+	background-color: orange;
+	border: none;
+	margin: 10px 0;
+}
+
+img {
+	width: 100px;
+}
