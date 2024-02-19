@@ -215,6 +215,20 @@ class RestaurantManagerController {
         this[VIEW].clearCentralZone();
         this[VIEW].showDishesInMenu(dishesInMenu);
     }
+    handleShowDishInNewWindow = (dish) => {
+        try {
+            this[VIEW].showDishDetails(dish);
+
+            this[VIEW].bindShowDishInNewWindow(
+                this.handleShowDishInNewWindow
+            );
+
+        } catch (error) {
+            this[VIEW].openNewWindowWithDetails(null);
+            alert('No se pudo abrir la ventana con los detalles del plato.');
+        }
+    };
+    
 }
 
 

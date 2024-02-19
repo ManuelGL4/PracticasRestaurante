@@ -81,6 +81,7 @@ class RestaurantManagerView {
 		const viewDetailsButton = document.createElement('button');
 		viewDetailsButton.textContent = 'Ver detalles en nueva ventana';
 		viewDetailsButton.addEventListener('click', () => this.openNewWindowWithDetails(dish));
+		viewDetailsButton.id = 'view-details-button';
 		console.log(dish);
 
 		detailsBox.appendChild(viewDetailsButton);
@@ -93,7 +94,7 @@ class RestaurantManagerView {
 
 	openNewWindowWithDetails(dish) {
 		// Abrir una nueva ventana
-		const dishWindow = window.open('auxPage.html', '_blank', 'width=600,height=400');
+		const dishWindow = window.open('auxPage.html', '_blank', 'width=1000,height=600');
 
 		// Verificar si la ventana se abrió correctamente
 		if (dishWindow) {
@@ -199,7 +200,7 @@ class RestaurantManagerView {
 			dishWindowDocument.write(newWindowContent);
 		} else {
 			// La ventana emergente fue bloqueada
-			alert('La ventana emergente fue bloqueada por el navegador. Por favor, habilite las ventanas emergentes para ver los detalles del plato.');
+			alert('La ventana emergente no se ha podido abrir');
 		}
 	}
 
@@ -278,6 +279,23 @@ class RestaurantManagerView {
 		});
 	}
 
+	bindShowDishInNewWindow(handler) {
+		const viewDetailsButton = document.getElementById('view-details-button');
+	
+		viewDetailsButton.addEventListener('click', () => {
+			if (!this.dishWindow || this.dishWindow.closed) {
+				this.dishWindow = window.open('auxPage.html', '_blank', 'width=1000,height=600');
+				this.dishWindow.addEventListener('DOMContentLoaded', () => {
+					handler(dish); // Pasar el plato al manejador
+				});
+			} else {
+				handler(dish); // Pasar el plato al manejador si la ventana ya esta abierta
+				this.dishWindow.focus();
+			}
+		});
+	}
+	
+	
 
 	clearCentralZone() {
 		const centralZone = document.getElementById('central-zone');
