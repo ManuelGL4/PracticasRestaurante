@@ -1,8 +1,13 @@
+const EXCECUTE_HANDLER = Symbol('excecuteHandler');
+
 class RestaurantManagerView {
 	constructor() {
 		this.main = document.getElementsByTagName("main")[0];
 		this.dishWindow = null;
+		this.openedWindows=[] // Array de ventanas abiertas
+		this.bindCloseAllWindows(this.handleCloseAllWindows.bind(this));
 	}
+	
 	showDishesInCentralZone(dishesInCategory) {
 		const centralZone = document.getElementById('central-zone');
 
@@ -198,6 +203,7 @@ class RestaurantManagerView {
 
 			// Escribir el contenido en el documento de la nueva ventana
 			dishWindowDocument.write(newWindowContent);
+			this.openedWindows.push(dishWindow); // Agregar la ventana al array
 		} else {
 			// La ventana emergente fue bloqueada
 			alert('La ventana emergente no se ha podido abrir');
@@ -291,6 +297,28 @@ class RestaurantManagerView {
 			} else {
 				handler(dish); // Pasar el plato al manejador si la ventana ya esta abierta
 				this.dishWindow.focus();
+			}
+		});
+	}
+	
+	bindCloseAllWindows(handler) {
+        const closeAllWindowsButton = document.getElementById('close-all-windows');
+        closeAllWindowsButton.addEventListener('click', handler);
+    }
+
+	handleCloseAllWindows() {
+		// Crear una copia del array de ventanas abiertas
+		const windowsCopy = this.openedWindows.slice();
+		console.log(windowsCopy);
+		// Recorrer la copia del array y cerrar cada ventana
+		windowsCopy.forEach(windowRef => {
+			if (!windowRef.closed) {
+				windowRef.close();
+				// Eliminar la referencia del array
+				const index = this.openedWindows.indexOf(windowRef);
+				if (index !== -1) {
+					this.openedWindows.splice(index, 1);
+				}
 			}
 		});
 	}

@@ -4,8 +4,8 @@ import {
 import { Dish, Coordinate, Allergen, Restaurant, Menu, Category } from '../clases/clases.js';
 import RestaurantManagerView from './restaurantManagerView.js';
 
-const MODEL = Symbol('ShoppingCartModel');
-const VIEW = Symbol('ShoppingCartView');
+const MODEL = Symbol('RestaurantsManager');
+const VIEW = Symbol('RestaurantManagerView');
 
 class RestaurantManagerController {
     constructor() {
