@@ -11,6 +11,7 @@ class RestaurantManagerController {
     constructor() {
         this[MODEL] = RestaurantsManager.getInstance();
         this[VIEW] = new RestaurantManagerView;
+        this[VIEW].bindInit(this.handleInit);
         this.onLoad();
     }
     onLoad() {
@@ -228,6 +229,7 @@ class RestaurantManagerController {
             alert('No se pudo abrir la ventana con los detalles del plato.');
         }
     };
+    
     
 }
 

@@ -1,4 +1,5 @@
-const EXCECUTE_HANDLER = Symbol('excecuteHandler');
+const EXECUTE_HANDLER = Symbol('executeHandler');
+
 
 class RestaurantManagerView {
 	constructor() {
@@ -6,8 +7,9 @@ class RestaurantManagerView {
 		this.dishWindow = null;
 		this.openedWindows=[] // Array de ventanas abiertas
 		this.bindCloseAllWindows(this.handleCloseAllWindows.bind(this));
+		this.bindNavigationButtons();
 	}
-	
+		
 	showDishesInCentralZone(dishesInCategory) {
 		const centralZone = document.getElementById('central-zone');
 
@@ -284,6 +286,41 @@ class RestaurantManagerView {
 			centralZone.appendChild(dishElement);
 		});
 	}
+	
+	[EXECUTE_HANDLER](handler, handlerArguments, scrollElement, data, url, event) {
+        handler(...handlerArguments);
+        const scroll = document.querySelector(scrollElement);
+        if (scroll) scroll.scrollIntoView();
+        history.pushState(data, null, url);
+        event.preventDefault();
+    }
+
+	bindInit(handler) {
+		const logoElements = document.getElementsByClassName('menu__logo');
+		for (const logoElement of logoElements) {
+			logoElement.addEventListener('click', (event) => {
+				this[EXECUTE_HANDLER](handler, [], 'body', { action: 'init' }, '#', event);
+			});
+		}
+	}
+	
+	// Metodo para vincular los botones de navegacion
+	bindNavigationButtons() {
+		window.addEventListener('popstate', () => {
+			this.handleNavigation();
+		});
+	}
+
+	// Metodo para manejar la navegacion
+	handleNavigation() {
+		const state = history.state;
+		if (state) {
+			//CAMBIAR EL SWITCH
+			switch (state.action) {
+			
+		}
+	}
+}
 
 	bindShowDishInNewWindow(handler) {
 		const viewDetailsButton = document.getElementById('view-details-button');
@@ -323,7 +360,7 @@ class RestaurantManagerView {
 		});
 	}
 	
-	
+
 
 	clearCentralZone() {
 		const centralZone = document.getElementById('central-zone');
