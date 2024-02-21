@@ -220,9 +220,7 @@ class RestaurantManagerController {
         try {
             this[VIEW].showDishDetails(dish);
 
-            this[VIEW].bindShowDishInNewWindow(
-                this.handleShowDishInNewWindow
-            );
+            this[VIEW].openNewWindowWithDetails(dish);
 
         } catch (error) {
             this[VIEW].openNewWindowWithDetails(null);
@@ -230,6 +228,22 @@ class RestaurantManagerController {
         }
     };
     
+    handleNavigation() {
+		const state = history.state;
+		if (state) {
+			switch (state.action) {
+				case 'init':
+					this.handleInit();
+					break;
+				case 'showCategory':
+					this.handleShowCategory(state.category);
+					break;
+				case 'showDish':
+					this.handleShowDish(state.dish);
+					break;
+			}
+		}
+	}
     
 }
 

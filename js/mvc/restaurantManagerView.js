@@ -103,11 +103,10 @@ class RestaurantManagerView {
 		// Abrir una nueva ventana
 		const dishWindow = window.open('auxPage.html', '_blank', 'width=1000,height=600');
 
-		// Verificar si la ventana se abrió correctamente
 		if (dishWindow) {
 			const dishWindowDocument = dishWindow.document;
 
-			// Crear el contenido HTML con los detalles del plato
+			// Contenido HTML con el plato
 			const newWindowContent = `
 			<!DOCTYPE html>
 			<html lang="es">
@@ -205,9 +204,8 @@ class RestaurantManagerView {
 
 			// Escribir el contenido en el documento de la nueva ventana
 			dishWindowDocument.write(newWindowContent);
-			this.openedWindows.push(dishWindow); // Agregar la ventana al array
+			this.openedWindows.push(dishWindow); // Agregar la ventana al array de ventanas
 		} else {
-			// La ventana emergente fue bloqueada
 			alert('La ventana emergente no se ha podido abrir');
 		}
 	}
@@ -240,6 +238,7 @@ class RestaurantManagerView {
 			centralZone.appendChild(categoryElement);
 		});
 	}
+
 	showRestaurantInfo(restaurant) {
 		const detailsBox = document.createElement('div');
 		detailsBox.classList.add('dish-details-box');
@@ -304,23 +303,11 @@ class RestaurantManagerView {
 		}
 	}
 	
-	// Metodo para vincular los botones de navegacion
 	bindNavigationButtons() {
 		window.addEventListener('popstate', () => {
 			this.handleNavigation();
 		});
 	}
-
-	// Metodo para manejar la navegacion
-	handleNavigation() {
-		const state = history.state;
-		if (state) {
-			//CAMBIAR EL SWITCH
-			switch (state.action) {
-			
-		}
-	}
-}
 
 	bindShowDishInNewWindow(handler) {
 		const viewDetailsButton = document.getElementById('view-details-button');
