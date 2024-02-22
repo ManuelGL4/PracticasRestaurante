@@ -216,17 +216,27 @@ class RestaurantManagerController {
         this[VIEW].clearCentralZone();
         this[VIEW].showDishesInMenu(dishesInMenu);
     }
-    handleShowDishInNewWindow = (dish) => {
-        try {
-            this[VIEW].showDishDetails(dish);
+    // handleShowDishInNewWindow = (dish) => {
+    //     try {
+    //         this[VIEW].showDishDetails(dish);
 
-            this[VIEW].openNewWindowWithDetails(dish);
+    //         this[VIEW].openNewWindowWithDetails(dish);
 
-        } catch (error) {
-            this[VIEW].openNewWindowWithDetails(null);
-            alert('No se pudo abrir la ventana con los detalles del plato.');
-        }
-    };
+    //     } catch (error) {
+    //         this[VIEW].openNewWindowWithDetails(null);
+    //         alert('No se pudo abrir la ventana con los detalles del plato.');
+    //     }
+    // };
+
+    closeAllOpenedWindows() {
+        // Itera sobre todas las ventanas abiertas y las cierra
+        this[VIEW].openedWindows.forEach(window => {
+            window.close();
+        });
+
+        // Limpia el array de ventanas abiertas
+        this[VIEW].openedWindows = [];
+    }
     
     handleNavigation() {
 		const state = history.state;

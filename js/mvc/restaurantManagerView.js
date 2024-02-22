@@ -101,115 +101,67 @@ class RestaurantManagerView {
 
 	openNewWindowWithDetails(dish) {
 		// Abrir una nueva ventana
-		const dishWindow = window.open('auxPage.html', '_blank', 'width=1000,height=600');
-
+		const dishWindow = window.open('', '_blank', 'width=1000,height=600');
+		let container;
+	
 		if (dishWindow) {
 			const dishWindowDocument = dishWindow.document;
-
+			container = dishWindowDocument.createElement('div');
 			// Contenido HTML con el plato
-			const newWindowContent = `
-			<!DOCTYPE html>
-			<html lang="es">
-
-			<head>
-				<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>Practica Restaurante DOM</title>
-				<link rel="stylesheet" href="../css/ventanacss.css">
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-			</head>
-
-			<body>
-				<header class="header">
-					<nav class="menu">
-						<img src="../img/logo.png" alt="Logo" class="menu__logo">
-						<a href="#" class="menu__link">Inicio<span class="indicador" id="indicador"></span></a>
-						<a href="#" class="menu__link">Menu</a>
-						<a href="#" class="menu__link">Ubicacion</a>
-						<a href="#" class="menu__link">Contacto</a>
-						<a href="./html/nosotros.html" class="menu__link">Nosotros</a>
-						<a href="./html/reservas.html" class="menu__link">Reservas</a>
-					</nav>
-				</header>
-
-				<main>
-				<div class="card" style="width: 18rem;color:white;	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
-				<img class="card-img-top" src="../img/${dish.dish.image}" alt="${dish.dish.name}">
-				<div class="card-body">
-				  <h5 class="card-title">${dish.dish.name}</h5>
-				  <p class="card-text">Descripción: ${dish.dish.description} Ingredientes: ${dish.dish.ingredients} Alergenos:${dish.dish.allergens} </p>
-				  <button onclick="window.close()">Cerrar ventana</button>
-				  </div>
-
-			  </div>
-				</main>
-				<div class="footer">
-					<div class="heading">
-						<h2>PRESTAURANTE<sup>™</sup></h2>
-					</div>
-					<div class="content">
-						<div class="services">
-							<h4>Servicios</h4>
-							<p><a href="#">Reservas</a></p>
-							<p><a href="#">Envio a domicilio</a></p>
-							<p><a href="#">Menu</a></p>
-						</div>
-						<div class="social-media">
-							<h4>Redes Sociales</h4>
-							<p>
-								<a href="#"><i class="fab fa-twitter"></i> Twitter</a>
-							</p>
-							<p>
-								<a href="https://www.facebook.com/"><i class="fab fa-facebook"></i> Facebook</a>
-							</p>
-							<p>
-								<a href="https://www.instagram.com/"><i class="fab fa-instagram"></i> Instagram</a>
-							</p>
-						</div>
-						<div class="links">
-							<h4>Accesos Rapidos</h4>
-							<p><a href="#">Inicio</a></p>
-							<p><a href="#">Menu</a></p>
-							<p><a href="#">Ubicacion</a></p>
-							<p><a href="#">Contacto</a></p>
-							<p><a href="#">Nosotros</a></p>
-							<p><a href="#">Reservas</a></p>
-						</div>
-						<div class="details">
-							<h4 class="address">Direccion</h4>
-							<p>
-								Calle inventada,10
-							</p>
-							<h4 class="mobile">Telefono Movil</h4>
-							<p><a href="#">678475895</a></p>
-							<h4 class="mail">Correo Electronico</h4>
-							<p><a href="#">prestaurante@gmail.com</a></p>
+			container.insertAdjacentHTML('beforeend', `
+				<div id="caja-plato">
+					<div id="dish-details-box">
+						<div class="card" style="width: 18rem;color:white; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
+							<img class="card-img-top" src="../img/${dish.dish.image}" alt="${dish.dish.name}">
+							<div class="card-body">
+								<h5 class="card-title">${dish.dish.name}</h5>
+								<p class="card-text">Descripción: ${dish.dish.description} Ingredientes: ${dish.dish.ingredients} Alergenos:${dish.dish.allergens} </p>
+								<button onclick="window.close()">Cerrar ventana</button>
+							</div>
 						</div>
 					</div>
-					<footer>
-						<hr />
-						© 2024 Prestaurante.
-					</footer>
 				</div>
-				<script type="module" src="../js/clases/clases.js"></script>
-				<script type="module" src="../js/clases/resturantManager.js"></script>
-				<script type="module" src="../js/mvc/restaurantManagerView.js"></script>
-				<script type="module" src="../js/mvc/restaurantManagerController.js"></script>
-				<script type="module" src="../js/mvc/restaurantManagerApp.js"></script>
-			</body>
-
-			</html>
-        `;
-
-			// Escribir el contenido en el documento de la nueva ventana
-			dishWindowDocument.write(newWindowContent);
-			this.openedWindows.push(dishWindow); // Agregar la ventana al array de ventanas
+			`);
+	
+			dishWindowDocument.body.appendChild(container);
+			this.openedWindows.push(dishWindow)
 		} else {
 			alert('La ventana emergente no se ha podido abrir');
 		}
 	}
 
+	closeAllOpenedWindows() {
+		// Iterar sobre todas las ventanas abiertas y cerrarlas una por una
+		this.openedWindows.forEach(window => {
+			window.close();
+		});
+	
+		// Limpiar el array de ventanas abiertas después de cerrarlas
+		this.openedWindows = [];
+	}
+	
+
+	bindCloseAllWindows(handler) {
+        const closeAllWindowsButton = document.getElementById('close-all-windows');
+        closeAllWindowsButton.addEventListener('click', handler);
+    }
+
+	handleCloseAllWindows() {
+		// Crear una copia del array de ventanas abiertas
+		const windowsCopy = this.openedWindows.slice();
+		console.log(this.openedWindows);
+		// Recorrer la copia del array y cerrar cada ventana
+		windowsCopy.forEach(windowRef => {
+			if (!windowRef.closed) {
+				windowRef.close();
+				// Eliminar la referencia del array
+				const index = this.openedWindows.indexOf(windowRef);
+				if (index !== -1) {
+					this.openedWindows.splice(index, 1);
+				}
+			}
+		});
+	}
 
 
 	showRandomDishes(dishes) {
@@ -309,43 +261,6 @@ class RestaurantManagerView {
 		});
 	}
 
-	bindShowDishInNewWindow(handler) {
-		const viewDetailsButton = document.getElementById('view-details-button');
-	
-		viewDetailsButton.addEventListener('click', () => {
-			if (!this.dishWindow || this.dishWindow.closed) {
-				this.dishWindow = window.open('auxPage.html', '_blank', 'width=1000,height=600');
-				this.dishWindow.addEventListener('DOMContentLoaded', () => {
-					handler(dish); // Pasar el plato al manejador
-				});
-			} else {
-				handler(dish); // Pasar el plato al manejador si la ventana ya esta abierta
-				this.dishWindow.focus();
-			}
-		});
-	}
-	
-	bindCloseAllWindows(handler) {
-        const closeAllWindowsButton = document.getElementById('close-all-windows');
-        closeAllWindowsButton.addEventListener('click', handler);
-    }
-
-	handleCloseAllWindows() {
-		// Crear una copia del array de ventanas abiertas
-		const windowsCopy = this.openedWindows.slice();
-		console.log(windowsCopy);
-		// Recorrer la copia del array y cerrar cada ventana
-		windowsCopy.forEach(windowRef => {
-			if (!windowRef.closed) {
-				windowRef.close();
-				// Eliminar la referencia del array
-				const index = this.openedWindows.indexOf(windowRef);
-				if (index !== -1) {
-					this.openedWindows.splice(index, 1);
-				}
-			}
-		});
-	}
 	
 
 
