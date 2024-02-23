@@ -76,21 +76,21 @@ class RestaurantManagerController {
         const menu1 = new Menu('Menú Degustación', 'platos destacados.');
         const menu2 = new Menu('Menú Infantil', 'para los más pequeños.');
         const menu3 = new Menu('Menú Vegetariano', 'Para aquellos que prefieren una opción sin carne.');
-        manager.assignDishToMenu(menu1,dish1);
-        manager.assignDishToMenu(menu1,dish2);
-        manager.assignDishToMenu(menu1,dish3);
-        manager.assignDishToMenu(menu2,dish4);
-        manager.assignDishToMenu(menu2,dish5);
-        manager.assignDishToMenu(menu2,dish6);
-        manager.assignDishToMenu(menu3,dish7);
-        manager.assignDishToMenu(menu3,dish8);
-        manager.assignDishToMenu(menu3,dish9);
-        
+        manager.assignDishToMenu(menu1, dish1);
+        manager.assignDishToMenu(menu1, dish2);
+        manager.assignDishToMenu(menu1, dish3);
+        manager.assignDishToMenu(menu2, dish4);
+        manager.assignDishToMenu(menu2, dish5);
+        manager.assignDishToMenu(menu2, dish6);
+        manager.assignDishToMenu(menu3, dish7);
+        manager.assignDishToMenu(menu3, dish8);
+        manager.assignDishToMenu(menu3, dish9);
+
         //3 RESTAURANTES
         const restaurant1 = new Restaurant('Restaurante Italiano', 'Ofrecemos auténtica comida italiana en un ambiente acogedor.', new Coordinate(41.9028, 12.4964));
         const restaurant2 = new Restaurant('Restaurante Mexicano', 'Disfruta de la vibrante cocina mexicana con auténticos sabores y especias.', new Coordinate(23.6345, -102.5528));
         const restaurant3 = new Restaurant('Restaurante Asiático', 'Sumérgete en la exótica comida asiática con una amplia variedad de platos y sabores.', new Coordinate(35.6895, 139.6917));
-        manager.addRestaurant(restaurant1,restaurant2,restaurant3);
+        manager.addRestaurant(restaurant1, restaurant2, restaurant3);
 
         //Pasar las categorias a array
         let categories = [];
@@ -145,41 +145,41 @@ class RestaurantManagerController {
             menu.appendChild(menuItem);
         });
 
-    let restaurants = [];
-    for (const dish of manager.getRestaurants()) {
-        restaurants.push(dish);
-    }
-    console.log(restaurants);
-
-    const selectRestaurant = document.createElement('select');
-
-    restaurants.forEach(restaurant => {
-        const option = document.createElement('option');
-        option.value = restaurant.getName();
-        option.textContent = restaurant.getName();
-        selectRestaurant.appendChild(option);
-    });
-    menus.forEach(menuAct => {
-        const menuItem = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = '#';
-        link.textContent = menuAct.menu.getName();
-        link.addEventListener('click', () => this.handleMenuClick(menuAct));
-        menuItem.appendChild(link);
-        menu.appendChild(menuItem);
-    });
-
-    selectRestaurant.addEventListener('change', (event) => {
-        const selectedRestaurantName = event.target.value;
-        const selectedRestaurant = restaurants.find(restaurant => restaurant.getName() === selectedRestaurantName);
-        if (selectedRestaurant) {
-            this[VIEW].showRestaurantInfo(selectedRestaurant);
+        let restaurants = [];
+        for (const dish of manager.getRestaurants()) {
+            restaurants.push(dish);
         }
-    });
+        console.log(restaurants);
 
-    // Agregar el menú desplegable al contenedor deseado en el HTML
-    const dropdownContainer = document.getElementById('dropdown-container');
-    dropdownContainer.appendChild(selectRestaurant);
+        const selectRestaurant = document.createElement('select');
+
+        restaurants.forEach(restaurant => {
+            const option = document.createElement('option');
+            option.value = restaurant.getName();
+            option.textContent = restaurant.getName();
+            selectRestaurant.appendChild(option);
+        });
+        menus.forEach(menuAct => {
+            const menuItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = menuAct.menu.getName();
+            link.addEventListener('click', () => this.handleMenuClick(menuAct));
+            menuItem.appendChild(link);
+            menu.appendChild(menuItem);
+        });
+
+        selectRestaurant.addEventListener('change', (event) => {
+            const selectedRestaurantName = event.target.value;
+            const selectedRestaurant = restaurants.find(restaurant => restaurant.getName() === selectedRestaurantName);
+            if (selectedRestaurant) {
+                this[VIEW].showRestaurantInfo(selectedRestaurant);
+            }
+        });
+
+        // Agregar el menú desplegable al contenedor deseado en el HTML
+        const dropdownContainer = document.getElementById('dropdown-container');
+        dropdownContainer.appendChild(selectRestaurant);
 
         const menuContainer = document.getElementById('lista-container');
         menuContainer.appendChild(menu);
@@ -191,7 +191,7 @@ class RestaurantManagerController {
 
     }//Fin InitApp
 
-   
+
 
     handleCategoryClick(category) {
         const manager = RestaurantsManager.getInstance();
@@ -201,10 +201,10 @@ class RestaurantManagerController {
         this[VIEW].showDishesInCentralZone(dishesInCategory);
     }
 
-    handleAllergenClick(allergen){
+    handleAllergenClick(allergen) {
         const manager = RestaurantsManager.getInstance();
         const dishesWithAllergen = manager.getDishesWithAllergen(allergen);
-    
+
         this[VIEW].clearCentralZone();
         this[VIEW].showDishesInCentralZone(dishesWithAllergen);
     }
@@ -212,21 +212,13 @@ class RestaurantManagerController {
     handleMenuClick(menu) {
         const manager = RestaurantsManager.getInstance();
         const dishesInMenu = manager.getDishesInMenu(menu);
-    
+
         this[VIEW].clearCentralZone();
         this[VIEW].showDishesInMenu(dishesInMenu);
     }
-    // handleShowDishInNewWindow = (dish) => {
-    //     try {
-    //         this[VIEW].showDishDetails(dish);
 
-    //         this[VIEW].openNewWindowWithDetails(dish);
 
-    //     } catch (error) {
-    //         this[VIEW].openNewWindowWithDetails(null);
-    //         alert('No se pudo abrir la ventana con los detalles del plato.');
-    //     }
-    // };
+
 
     closeAllOpenedWindows() {
         // Itera sobre todas las ventanas abiertas y las cierra
@@ -237,24 +229,24 @@ class RestaurantManagerController {
         // Limpia el array de ventanas abiertas
         this[VIEW].openedWindows = [];
     }
-    
+
     handleNavigation() {
-		const state = history.state;
-		if (state) {
-			switch (state.action) {
-				case 'init':
-					this.handleInit();
-					break;
-				case 'showCategory':
-					this.handleShowCategory(state.category);
-					break;
-				case 'showDish':
-					this.handleShowDish(state.dish);
-					break;
-			}
-		}
-	}
-    
+        const state = history.state;
+        if (state) {
+            switch (state.action) {
+                case 'init':
+                    this.handleInit();
+                    break;
+                case 'showCategory':
+                    this.handleShowCategory(state.category);
+                    break;
+                case 'showDish':
+                    this.handleShowDish(state.dish);
+                    break;
+            }
+        }
+    }
+
 }
 
 

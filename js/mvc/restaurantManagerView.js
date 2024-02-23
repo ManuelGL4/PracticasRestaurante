@@ -4,12 +4,12 @@ const EXECUTE_HANDLER = Symbol('executeHandler');
 class RestaurantManagerView {
 	constructor() {
 		this.main = document.getElementsByTagName("main")[0];
-		this.dishWindow = null;
-		this.openedWindows=[] // Array de ventanas abiertas
+		this.productWindow = null;
+		this.openedWindows = [] // Array de ventanas abiertas
 		this.bindCloseAllWindows(this.handleCloseAllWindows.bind(this));
 		this.bindNavigationButtons();
 	}
-		
+
 	showDishesInCentralZone(dishesInCategory) {
 		const centralZone = document.getElementById('central-zone');
 
@@ -87,9 +87,8 @@ class RestaurantManagerView {
 		//Añadir el boton despues
 		const viewDetailsButton = document.createElement('button');
 		viewDetailsButton.textContent = 'Ver detalles en nueva ventana';
-		viewDetailsButton.addEventListener('click', () => this.openNewWindowWithDetails(dish));
+		viewDetailsButton.addEventListener('click', () => this.handleShowDishInNewWindow(dish));
 		viewDetailsButton.id = 'view-details-button';
-		console.log(dish);
 
 		detailsBox.appendChild(viewDetailsButton);
 
@@ -100,57 +99,79 @@ class RestaurantManagerView {
 
 
 	openNewWindowWithDetails(dish) {
-		// Abrir una nueva ventana
-		const dishWindow = window.open('', '_blank', 'width=1000,height=600');
-		let container;
-	
-		if (dishWindow) {
-			const dishWindowDocument = dishWindow.document;
-			container = dishWindowDocument.createElement('div');
-			// Contenido HTML con el plato
-			container.insertAdjacentHTML('beforeend', `
-				<div id="caja-plato">
-					<div id="dish-details-box">
-						<div class="card" style="width: 18rem;color:white; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
-							<img class="card-img-top" src="../img/${dish.dish.image}" alt="${dish.dish.name}">
-							<div class="card-body">
-								<h5 class="card-title">${dish.dish.name}</h5>
-								<p class="card-text">Descripción: ${dish.dish.description} Ingredientes: ${dish.dish.ingredients} Alergenos:${dish.dish.allergens} </p>
-								<button onclick="window.close()">Cerrar ventana</button>
+		let name = dish.name;
+		let description = dish.description;
+		let image = dish.image;
+		let ingredients = dish.ingredients;
+		let allergens = dish.allergentens;
+
+		const newWindow = window.open('auxPage.html', '_blank', 'width=800, height=600, top=250, left=250, titlebar=yes, toolbar=no, menubar=no, location=no');
+
+		newWindow.addEventListener('load', () => {
+			const main = newWindow.document.querySelector('main');
+			console.log(main);
+
+			if (dish) {
+				const container = newWindow.document.createElement('div');
+				container.id = 'caja-plato';
+				container.insertAdjacentHTML('beforeend', `
+					<div id="caja-plato">
+						<div id="dish-details-box">
+							<div class="card" style="width: 18rem;color:white; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
+								<img class="card-img-top" src="../img/${image}" alt="${name}">
+								<div class="card-body">
+									<h5 class="card-title">${name}</h5>
+									<p class="card-text">Descripción: ${description} Ingredientes: ${ingredients} Alergenos:${allergens} </p>
+									<button onclick="window.close()">Cerrar ventana</button>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			`);
-	
-			dishWindowDocument.body.appendChild(container);
-			this.openedWindows.push(dishWindow)
-		} else {
-			alert('La ventana emergente no se ha podido abrir');
-		}
+				`);
+				main.appendChild(container);
+				newWindow.document.body.scrollIntoView();
+			}
+		});
+
+		// Añadir la nueva ventana al array de ventanas abiertas
+		this.openedWindows.push(newWindow);
 	}
 
+	handleShowDishInNewWindow = (dish) => {
+		try {
+			this.openNewWindowWithDetails(dish.dish);
+		} catch (error) {
+			console.error("Error al abrir la ventana:", error);
+		}
+	};
+
+
+	bindShowProductInNewWindow(handler) {
+		const viewDetailsButton = document.getElementById('view-details-button');
+		viewDetailsButton.addEventListener('click', (event) => {
+			handler(event.target.dataset.serial);
+		});
+	}
+
+
 	closeAllOpenedWindows() {
-		// Iterar sobre todas las ventanas abiertas y cerrarlas una por una
 		this.openedWindows.forEach(window => {
 			window.close();
 		});
-	
-		// Limpiar el array de ventanas abiertas después de cerrarlas
+
 		this.openedWindows = [];
 	}
-	
+
 
 	bindCloseAllWindows(handler) {
-        const closeAllWindowsButton = document.getElementById('close-all-windows');
-        closeAllWindowsButton.addEventListener('click', handler);
-    }
+		const closeAllWindowsButton = document.getElementById('close-all-windows');
+		closeAllWindowsButton.addEventListener('click', handler);
+	}
 
 	handleCloseAllWindows() {
 		// Crear una copia del array de ventanas abiertas
 		const windowsCopy = this.openedWindows.slice();
 		console.log(this.openedWindows);
-		// Recorrer la copia del array y cerrar cada ventana
 		windowsCopy.forEach(windowRef => {
 			if (!windowRef.closed) {
 				windowRef.close();
@@ -237,14 +258,14 @@ class RestaurantManagerView {
 			centralZone.appendChild(dishElement);
 		});
 	}
-	
+
 	[EXECUTE_HANDLER](handler, handlerArguments, scrollElement, data, url, event) {
-        handler(...handlerArguments);
-        const scroll = document.querySelector(scrollElement);
-        if (scroll) scroll.scrollIntoView();
-        history.pushState(data, null, url);
-        event.preventDefault();
-    }
+		handler(...handlerArguments);
+		const scroll = document.querySelector(scrollElement);
+		if (scroll) scroll.scrollIntoView();
+		history.pushState(data, null, url);
+		event.preventDefault();
+	}
 
 	bindInit(handler) {
 		const logoElements = document.getElementsByClassName('menu__logo');
@@ -254,14 +275,14 @@ class RestaurantManagerView {
 			});
 		}
 	}
-	
+
 	bindNavigationButtons() {
 		window.addEventListener('popstate', () => {
 			this.handleNavigation();
 		});
 	}
 
-	
+
 
 
 	clearCentralZone() {
