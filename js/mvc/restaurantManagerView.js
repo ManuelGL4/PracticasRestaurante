@@ -1,3 +1,8 @@
+import { newDishValidation } from '../clases/validation.js';
+import {
+	RestaurantsManager
+} from '../clases/resturantManager.js';
+
 const EXECUTE_HANDLER = Symbol('executeHandler');
 
 
@@ -7,8 +12,134 @@ class RestaurantManagerView {
 		this.productWindow = null;
 		this.openedWindows = [] // Array de ventanas abiertas
 		this.bindCloseAllWindows(this.handleCloseAllWindows.bind(this));
-		this.bindNavigationButtons();
 	}
+
+	showAdminMenu() {
+		const menuOption = document.createElement('li');
+		menuOption.classList.add('nav-item');
+		menuOption.classList.add('dropdown');
+		menuOption.insertAdjacentHTML(
+			'afterbegin',
+			'<a class="nav-link dropdown-toggle" href="#" id="navServices" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administración</a>',
+		);
+		const suboptions = document.createElement('ul');
+		suboptions.classList.add('dropdown-menu');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewCategory" class="dropdown-item" href="#new-category">Crear Plato</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Asignar Menú</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewCategory" class="dropdown-item" href="#new-category">Desasignar Menú</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Añadir Categorias</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Eliminar Categorias</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>');
+		menuOption.append(suboptions);
+		const menu = document.querySelector('.menu');
+		menu.appendChild(menuOption);
+	}
+
+	showNewDishForm() {
+		const manager = RestaurantsManager.getInstance();
+		const container = document.createElement('div');
+
+		let categories = [];
+		for (const category of manager.getCategories()) {
+			categories.push(category);
+		}
+
+		let allergens = [];
+		for (const dish of manager.getAllergens()) {
+			allergens.push(dish);
+		}
+
+		this.main.replaceChildren();
+		//name B, description = '' B, ingredients = [], image = '' B,categories B,alergens B
+		container.insertAdjacentHTML(
+			'beforeend',
+			`<form name="fNewDish" role="form" class="row g-3" novalidate>
+		<div class="col-md-6 mb-3">
+		<label class="form-label" for="ndName">Nombre del plato</label>
+		<div class="input-group">
+		<span class="input-group-text"><i class="bi bi-type"></i></span>
+		<input type="text" class="form-control" id="ndName"
+		name="ndName"
+		placeholder="Nombre del plato" value="" required>
+		<div class="invalid-feedback">El nombre del plato es obligatorio.</div>
+		<div class="valid-feedback">Correcto.</div>
+		</div>
+		</div>
+		<div class="col-md-6 mb-3">
+		<label class="form-label" for="ndImg">Imagen del plato</label>
+		<div class="input-group">
+		<span class="input-group-text"><i class="bi bi-fileimage"></i></span>
+		<input type="url" class="form-control" id="ndImg" name="ndImg"
+		placeholder="Imagen del plato"
+		value="" required>
+		<div class="invalid-feedback"></div>
+		<div class="valid-feedback">Correcto.</div>
+		</div>
+		</div>
+		<div class="col-md-12 mb-3">
+<label class="form-label" for="ndIngredients">Ingredientes</label>
+<div class="input-group">
+<span class="input-group-text"><i class="bi bi-fileimage"></i></span>
+<textarea class="form-control" id="ndIngredients" name="ndIngredients"
+placeholder="Ingredientes"
+value="" required></textarea>
+<div class="invalid-feedback"></div>
+<div class="valid-feedback">Correcto.</div>
+</div>
+</div>
+		<div class="col-md-12 mb-3">
+		<label class="form-label" for="ndDescription">Descripción</label>
+		<div class="input-group">
+		<span class="input-group-text"><i class="bi bi-bodytext"></i></span>
+		<input type="text" class="form-control" id="ndDescription"
+		name="ndDescription" value="">
+		<div class="invalid-feedback"></div>
+		<div class="valid-feedback">Correcto.</div>
+		</div>
+		</div>
+		<div class="col-md-6 mb-3">
+            <label class="form-label" for="ndCategories">Categorías</label>
+            <select class="form-select" id="ndCategories" name="ndCategories" multiple required>
+                ${categories.map(category => `<option value="${category}">${category}</option>`).join('')}
+            </select>
+            <div class="invalid-feedback">Seleccione al menos una categoría.</div>
+            <div class="valid-feedback">Correcto.</div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="ndAllergens">Alergenos</label>
+            <select class="form-select" id="ndAllergens" name="ndAllergens" multiple required>
+                ${allergens.map(allergen => `<option value="${allergen}">${allergen}</option>`).join('')}
+            </select>
+            <div class="invalid-feedback">Seleccione al menos un alergeno.</div>
+            <div class="valid-feedback">Correcto.</div>
+        </div>
+		<div class="mb-12">
+		<button class="btn btn-primary" type="submit">Enviar</button>
+		<button class="btn btn-primary" type="reset">Cancelar</button>
+		</div>
+		</form>`,
+
+		);
+		this.main.append(container);
+	}
+
+	bindAdminMenu(hNewDish) {
+		const newCategoryLink = document.getElementById('lnewCategory');
+		newCategoryLink.addEventListener('click', (event) => {
+			hNewDish(); // Llama a showNewDishForm aquí
+		});
+	}
+
+
+	bindNewDishForm(handler) {
+		newDishValidation(handler);
+	}
+
+
+
+
+
 
 	showDishesInCentralZone(dishesInCategory) {
 		const centralZone = document.getElementById('central-zone');
@@ -115,19 +246,19 @@ class RestaurantManagerView {
 				const container = newWindow.document.createElement('div');
 				container.id = 'caja-plato';
 				container.insertAdjacentHTML('beforeend', `
-					<div id="caja-plato">
-						<div id="dish-details-box">
-							<div class="card" style="width: 18rem;color:white; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
-								<img class="card-img-top" src="../img/${image}" alt="${name}">
-								<div class="card-body">
-									<h5 class="card-title">${name}</h5>
-									<p class="card-text">Descripción: ${description} Ingredientes: ${ingredients} Alergenos:${allergens} </p>
-									<button onclick="window.close()">Cerrar ventana</button>
-								</div>
-							</div>
+			< div id = "caja-plato" >
+			<div id="dish-details-box">
+				<div class="card" style="width: 18rem;color:white; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
+					<img class="card-img-top" src="../img/${image}" alt="${name}">
+						<div class="card-body">
+							<h5 class="card-title">${name}</h5>
+							<p class="card-text">Descripción: ${description} Ingredientes: ${ingredients} Alergenos:${allergens} </p>
+							<button onclick="window.close()">Cerrar ventana</button>
 						</div>
-					</div>
-				`);
+				</div>
+			</div>
+					</ >
+			`);
 				main.appendChild(container);
 				newWindow.document.body.scrollIntoView();
 			}
@@ -155,10 +286,12 @@ class RestaurantManagerView {
 
 
 	closeAllOpenedWindows() {
+		// Iterar sobre todas las ventanas abiertas y cerrarlas una por una
 		this.openedWindows.forEach(window => {
 			window.close();
 		});
 
+		// Limpiar el array de ventanas abiertas después de cerrarlas
 		this.openedWindows = [];
 	}
 
@@ -172,6 +305,7 @@ class RestaurantManagerView {
 		// Crear una copia del array de ventanas abiertas
 		const windowsCopy = this.openedWindows.slice();
 		console.log(this.openedWindows);
+		// Recorrer la copia del array y cerrar cada ventana
 		windowsCopy.forEach(windowRef => {
 			if (!windowRef.closed) {
 				windowRef.close();

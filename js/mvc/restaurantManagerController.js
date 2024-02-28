@@ -14,11 +14,15 @@ class RestaurantManagerController {
         this[VIEW].bindInit(this.handleInit);
         this.onLoad();
     }
-    onLoad() {
+    onLoad = () => {
         this.initApp();
+        this[VIEW].showAdminMenu();
+        this[VIEW].bindAdminMenu(this.handleNewCategoryForm);
+
     }
 
     initApp() {
+
         const manager = RestaurantsManager.getInstance();
         //12 PLATOS
         const dish1 = new Dish('Ensalada', 'Descripción ensalada', 'Ingredientes de ensalada', 'ensalada.jpg');
@@ -217,7 +221,11 @@ class RestaurantManagerController {
         this[VIEW].showDishesInMenu(dishesInMenu);
     }
 
-
+    handleNewCategoryForm = () => {
+        console.log("HAS SELECCIONADO EL FORMULARIO DE NUEVO PLATO");
+        this[VIEW].showNewDishForm();
+        this[VIEW].bindNewDishForm(this.handleCreateCategory);
+    };
 
 
     closeAllOpenedWindows() {
@@ -246,6 +254,15 @@ class RestaurantManagerController {
             }
         }
     }
+
+
+
+
+
+    bindNewCategoryForm(handler) {
+        newCategoryValidation(handler);
+    }
+
 
 }
 
