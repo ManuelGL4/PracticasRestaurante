@@ -224,7 +224,7 @@ class RestaurantManagerController {
     handleNewCategoryForm = () => {
         console.log("HAS SELECCIONADO EL FORMULARIO DE NUEVO PLATO");
         this[VIEW].showNewDishForm();
-        this[VIEW].bindNewDishForm(this.handleCreateCategory);
+        this[VIEW].bindNewDishForm(this.handleCreateDish);
     };
 
 
@@ -256,7 +256,23 @@ class RestaurantManagerController {
     }
 
 
+    handleCreateDish = (name, description, ingredients, image, categories, allergens) => {
+        const dish = new Dish(name, description, ingredients, image, categories, allergens);
+        console.log(dish);
+        const manager = RestaurantsManager.getInstance();
 
+        let done;
+        let error;
+        try {
+            const success = manager.addDish(dish);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+    
+        this[VIEW].showNewDishModal(done, dish, error);
+    };
 
 
     bindNewCategoryForm(handler) {

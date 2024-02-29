@@ -127,7 +127,7 @@ value="" required></textarea>
 	bindAdminMenu(hNewDish) {
 		const newCategoryLink = document.getElementById('lnewCategory');
 		newCategoryLink.addEventListener('click', (event) => {
-			hNewDish(); // Llama a showNewDishForm aquí
+			hNewDish();
 		});
 	}
 
@@ -136,7 +136,32 @@ value="" required></textarea>
 		newDishValidation(handler);
 	}
 
-
+	showNewDishModal(done, dish, error) {
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Nuevo Plato';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+		body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato
+		<strong>${dish.name}</strong> ha sido creado correctamente.</div>`);
+		} else {
+		body.insertAdjacentHTML(
+		'afterbegin',
+		`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${dish.name}</strong> ya estaba creado.</div>`,
+		);
+		}
+		messageModal.show();
+		const listener = (event) => {
+		if (done) {
+		document.fNewDish.reset();
+		}
+		document.fNewDish.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+		once: true });
+	}
 
 
 
