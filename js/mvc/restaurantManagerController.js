@@ -17,7 +17,7 @@ class RestaurantManagerController {
     onLoad = () => {
         this.initApp();
         this[VIEW].showAdminMenu();
-        this[VIEW].bindAdminMenu(this.handleNewCategoryForm);
+        this[VIEW].bindAdminMenu(this.handleNewDishForm);
 
     }
 
@@ -221,7 +221,7 @@ class RestaurantManagerController {
         this[VIEW].showDishesInMenu(dishesInMenu);
     }
 
-    handleNewCategoryForm = () => {
+    handleNewDishForm = () => {
         console.log("HAS SELECCIONADO EL FORMULARIO DE NUEVO PLATO");
         this[VIEW].showNewDishForm();
         this[VIEW].bindNewDishForm(this.handleCreateDish);
@@ -273,11 +273,6 @@ class RestaurantManagerController {
     
         this[VIEW].showNewDishModal(done, dish, error);
     };
-
-
-    bindNewCategoryForm(handler) {
-        newCategoryValidation(handler);
-    }
 
 
 }
