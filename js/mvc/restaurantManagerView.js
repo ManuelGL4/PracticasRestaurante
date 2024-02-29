@@ -25,7 +25,7 @@ class RestaurantManagerView {
 		const suboptions = document.createElement('ul');
 		suboptions.classList.add('dropdown-menu');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewDish" class="dropdown-item" href="#new-category">Crear Plato</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelDish" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Asignar Menú</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewCategory" class="dropdown-item" href="#new-category">Desasignar Menú</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Añadir Categorias</a></li>');
@@ -137,10 +137,14 @@ value="" required></textarea>
 		this.main.append(container);
 	}
 
-	bindAdminMenu(hNewDish) {
+	bindAdminMenu(hNewDish,hRemoveDish) {
 		const newCategoryLink = document.getElementById('lnewDish');
 		newCategoryLink.addEventListener('click', (event) => {
 			hNewDish();
+		});
+		const removeDishLink = document.getElementById('ldelDish');
+		removeDishLink.addEventListener('click', (event) => {
+			hRemoveDish();
 		});
 	}
 
@@ -176,7 +180,7 @@ value="" required></textarea>
 		once: true });
 	}
 
-	showRemoveDishForm(dish) {
+	showRemoveDishForm(dishes) {
 		this.main.replaceChildren();
 		  const container = document.createElement('div');
 		  container.classList.add('container');
@@ -187,7 +191,7 @@ value="" required></textarea>
 		  'afterbegin',
 		  '<h1 class="display-5">Eliminar un producto</h1>',
 		);
-	
+			console.log(dishes);
 		const form = document.createElement('form');
 		form.name = 'fRemoveDish';
 		form.setAttribute('role', 'form');
@@ -198,26 +202,30 @@ value="" required></textarea>
 		form.insertAdjacentHTML(
 		  'beforeend',
 		  `<div class="col-md-6 mb-3">
-					<label class="form-label" for="rpType">Platos:</label>
-					<div class="input-group">
-						<label class="input-group-text" for="rpType"><i class="bi bi-card-checklist"></i></label>
-						<select class="form-select" name="rpType" id="rpType">
-							<option disabled selected>Selecciona un tipo...</option>
-							<option value="Camera">Cámara</option>
-							<option value="Laptop">Portátil</option>
-							<option value="Tablet">Tablet</option>
-							<option value="Smartphone">Teléfono</option>
-						</select>
-					</div>
-				</div>`,
-		);
+					<label class="form-label" for="rdDish">Platos:</label>
+					<select class="form-select" id="rdDish" name="rdDish" multiple required>
+					</select>
+					<div class="invalid-feedback">Seleccione al menos un plato.</div>
+					<div class="valid-feedback">Correcto.</div>
+				  </div>
+					  </div>
+					  `,
+					  );
+					  const rdDish = form.querySelector('#rdDish');
+					  for (const dish of dishes) {
+						rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.dish.name}">${dish.dish.name}</option>`);
+						}
 	
-		container.append(form);
-		container.insertAdjacentHTML(
-		  'beforeend',
-		  '<div id="product-list" class="container my-3"><div class="row"></div></div>',
-		);
-	
+
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="mb-12">
+		<button class="btn btn-primary" type="submit">Eliminar</button>
+		</div>
+		</form>`,
+	 );
+	 container.append(form);
 		  this.main.append(container);
 	  }
 

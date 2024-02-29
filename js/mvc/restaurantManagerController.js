@@ -17,7 +17,7 @@ class RestaurantManagerController {
     onLoad = () => {
         this.initApp();
         this[VIEW].showAdminMenu();
-        this[VIEW].bindAdminMenu(this.handleNewDishForm);
+        this[VIEW].bindAdminMenu(this.handleNewDishForm,this.handleRemoveDishForm);
 
     }
 
@@ -229,7 +229,12 @@ class RestaurantManagerController {
     };
     
     handleRemoveDishForm = () => {
-		this[VIEW].showRemoveDishForm();
+        const manager = RestaurantsManager.getInstance();
+        const dishesIterator = manager.getDishes();
+        const dishesArray = Array.from(dishesIterator);//Convertir a array pq si no da undifined y no se pq
+        console.log(dishesArray);
+    
+        this[VIEW].showRemoveDishForm(dishesArray);
 	}
 
 
