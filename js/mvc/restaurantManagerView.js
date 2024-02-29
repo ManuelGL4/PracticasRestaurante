@@ -24,7 +24,7 @@ class RestaurantManagerView {
 		);
 		const suboptions = document.createElement('ul');
 		suboptions.classList.add('dropdown-menu');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewCategory" class="dropdown-item" href="#new-category">Crear Plato</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewDish" class="dropdown-item" href="#new-category">Crear Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Asignar Menú</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewCategory" class="dropdown-item" href="#new-category">Desasignar Menú</a></li>');
@@ -138,7 +138,7 @@ value="" required></textarea>
 	}
 
 	bindAdminMenu(hNewDish) {
-		const newCategoryLink = document.getElementById('lnewCategory');
+		const newCategoryLink = document.getElementById('lnewDish');
 		newCategoryLink.addEventListener('click', (event) => {
 			hNewDish();
 		});
