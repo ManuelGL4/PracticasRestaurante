@@ -36,25 +36,24 @@ class RestaurantManagerView {
 		menu.appendChild(menuOption);
 	}
 
-	showNewDishForm() {
-		const manager = RestaurantsManager.getInstance();
+	showNewDishForm(categories,allergens) {
+		console.log(categories,allergens);
 		const container = document.createElement('div');
-
-		let categories = [];
-		for (const category of manager.getCategories()) {
-			categories.push(category);
-		}
-
-		let allergens = [];
-		for (const dish of manager.getAllergens()) {
-			allergens.push(dish);
-		}
-
-		this.main.replaceChildren();
-		//name B, description = '' B, ingredients = [], image = '' B,categories B,alergens B
 		container.insertAdjacentHTML(
+			'afterbegin',
+			'<h1 class="display-5">Nuevo Plato</h1>',
+		  );
+		this.main.replaceChildren();
+		const form = document.createElement('form');
+		form.name = 'fNewDish';
+		form.setAttribute('role', 'form');
+		form.setAttribute('novalidate', '');
+		form.classList.add('row');
+		form.classList.add('g-3');
+		//name B, description = '' B, ingredients = [], image = '' B,categories B,alergens B
+		form.insertAdjacentHTML(
 			'beforeend',
-			`<form name="fNewDish" role="form" class="row g-3" novalidate>
+			`
 		<div class="col-md-6 mb-3">
 		<label class="form-label" for="ndName">Nombre del plato</label>
 		<div class="input-group">
@@ -99,28 +98,42 @@ value="" required></textarea>
 		</div>
 		</div>
 		<div class="col-md-6 mb-3">
-            <label class="form-label" for="ndCategories">Categorías</label>
-            <select class="form-select" id="ndCategories" name="ndCategories" multiple required>
-                ${categories.map(category => `<option value="${category}">${category}</option>`).join('')}
-            </select>
-            <div class="invalid-feedback">Seleccione al menos una categoría.</div>
-            <div class="valid-feedback">Correcto.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label" for="ndAllergens">Alergenos</label>
-            <select class="form-select" id="ndAllergens" name="ndAllergens" multiple required>
-                ${allergens.map(allergen => `<option value="${allergen}">${allergen}</option>`).join('')}
-            </select>
-            <div class="invalid-feedback">Seleccione al menos un alergeno.</div>
-            <div class="valid-feedback">Correcto.</div>
-        </div>
+      <label class="form-label" for="ndCategories">Categorías</label>
+      <select class="form-select" id="ndCategories" name="ndCategories" multiple required>
+      </select>
+      <div class="invalid-feedback">Seleccione al menos una categoría.</div>
+	  <div class="valid-feedback">Correcto.</div>
+	  </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label" for="ndAllergens">Alergenos</label>
+      <select class="form-select" id="ndAllergens" name="ndAllergens" multiple required>
+      </select>
+      <div class="invalid-feedback">Seleccione al menos un alergeno.</div>
+	  <div class="valid-feedback">Correcto.</div>
+    </div>
+		
+		`,
+		);
+		const ndCategories = form.querySelector('#ndCategories');
+		for (const category of categories) {
+			ndCategories.insertAdjacentHTML('beforeend', `<option value="${category.name}">${category.name}</option>`);
+		  }
+		  const npAllergens = form.querySelector('#ndAllergens');
+		  for (const allergen of allergens) {
+			  npAllergens.insertAdjacentHTML('beforeend', `<option value="${allergen.name}">${allergen.name}</option>`);
+		  }
+
+		  form.insertAdjacentHTML(
+			'beforeend',
+			`
 		<div class="mb-12">
 		<button class="btn btn-primary" type="submit">Enviar</button>
 		<button class="btn btn-primary" type="reset">Cancelar</button>
 		</div>
 		</form>`,
+	 );
+	 container.append(form);
 
-		);
 		this.main.append(container);
 	}
 
@@ -162,6 +175,51 @@ value="" required></textarea>
 		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
 		once: true });
 	}
+
+	showRemoveDishForm() {
+		this.main.replaceChildren();
+		  const container = document.createElement('div');
+		  container.classList.add('container');
+		  container.classList.add('my-3');
+		  container.id = 'remove-product';
+	
+		container.insertAdjacentHTML(
+		  'afterbegin',
+		  '<h1 class="display-5">Eliminar un producto</h1>',
+		);
+	
+		const form = document.createElement('form');
+		form.name = 'fRemoveDish';
+		form.setAttribute('role', 'form');
+		form.setAttribute('novalidate', '');
+		form.classList.add('row');
+		form.classList.add('g-3');
+	
+		form.insertAdjacentHTML(
+		  'beforeend',
+		  `<div class="col-md-6 mb-3">
+					<label class="form-label" for="rpType">Platos:</label>
+					<div class="input-group">
+						<label class="input-group-text" for="rpType"><i class="bi bi-card-checklist"></i></label>
+						<select class="form-select" name="rpType" id="rpType">
+							<option disabled selected>Selecciona un tipo...</option>
+							<option value="Camera">Cámara</option>
+							<option value="Laptop">Portátil</option>
+							<option value="Tablet">Tablet</option>
+							<option value="Smartphone">Teléfono</option>
+						</select>
+					</div>
+				</div>`,
+		);
+	
+		container.append(form);
+		container.insertAdjacentHTML(
+		  'beforeend',
+		  '<div id="product-list" class="container my-3"><div class="row"></div></div>',
+		);
+	
+		  this.main.append(container);
+	  }
 
 
 

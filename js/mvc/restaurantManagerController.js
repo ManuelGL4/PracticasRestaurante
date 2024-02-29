@@ -222,10 +222,19 @@ class RestaurantManagerController {
     }
 
     handleNewDishForm = () => {
+        const manager = RestaurantsManager.getInstance();
         console.log("HAS SELECCIONADO EL FORMULARIO DE NUEVO PLATO");
-        this[VIEW].showNewDishForm();
+        const categories = [...manager.getCategories()]; // Obtener las categorías
+        const allergens = [...manager.getAllergens()]; // Obtener los alérgenos
+        console.log(categories);
+        console.log(allergens);
+        this[VIEW].showNewDishForm(categories, allergens); // Pasar los datos a showNewDishForm
         this[VIEW].bindNewDishForm(this.handleCreateDish);
     };
+    
+    handleRemoveDishForm = () => {
+		this[VIEW].showRemoveDishForm();
+	}
 
 
     closeAllOpenedWindows() {
