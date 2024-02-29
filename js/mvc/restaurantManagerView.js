@@ -176,7 +176,7 @@ value="" required></textarea>
 		once: true });
 	}
 
-	showRemoveDishForm() {
+	showRemoveDishForm(dish) {
 		this.main.replaceChildren();
 		  const container = document.createElement('div');
 		  container.classList.add('container');
