@@ -1,4 +1,4 @@
-import { newDishValidation } from '../clases/validation.js';
+import { newDishValidation, deleteDishValidator, newCategoryValidation } from '../clases/validation.js';
 import {
 	RestaurantsManager
 } from '../clases/resturantManager.js';
@@ -26,23 +26,21 @@ class RestaurantManagerView {
 		suboptions.classList.add('dropdown-menu');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewDish" class="dropdown-item" href="#new-category">Crear Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelDish" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Asignar Menú</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewCategory" class="dropdown-item" href="#new-category">Desasignar Menú</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Añadir Categorias</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Eliminar Categorias</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lassignMenu" class="dropdown-item" href="#new-product">Asignar-Desasignar Menú</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Crear-Eliminar Categorias</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>');
 		menuOption.append(suboptions);
 		const menu = document.querySelector('.menu');
 		menu.appendChild(menuOption);
 	}
 
-	showNewDishForm(categories,allergens) {
-		console.log(categories,allergens);
+	showNewDishForm(categories, allergens) {
+		console.log(categories, allergens);
 		const container = document.createElement('div');
 		container.insertAdjacentHTML(
 			'afterbegin',
 			'<h1 class="display-5">Nuevo Plato</h1>',
-		  );
+		);
 		this.main.replaceChildren();
 		const form = document.createElement('form');
 		form.name = 'fNewDish';
@@ -50,7 +48,7 @@ class RestaurantManagerView {
 		form.setAttribute('novalidate', '');
 		form.classList.add('row');
 		form.classList.add('g-3');
-		//name B, description = '' B, ingredients = [], image = '' B,categories B,alergens B
+		//name B, description = '' B, ingredients = '', image = '' B,categories B,alergens B
 		form.insertAdjacentHTML(
 			'beforeend',
 			`
@@ -117,13 +115,13 @@ value="" required></textarea>
 		const ndCategories = form.querySelector('#ndCategories');
 		for (const category of categories) {
 			ndCategories.insertAdjacentHTML('beforeend', `<option value="${category.name}">${category.name}</option>`);
-		  }
-		  const npAllergens = form.querySelector('#ndAllergens');
-		  for (const allergen of allergens) {
-			  npAllergens.insertAdjacentHTML('beforeend', `<option value="${allergen.name}">${allergen.name}</option>`);
-		  }
+		}
+		const npAllergens = form.querySelector('#ndAllergens');
+		for (const allergen of allergens) {
+			npAllergens.insertAdjacentHTML('beforeend', `<option value="${allergen.name}">${allergen.name}</option>`);
+		}
 
-		  form.insertAdjacentHTML(
+		form.insertAdjacentHTML(
 			'beforeend',
 			`
 		<div class="mb-12">
@@ -131,13 +129,13 @@ value="" required></textarea>
 		<button class="btn btn-primary" type="reset">Cancelar</button>
 		</div>
 		</form>`,
-	 );
-	 container.append(form);
+		);
+		container.append(form);
 
 		this.main.append(container);
 	}
 
-	bindAdminMenu(hNewDish,hRemoveDish) {
+	bindAdminMenu(hNewDish, hRemoveDish, hAssignMenuDish, hCDCategory) {
 		const newCategoryLink = document.getElementById('lnewDish');
 		newCategoryLink.addEventListener('click', (event) => {
 			hNewDish();
@@ -146,11 +144,26 @@ value="" required></textarea>
 		removeDishLink.addEventListener('click', (event) => {
 			hRemoveDish();
 		});
+		const assignMenuLink = document.getElementById('lassignMenu');
+		assignMenuLink.addEventListener('click', (event) => {
+			hAssignMenuDish();
+		});
+		const categoryCDMenuLink = document.getElementById('ldelCategory');
+		categoryCDMenuLink.addEventListener('click', (event) => {
+			hCDCategory();
+		});
 	}
 
 
 	bindNewDishForm(handler) {
 		newDishValidation(handler);
+	}
+	bindRemoveDishForm(handler) {
+		deleteDishValidator(handler);
+	}
+
+	bindNewCategoryForm(handler) {
+		newCategoryValidation(handler);
 	}
 
 	showNewDishModal(done, dish, error) {
@@ -161,47 +174,47 @@ value="" required></textarea>
 		const body = messageModalContainer.querySelector('.modal-body');
 		body.replaceChildren();
 		if (done) {
-		body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato
-		<strong>${dish.name}</strong> ha sido creado correctamente.</div>`);
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dish.name}</strong> ha sido creado correctamente.</div>`);
 		} else {
-		body.insertAdjacentHTML(
-		'afterbegin',
-		`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${dish.name}</strong> ya estaba creado.</div>`,
-		);
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${dish.name}</strong> ya estaba creado. <strong>${error}</strong></div>`,
+			);
 		}
 		messageModal.show();
 		const listener = (event) => {
-		if (done) {
-		document.fNewDish.reset();
-		}
-		document.fNewDish.ncTitle.focus();
+			if (done) {
+				document.fNewDish.reset();
+			}
+			document.fNewDish.ncTitle.focus();
 		};
 		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
-		once: true });
+			once: true
+		});
 	}
 
 	showRemoveDishForm(dishes) {
 		this.main.replaceChildren();
-		  const container = document.createElement('div');
-		  container.classList.add('container');
-		  container.classList.add('my-3');
-		  container.id = 'remove-product';
-	
+		const container = document.createElement('div');
+		container.classList.add('container');
+		container.classList.add('my-3');
+		container.id = 'remove-product';
+
 		container.insertAdjacentHTML(
-		  'afterbegin',
-		  '<h1 class="display-5">Eliminar un producto</h1>',
+			'afterbegin',
+			'<h1 class="display-5">Eliminar un Plato</h1>',
 		);
-			console.log(dishes);
+		console.log(dishes);
 		const form = document.createElement('form');
 		form.name = 'fRemoveDish';
 		form.setAttribute('role', 'form');
 		form.setAttribute('novalidate', '');
 		form.classList.add('row');
 		form.classList.add('g-3');
-	
+
 		form.insertAdjacentHTML(
-		  'beforeend',
-		  `<div class="col-md-6 mb-3">
+			'beforeend',
+			`<div class="col-md-12 mb-4">
 					<label class="form-label" for="rdDish">Platos:</label>
 					<select class="form-select" id="rdDish" name="rdDish" multiple required>
 					</select>
@@ -210,12 +223,12 @@ value="" required></textarea>
 				  </div>
 					  </div>
 					  `,
-					  );
-					  const rdDish = form.querySelector('#rdDish');
-					  for (const dish of dishes) {
-						rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.dish.name}">${dish.dish.name}</option>`);
-						}
-	
+		);
+		const rdDish = form.querySelector('#rdDish');
+		for (const dish of dishes) {
+			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.dish.name}">${dish.dish.name}</option>`);
+		}
+
 
 		form.insertAdjacentHTML(
 			'beforeend',
@@ -224,12 +237,160 @@ value="" required></textarea>
 		<button class="btn btn-primary" type="submit">Eliminar</button>
 		</div>
 		</form>`,
-	 );
-	 container.append(form);
-		  this.main.append(container);
-	  }
+		);
+		container.append(form);
+		this.main.append(container);
+	}
 
 
+	showAssignMenuToDish(menus, dishes) {
+		this.main.replaceChildren();
+		const container = document.createElement('div');
+		container.classList.add('container');
+		container.classList.add('my-3');
+		container.id = 'remove-product';
+
+		container.insertAdjacentHTML(
+			'afterbegin',
+			'<h1 class="display-5">Asignar un menu a un plato</h1>',
+		);
+		console.log(dishes);
+		const form = document.createElement('form');
+		form.name = 'fAssignMenu';
+		form.setAttribute('role', 'form');
+		form.setAttribute('novalidate', '');
+		form.classList.add('row');
+		form.classList.add('g-3');
+
+		form.insertAdjacentHTML(
+			'beforeend',
+			`<div class="col-md-6 mb-3">
+					<label class="form-label" for="rdDish">Seleccione un plato:</label>
+					<select class="form-select" id="rdDish" name="rdDish" required>
+					</select>
+					<div class="invalid-feedback">Seleccione un plato.</div>
+					<div class="valid-feedback">Correcto.</div>
+				  </div>
+					  </div>
+					  `,
+		);
+		const rdDish = form.querySelector('#rdDish');
+		for (const dish of dishes) {
+			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.dish.name}</option>`);
+		}
+		form.insertAdjacentHTML(
+			'beforeend',
+			`<div class="col-md-6 mb-3">
+					<label class="form-label" for="rdMenu">Seleccione los menus a los que lo quiere asignar:</label>
+					<select class="form-select" id="rdMenu" name="rdMenu" multiple required>
+					</select>
+					<div class="invalid-feedback">Seleccione al menos un menu.</div>
+					<div class="valid-feedback">Correcto.</div>
+				  </div>
+					  </div>
+					  `,
+		);
+		const rdMenu = form.querySelector('#rdMenu');
+		for (const menu of menus) {
+			rdMenu.insertAdjacentHTML('beforeend', `<option value="${menu.menu.name}">${menu.menu.name}</option>`);
+		}
+
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="mb-12">
+		<button class="btn btn-primary" type="submit">Asignar</button>
+		</div>
+		</form>`,
+		);
+		// FALTA EL ORDENAR LOS PLATOS
+		container.append(form);
+		this.main.append(container);
+	}
+
+	showCategoryForm() {
+		const container = document.createElement('div');
+		container.insertAdjacentHTML(
+			'afterbegin',
+			'<h1 class="display-5">Nueva Categoria</h1>',
+		);
+		this.main.replaceChildren();
+		const form = document.createElement('form');
+		form.name = 'fNewCategory';
+		form.setAttribute('role', 'form');
+		form.setAttribute('novalidate', '');
+		form.classList.add('row');
+		form.classList.add('g-3');
+		//name,description
+
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="col-md-6 mb-3">
+		<label class="form-label" for="ncName">Nombre de la categoria</label>
+		<div class="input-group">
+		<span class="input-group-text"><i class="bi bi-type"></i></span>
+		<input type="text" class="form-control" id="ncName"
+		name="ncName"
+		placeholder="Nombre del plato" value="" required>
+		<div class="invalid-feedback">El nombre de la categoria es obligatorio.</div>
+		<div class="valid-feedback">Correcto.</div>
+		</div>
+		</div>
+		<div class="col-md-6 mb-3">
+		<label class="form-label" for="ncDescription">Descripción de la categoria</label>
+		<div class="input-group">
+		<span class="input-group-text"><i class="bi bi-bodytext"></i></span>
+		<input type="text" class="form-control" id="ncDescription"
+		name="ncDescription" value="">
+		<div class="invalid-feedback"></div>
+		<div class="valid-feedback">Correcto.</div>
+		</div>
+		</div>
+		`,
+		);
+
+
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="mb-12">
+		<button class="btn btn-primary" type="submit">Añadir Categoria</button>
+		<button class="btn btn-primary" type="reset">Cancelar</button>
+		</div>
+		</form>`,
+		);
+		container.append(form);
+
+		this.main.append(container);
+	}
+
+	showNewCategoryModal(done, cat, error) {
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Nueva Categoria';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">La categoria <strong>${cat.name}</strong> ha sido creada correctamente.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> La categoria <strong>${cat.name}</strong> ya estaba creada.</div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				document.fNewCategory.reset();
+			}
+			document.fNewCategory.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+	}
 
 
 	showDishesInCentralZone(dishesInCategory) {

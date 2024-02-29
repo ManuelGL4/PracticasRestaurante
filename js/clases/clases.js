@@ -1,5 +1,5 @@
 class Dish {
-  constructor(name, description = '', ingredients = [], image = '') {
+  constructor(name, description, ingredients, image = '') {
     this.name = name;
     this.description = description;
     this.ingredients = ingredients;
@@ -39,7 +39,7 @@ class Dish {
   }
 
   toString() {
-    return `Dish: ${this.name}, Description: ${this.description}, Ingredients: [${this.ingredients.join(', ')}], Image: ${this.image}`;
+    return `Dish: ${this.name}, Description: ${this.description}, Ingredients: ${this.ingredients}, Image: ${this.image}`;
   }
 }
 
@@ -47,7 +47,6 @@ class Category {
   constructor(name, description = '') {
     this.name = name;
     this.description = description;
-    this.dishes = [];
   }
 
   getName() {

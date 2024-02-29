@@ -17,7 +17,7 @@ class RestaurantManagerController {
     onLoad = () => {
         this.initApp();
         this[VIEW].showAdminMenu();
-        this[VIEW].bindAdminMenu(this.handleNewDishForm,this.handleRemoveDishForm);
+        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenu, this.handleCDCategory);
 
     }
 
@@ -227,15 +227,106 @@ class RestaurantManagerController {
         this[VIEW].showNewDishForm(manager.getCategories(), manager.getAllergens());
         this[VIEW].bindNewDishForm(this.handleCreateDish);
     };
-    
+
     handleRemoveDishForm = () => {
         const manager = RestaurantsManager.getInstance();
         const dishesIterator = manager.getDishes();
         const dishesArray = Array.from(dishesIterator);//Convertir a array pq si no da undifined y no se pq
         console.log(dishesArray);
-    
+
         this[VIEW].showRemoveDishForm(dishesArray);
-	}
+        this[VIEW].bindRemoveDishForm(this.handleRemoveDish);
+    }
+
+    handleAssignDishToMenu = () => {
+        const manager = RestaurantsManager.getInstance();
+        const menusIterator = manager.getMenus();
+        const menusArray = Array.from(menusIterator);//Convertir a array pq si no da undifined y no se pq
+        this[VIEW].showAssignMenuToDish(menusArray, manager.getDishes());
+    }
+
+    handleCDCategory = () => {
+        this[VIEW].showCategoryForm();
+        this[VIEW].bindNewCategoryForm(this.handleCreateCategory);
+    }
+
+    handleCreateCategory(name, description) {
+        const cat = new Category(name, description);
+        console.log(cat);
+        const manager = RestaurantsManager.getInstance();
+
+        let done;
+        let error;
+        try {
+            const success = manager.addCategory(cat);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+
+        this[VIEW].showNewCategoryModal(done, cat, error);
+    }
+
+
+
+
+    handleRemoveDish = (name, description, ingredients, image, categories, allergens) => {
+        const manager = RestaurantsManager.getInstance();
+        const dish = new Dish(name, description, ingredients, image);
+        console.log("-------------------EL PLATO QUE SE VA A BORRAR ES--------------");
+        console.log(dish);
+        let done;
+        let error;
+        try {
+            const success = manager.removeDish(dish);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+
+        this[VIEW].showRemovedDishModal(done, dish, error);
+    };
+
+
+    handleCreateDish = (name, description, ingredients, image, categories, allergens) => {
+        const dish = new Dish(name, description, ingredients, image);
+
+        console.log(dish);
+        const manager = RestaurantsManager.getInstance();
+
+        let done;
+        let error;
+        try {
+            const success = manager.addDish(dish);
+
+            // Asignar categorías al plato
+            for (const categoryName of categories) {
+                manager.assignCategoryToDish(categoryName, dish);
+            }
+
+            // Asignar alérgenos al plato
+            for (const allergenName of allergens) {
+                manager.assignAllergenToDish(allergenName, dish);
+            }
+
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+
+        this[VIEW].showNewDishModal(done, dish, error);
+    };
+
+
+
+
+
+
+
+
 
 
     closeAllOpenedWindows() {
@@ -264,26 +355,6 @@ class RestaurantManagerController {
             }
         }
     }
-
-
-    handleCreateDish = (name, description, ingredients, image, categories, allergens) => {
-        const dish = new Dish(name, description, ingredients, image, categories, allergens);
-        console.log(dish);
-        const manager = RestaurantsManager.getInstance();
-
-        let done;
-        let error;
-        try {
-            const success = manager.addDish(dish);
-            done = success ? true : false;
-        } catch (exception) {
-            done = false;
-            error = exception.message;
-        }
-    
-        this[VIEW].showNewDishModal(done, dish, error);
-    };
-
 
 }
 

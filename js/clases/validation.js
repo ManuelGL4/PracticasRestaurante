@@ -91,7 +91,78 @@ function newDishValidation(handler) {
         if (!isValid) {
             firstInvalidElement.focus();
         } else {
-            handler(this.ndDescription.value);
+            handler(this.ndName.value, this.ndDescription.value, this.ndIngredients.value, this.ndImg.value,this.ndCategories.value,this.ndAllergens.value);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    // Restablecer la validación al hacer reset
+    form.addEventListener('reset', function (event) {
+        for (const div of this.querySelectorAll('div.valid-feedback, div.invalid-feedback')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
+        for (const input of this.querySelectorAll('input, select, textarea')) {
+            input.classList.remove('is-valid');
+            input.classList.remove('is-invalid');
+        }
+        this.ndName.focus();
+    });
+
+    for (const element of form.querySelectorAll('input, select, textarea')) {
+        element.addEventListener('change', defaultCheckElement);
+    }
+}
+
+function deleteDishValidator(handler) {
+    const form = document.forms.fRemoveDish;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+
+        const selectedDishes = form.rdDish.selectedOptions;
+        if (selectedDishes.length === 0) {
+            isValid = false;
+            showFeedBack(form.rdDish, false, "Seleccione al menos un plato.");
+        } else {
+            showFeedBack(form.rdDish, true, "Correcto.");
+        }
+        if (isValid) {
+            handler();
+        } else {
+            //console.log(this.ndName.value, this.ndDescription.value, this.ndIngredients.value, this.ndImg.value);
+            handler(this.ndName.value, this.ndDescription.value, this.ndIngredients.value, this.ndImg.value);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+    });
+}
+
+
+
+function newCategoryValidation(handler) {
+    const form = document.forms.fNewCategory;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+        let firstInvalidElement = null;
+
+        // Validación del nombre del plato
+        this.ncName.value = this.ncName.value.trim();
+        if (!this.ncName.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.ncName, false, "El nombre de la categoria es obligatorio.");
+            if (!firstInvalidElement) firstInvalidElement = this.ncName;
+        } else {
+            showFeedBack(this.ncName, true, "Correcto.");
+        }
+
+        if (!isValid) {
+            firstInvalidElement.focus();
+        } else {
+            handler(this.ncDescription.value);
         }
 
         event.preventDefault();
@@ -107,7 +178,7 @@ function newDishValidation(handler) {
             input.classList.remove('is-valid');
             input.classList.remove('is-invalid');
         }
-        this.ndName.focus();
+        this.ncName.focus();
     });
 
     for (const input of form.querySelectorAll('input, textarea, select')) {
@@ -115,4 +186,4 @@ function newDishValidation(handler) {
     }
 }
 
-export { newDishValidation };
+export { newDishValidation, deleteDishValidator, newCategoryValidation };
