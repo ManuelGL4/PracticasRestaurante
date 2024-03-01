@@ -271,10 +271,18 @@ function newCategoryValidation(handler) {
             showFeedBack(this.ncName, true, "Correcto.");
         }
 
+        if (!this.ncDescription.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.ncDescription, false, "La descripcion de la categoria es obligatoria.");
+            if (!firstInvalidElement) firstInvalidElement = this.ncDescription;
+        } else {
+            showFeedBack(this.ncDescription, true, "Correcto.");
+        }
+        
         if (!isValid) {
             firstInvalidElement.focus();
         } else {
-            handler(this.ncDescription.value);
+            handler(this.ncName.value,this.ncDescription.value);
         }
 
         event.preventDefault();

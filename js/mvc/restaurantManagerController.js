@@ -258,6 +258,7 @@ class RestaurantManagerController {
 
     handleCreateCategory(name, description) {
         const cat = new Category(name, description);
+        console.log(name + description);
         console.log(cat);
         const manager = RestaurantsManager.getInstance();
 
@@ -270,8 +271,8 @@ class RestaurantManagerController {
             done = false;
             error = exception.message;
         }
-
-        this[VIEW].showNewCategoryModal(done, cat, error);
+        console.log(done);
+//        this[VIEW].showNewCategoryModal(done); MIRAR PORQUE NO VA ESTO SI SE DESCOMENTA
     }
 
     handleAssignDishToMenu = (dishName, selectedMenuName) => {

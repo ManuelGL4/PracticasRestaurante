@@ -482,7 +482,7 @@ value="" required></textarea>
 		<span class="input-group-text"><i class="bi bi-type"></i></span>
 		<input type="text" class="form-control" id="ncName"
 		name="ncName"
-		placeholder="Nombre del plato" value="" required>
+		placeholder="Nombre de la categoria" value="" required>
 		<div class="invalid-feedback">El nombre de la categoria es obligatorio.</div>
 		<div class="valid-feedback">Correcto.</div>
 		</div>
@@ -515,32 +515,39 @@ value="" required></textarea>
 		this.main.append(container);
 	}
 
-	showNewCategoryModal(done, cat, error) {
+	showNewCategoryModal(done){
 		const messageModalContainer = document.getElementById('messageModal');
 		const messageModal = new bootstrap.Modal('#messageModal');
 		const title = document.getElementById('messageModalTitle');
-		title.innerHTML = 'Nueva Categoria';
+		title.innerHTML = 'Crear categoria';
 		const body = messageModalContainer.querySelector('.modal-body');
 		body.replaceChildren();
 		if (done) {
-			body.insertAdjacentHTML('afterbegin', `<div class="p-3">La categoria <strong>${cat.name}</strong> ha sido creada correctamente.</div>`);
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">Categoria añadida correctamente.</div>`);
 		} else {
 			body.insertAdjacentHTML(
 				'afterbegin',
-				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> La categoria <strong>${cat.name}</strong> ya estaba creada.</div>`,
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i>La categoria no se ha podido crear.Revise si ya existe.</div>`,
 			);
 		}
 		messageModal.show();
 		const listener = (event) => {
 			if (done) {
-				document.fNewCategory.reset();
+				const form = document.forms['fNewCategory'];
+				if (form) {
+					form.reset();
+				}
 			}
-			document.fNewCategory.ncTitle.focus();
+			const inputName = document.getElementById('ncName');
+			if (inputName) {
+				inputName.focus();
+			}
 		};
 		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
 			once: true
 		});
 	}
+	
 
 
 	showDishesInCentralZone(dishesInCategory) {
