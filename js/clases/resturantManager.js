@@ -267,24 +267,18 @@ const RestaurantsManager = (function () {
       //Metodo removeDish
       removeDish(...dishesToRemove) {
         for (const dishToRemove of dishesToRemove) {
-            if (!dishToRemove || !(dishToRemove instanceof Dish) || !this.#dishes.includes(dishToRemove)) {
+            if (!dishToRemove || !(dishToRemove instanceof Dish) || !this.#dishes.some(d => d.dish === dishToRemove)) {
                 throw new Error('El plato no está registrado.');
             }
     
-            // Desasignar el plato de todos los menús
-            this.#menus.forEach(menu => {
-                const index = menu.dishes.findIndex(d => d.dish.name === dishToRemove.name);
-                if (index !== -1) {
-                    this.deassignDishToMenu(menu.menu, menu.dishes[index].dish);
-                }
-            });
-    
             // Eliminar el plato de la lista de platos
-            const index = this.#dishes.findIndex(d => d.name === dishToRemove.name);
+            const index = this.#dishes.findIndex(d => d.dish === dishToRemove);
             this.#dishes.splice(index, 1);
         }
         return this;
     }
+    
+    
     
 
     //Metodo addRestaurant
@@ -691,15 +685,26 @@ removeDishByName(...dishNames) {
   }
   return this;
 }
-    getDishByName(name) {    
-      const dish = this.#dishes.find(d => d.name === name);
-    
-      if (!dish) {
-        throw new Error(`No existe un plato con el nombre "${name}".`);
-      }
-    
-      return dish;
-    }
+getDishByName(name) {    
+  const dishObject = this.#dishes.find(d => d.dish.getName() === name);
+
+  if (!dishObject) {
+    throw new Error(`No existe un plato con el nombre "${name}".`);
+  }
+
+  return dishObject.dish;
+}
+
+getMenuByName(name) {
+  const menuObject = this.#menus.find(menu => menu.menu.getName() === name);
+
+  if (!menuObject) {
+    throw new Error(`No existe un menú con el nombre "${name}".`);
+  }
+
+  return menuObject.menu;
+}
+
 
   }
 

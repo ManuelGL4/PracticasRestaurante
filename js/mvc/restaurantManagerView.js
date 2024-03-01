@@ -1,4 +1,4 @@
-import { newDishValidation, deleteDishValidator, newCategoryValidation } from '../clases/validation.js';
+import { newDishValidation, deleteDishValidator,assignDTMValidation, newCategoryValidation } from '../clases/validation.js';
 import {
 	RestaurantsManager
 } from '../clases/resturantManager.js';
@@ -27,7 +27,8 @@ class RestaurantManagerView {
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewDish" class="dropdown-item" href="#new-category">Crear Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelDish" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lassignMenu" class="dropdown-item" href="#new-product">Asignar-Desasignar Menú</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Crear-Eliminar Categorias</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Crear-Eliminar Categorias</a></li>')
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Crear Restaurante</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>');
 		menuOption.append(suboptions);
 		const menu = document.querySelector('.menu');
@@ -166,6 +167,10 @@ value="" required></textarea>
 		newCategoryValidation(handler);
 	}
 
+	bindAssignDishToMenu(handler){
+		assignDTMValidation(handler);
+	}
+
 	showNewDishModal(done, dish, error) {
 		const messageModalContainer = document.getElementById('messageModal');
 		const messageModal = new bootstrap.Modal('#messageModal');
@@ -214,20 +219,21 @@ value="" required></textarea>
 	
 		form.insertAdjacentHTML(
 			'beforeend',
-			`<div class="col-md-12 mb-4">
-					<label class="form-label" for="rdDish">Platos:</label>
-					<select class="form-select" id="rdDish" name="rdDish" multiple required>
+			`<div class="col-md-6 mb-3">
+					<label class="form-label" for="rdDish">Seleccione un plato:</label>
+					<select class="form-select" id="rdDish" name="rdDish" required>
 					</select>
-					<div class="invalid-feedback">Seleccione al menos un plato.</div>
+					<div class="invalid-feedback">Seleccione un plato.</div>
 					<div class="valid-feedback">Correcto.</div>
-				</div>
-				`,
+				  </div>
+					  </div>
+					  `,
 		);
-	
 		const rdDish = form.querySelector('#rdDish');
-		for (const dish of dishes) {
-			const actualDish = dish.dish;
-			rdDish.insertAdjacentHTML('beforeend', `<option value="${actualDish.name}">${actualDish.name}</option>`);
+		for (const dishObj of dishes) {
+			const dish = dishObj.dish;
+			console.log(dish);
+			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.name}</option>`);
 		}
 	
 		form.insertAdjacentHTML(
@@ -251,7 +257,7 @@ value="" required></textarea>
 		const body = messageModalContainer.querySelector('.modal-body');
 		body.replaceChildren();
 		if (done) {
-			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dish.name}</strong> ha sido borrado de la coleccion correctamente.</div>`);
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dish}</strong> ha sido borrado de la coleccion correctamente.</div>`);
 		} else {
 			body.insertAdjacentHTML(
 				'afterbegin',
@@ -286,8 +292,8 @@ value="" required></textarea>
 		form.insertAdjacentHTML(
 			'beforeend',
 			`<div class="col-md-6 mb-3">
-					<label class="form-label" for="rdDish">Seleccione un plato:</label>
-					<select class="form-select" id="rdDish" name="rdDish" required>
+					<label class="form-label" for="amdD">Seleccione un plato:</label>
+					<select class="form-select" id="amdD" name="amdD" required>
 					</select>
 					<div class="invalid-feedback">Seleccione un plato.</div>
 					<div class="valid-feedback">Correcto.</div>
@@ -295,19 +301,19 @@ value="" required></textarea>
 					  </div>
 					  `,
 		);
-		const rdDish = form.querySelector('#rdDish');
+		const amdD = form.querySelector('#amdD');
 		for (const dishObj of dishes) {
 			const dish = dishObj.dish;
 			console.log(dish);
-			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.name}</option>`);
+			amdD.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.name}</option>`);
 		}
 		
 		
 		form.insertAdjacentHTML(
 			'beforeend',
 			`<div class="col-md-6 mb-3">
-					<label class="form-label" for="rdMenu">Seleccione los menus a los que lo quiere asignar:</label>
-					<select class="form-select" id="rdMenu" name="rdMenu" multiple required>
+					<label class="form-label" for="rdMenu">Seleccione el menu al que quiere asignarlo:</label>
+					<select class="form-select" id="rdMenu" name="rdMenu" required>
 					</select>
 					<div class="invalid-feedback">Seleccione al menos un menu.</div>
 					<div class="valid-feedback">Correcto.</div>
@@ -316,8 +322,10 @@ value="" required></textarea>
 					  `,
 		);
 		const rdMenu = form.querySelector('#rdMenu');
-		for (const menu of menus) {
-			rdMenu.insertAdjacentHTML('beforeend', `<option value="${menu.menu.name}">${menu.menu.name}</option>`);
+		for (const menuObj of menus) {
+			const menu = menuObj.menu;
+			console.log(menu);
+			rdMenu.insertAdjacentHTML('beforeend', `<option value="${menu.name}">${menu.name}</option>`);
 		}
 
 		form.insertAdjacentHTML(
@@ -331,6 +339,33 @@ value="" required></textarea>
 		// FALTA EL ORDENAR LOS PLATOS
 		container.append(form);
 		this.main.append(container);
+	}
+
+	showAssignMenuToDishModal(done, error){
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Asignar menu a plato';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato ha sido añadido.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato no se ha podido añadir. <strong>${error}</strong></div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				document.fNewDish.reset();
+			}
+			document.fNewDish.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
 	}
 
 	showCategoryForm() {

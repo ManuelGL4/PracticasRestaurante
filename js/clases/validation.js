@@ -1,3 +1,4 @@
+import { RestaurantsManager } from "./resturantManager.js";
 function showFeedBack(input, valid, message) {
     const validClass = (valid) ? 'is-valid' : 'is-invalid';
     const messageDiv = (valid) ?
@@ -120,32 +121,84 @@ function deleteDishValidator(handler) {
     const form = document.forms.fRemoveDish;
     form.setAttribute('novalidate', true);
     form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
 
-        const selectedDishes = form.rdDish.selectedOptions;
-        if (selectedDishes.length === 0) {
-            showFeedBack(form.rdDish, false, "Seleccione al menos un plato.");
-            return;
+        let isValid = true;
+        let firstInvalidElement = null;
+        if (!this.rdDish.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.rdDish, false, "Seleccione un plato.");
+            if (!firstInvalidElement) firstInvalidElement = this.rdDish;
+        } else {
+            showFeedBack(this.rdDish, true, "Correcto.");
         }
 
-        // Obtener el nombre del plato seleccionado
-        const dishName = selectedDishes[0].value;
-
-        // Ejecutar el handler y obtener el nombre del plato eliminado
-        const deletedDishName = handler(dishName.dish);
-
-        // Mostrar la retroalimentación basada en si se eliminó el plato o no
-        if (deletedDishName) {
-            showFeedBack(form.rdDish, true, "Plato eliminado correctamente: " + deletedDishName);
+        if (!isValid) {
+            if (firstInvalidElement) {
+                firstInvalidElement.focus();
+            }
         } else {
-            showFeedBack(form.rdDish, false, "Error al eliminar el plato.");
+            const dishName = this.rdDish.value;
+            console.log(dishName);
+            handler(dishName);
         }
 
         event.stopPropagation();
         event.preventDefault();
     });
 }
+function assignDTMValidation(handler) {
+    const form = document.forms.fAssignMenu;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+        let firstInvalidElement = null;
+
+        if (!this.amdD.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.amdD, false, "Seleccione un plato.");
+            if (!firstInvalidElement) firstInvalidElement = this.amdD;
+        } else {
+            showFeedBack(this.amdD, true, "Correcto.");
+        }
+
+        if (!this.rdMenu.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.rdMenu, false, "Seleccione un menú.");
+            if (!firstInvalidElement) firstInvalidElement = this.rdMenu;
+        } else {
+            showFeedBack(this.rdMenu, true, "Correcto.");
+        }
+        
+
+        if (!isValid) {
+            if (firstInvalidElement) {
+                firstInvalidElement.focus();
+            }
+        } else {
+            const menuName=this.rdMenu.value;
+            const dishName = this.amdD.value;
+            console.log(dishName);
+            handler(dishName, menuName);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    // Restablecer la validación al hacer reset
+    form.addEventListener('reset', function (event) {
+        for (const div of this.querySelectorAll('div.valid-feedback, div.invalid-feedback')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
+        for (const input of this.querySelectorAll('input, select, textarea')) {
+            input.classList.remove('is-valid');
+            input.classList.remove('is-invalid');
+        }
+        this.amdD.focus();
+    });
+}
+
 
 
 
@@ -194,4 +247,4 @@ function newCategoryValidation(handler) {
     }
 }
 
-export { newDishValidation, deleteDishValidator, newCategoryValidation };
+export { newDishValidation, deleteDishValidator,assignDTMValidation, newCategoryValidation };

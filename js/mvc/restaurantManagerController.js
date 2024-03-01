@@ -17,7 +17,7 @@ class RestaurantManagerController {
     onLoad = () => {
         this.initApp();
         this[VIEW].showAdminMenu();
-        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenu, this.handleCDCategory);
+        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenuForm, this.handleCDCategory);
 
     }
 
@@ -240,11 +240,12 @@ class RestaurantManagerController {
     }
     
 
-    handleAssignDishToMenu = () => {
+    handleAssignDishToMenuForm = () => {
         const manager = RestaurantsManager.getInstance();
         const menusIterator = manager.menus;
         const dishesIterator = manager.dishes;
         this[VIEW].showAssignMenuToDish(menusIterator, dishesIterator);
+        this[VIEW].bindAssignDishToMenu(this.handleAssignDishToMenu);
     }
     
 
@@ -271,25 +272,58 @@ class RestaurantManagerController {
         this[VIEW].showNewCategoryModal(done, cat, error);
     }
 
+    handleAssignDishToMenu = (dishName, selectedMenuName) => {
+        const manager = RestaurantsManager.getInstance();
+        console.log("-------------------ASIGNACIÓN DE PLATO A MENÚ--------------");
+        let done;
+        let error;
+        let dish;
+        let menu;
+    
+        try {
+            dish = manager.getDishByName(dishName);
+            menu = manager.getMenuByName(selectedMenuName);
+            console.log("Plato seleccionado:", dish +" Menu seleccionado: ",menu);
+            console.log(`Asignar plato '${dishName}' al menú '${selectedMenuName}'`);
+            
+            const success = manager.assignDishToMenu(menu, dish);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+        this[VIEW].showAssignMenuToDishModal(done, error);
+        
+    };
+    
+    
 
 
 
     handleRemoveDish = (dishName) => {
         const manager = RestaurantsManager.getInstance();
         console.log("-------------------EL PLATO QUE SE VA A BORRAR ES--------------");
-        let dish=this[MODEL].getDishByName(dishName).dish;
-        console.log(this[MODEL].getDishByName(dishName).dish);
+        console.log(dishName);
         let done;
         let error;
+        let dish;
         try {
-            const success = this[MODEL].removeDishByName();
+            dish = manager.getDishByName(dishName);
+            console.log("Plato seleccionado:", dish);
+            const success = manager.removeDish(dish);
             done = success ? true : false;
         } catch (exception) {
             done = false;
             error = exception.message;
         }
-    
-        this[VIEW].showRemovedDishModal(done, dish, error);
+        //VOLVER A MOSTRAR EL FORMULARIO ACTUALIZADO
+        for (const dish of manager.getDishes()) {
+            console.log(dish);
+        }
+        const dishesIterator = manager.dishes;
+        console.log(dishesIterator);
+        this[VIEW].showRemoveDishForm(dishesIterator);
+        this[VIEW].bindRemoveDishForm(this.handleRemoveDish);
     };
     
 
