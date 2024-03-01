@@ -199,19 +199,19 @@ value="" required></textarea>
 		container.classList.add('container');
 		container.classList.add('my-3');
 		container.id = 'remove-product';
-
+	
 		container.insertAdjacentHTML(
 			'afterbegin',
 			'<h1 class="display-5">Eliminar un Plato</h1>',
 		);
-		console.log(dishes);
+	
 		const form = document.createElement('form');
 		form.name = 'fRemoveDish';
 		form.setAttribute('role', 'form');
 		form.setAttribute('novalidate', '');
 		form.classList.add('row');
 		form.classList.add('g-3');
-
+	
 		form.insertAdjacentHTML(
 			'beforeend',
 			`<div class="col-md-12 mb-4">
@@ -220,28 +220,49 @@ value="" required></textarea>
 					</select>
 					<div class="invalid-feedback">Seleccione al menos un plato.</div>
 					<div class="valid-feedback">Correcto.</div>
-				  </div>
-					  </div>
-					  `,
+				</div>
+				`,
 		);
+	
 		const rdDish = form.querySelector('#rdDish');
 		for (const dish of dishes) {
-			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.dish.name}">${dish.dish.name}</option>`);
+			const actualDish = dish.dish;
+			rdDish.insertAdjacentHTML('beforeend', `<option value="${actualDish.name}">${actualDish.name}</option>`);
 		}
-
-
+	
 		form.insertAdjacentHTML(
 			'beforeend',
 			`
-		<div class="mb-12">
-		<button class="btn btn-primary" type="submit">Eliminar</button>
-		</div>
-		</form>`,
+			<div class="mb-12">
+				<button class="btn btn-primary" type="submit">Eliminar</button>
+			</div>
+			</form>`,
 		);
 		container.append(form);
 		this.main.append(container);
 	}
-
+	
+	
+	showRemovedDishModal(done, dish, error){
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Eliminar Plato';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dish.name}</strong> ha sido borrado de la coleccion correctamente.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> Error: <strong>${error}</strong></div>`,
+			);
+		}
+		messageModal.show();
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+	}
 
 	showAssignMenuToDish(menus, dishes) {
 		this.main.replaceChildren();
@@ -275,9 +296,13 @@ value="" required></textarea>
 					  `,
 		);
 		const rdDish = form.querySelector('#rdDish');
-		for (const dish of dishes) {
-			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.dish.name}</option>`);
+		for (const dishObj of dishes) {
+			const dish = dishObj.dish;
+			console.log(dish);
+			rdDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.name}</option>`);
 		}
+		
+		
 		form.insertAdjacentHTML(
 			'beforeend',
 			`<div class="col-md-6 mb-3">

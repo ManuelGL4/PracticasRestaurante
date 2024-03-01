@@ -230,20 +230,23 @@ class RestaurantManagerController {
 
     handleRemoveDishForm = () => {
         const manager = RestaurantsManager.getInstance();
-        const dishesIterator = manager.getDishes();
-        const dishesArray = Array.from(dishesIterator);//Convertir a array pq si no da undifined y no se pq
-        console.log(dishesArray);
-
-        this[VIEW].showRemoveDishForm(dishesArray);
+        for (const dish of manager.getDishes()) {
+            console.log(dish);
+        }
+        const dishesIterator = manager.dishes;
+        console.log(dishesIterator);
+        this[VIEW].showRemoveDishForm(dishesIterator);
         this[VIEW].bindRemoveDishForm(this.handleRemoveDish);
     }
+    
 
     handleAssignDishToMenu = () => {
         const manager = RestaurantsManager.getInstance();
-        const menusIterator = manager.getMenus();
-        const menusArray = Array.from(menusIterator);//Convertir a array pq si no da undifined y no se pq
-        this[VIEW].showAssignMenuToDish(menusArray, manager.getDishes());
+        const menusIterator = manager.menus;
+        const dishesIterator = manager.dishes;
+        this[VIEW].showAssignMenuToDish(menusIterator, dishesIterator);
     }
+    
 
     handleCDCategory = () => {
         this[VIEW].showCategoryForm();
@@ -271,52 +274,50 @@ class RestaurantManagerController {
 
 
 
-    handleRemoveDish = (name, description, ingredients, image, categories, allergens) => {
+    handleRemoveDish = (dishName) => {
         const manager = RestaurantsManager.getInstance();
-        const dish = new Dish(name, description, ingredients, image);
         console.log("-------------------EL PLATO QUE SE VA A BORRAR ES--------------");
-        console.log(dish);
+        let dish=this[MODEL].getDishByName(dishName).dish;
+        console.log(this[MODEL].getDishByName(dishName).dish);
         let done;
         let error;
         try {
-            const success = manager.removeDish(dish);
+            const success = this[MODEL].removeDishByName();
             done = success ? true : false;
         } catch (exception) {
             done = false;
             error = exception.message;
         }
-
+    
         this[VIEW].showRemovedDishModal(done, dish, error);
     };
-
+    
 
     handleCreateDish = (name, description, ingredients, image, categories, allergens) => {
         const dish = new Dish(name, description, ingredients, image);
 
         console.log(dish);
+        console.log(categories);
+        console.log(allergens);
+        
         const manager = RestaurantsManager.getInstance();
-
+        
+        console.log(manager.getCategoryByName(categories));
+        console.log(manager.getAllergenByName(allergens));
         let done;
         let error;
         try {
             const success = manager.addDish(dish);
 
-            // Asignar categorías al plato
-            for (const categoryName of categories) {
-                manager.assignCategoryToDish(categoryName, dish);
-            }
-
-            // Asignar alérgenos al plato
-            for (const allergenName of allergens) {
-                manager.assignAllergenToDish(allergenName, dish);
-            }
-
+            // Asignar categorías y alergenos al plato
+            
+            manager.assignCategoryToDish(manager.getCategoryByName(categories), dish);
+            manager.assignAllergenToDish(manager.getAllergenByName(allergens),dish);
             done = success ? true : false;
         } catch (exception) {
             done = false;
             error = exception.message;
         }
-
         this[VIEW].showNewDishModal(done, dish, error);
     };
 

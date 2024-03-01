@@ -120,25 +120,33 @@ function deleteDishValidator(handler) {
     const form = document.forms.fRemoveDish;
     form.setAttribute('novalidate', true);
     form.addEventListener('submit', function (event) {
-        let isValid = true;
+        event.preventDefault();
+        event.stopPropagation();
 
         const selectedDishes = form.rdDish.selectedOptions;
         if (selectedDishes.length === 0) {
-            isValid = false;
             showFeedBack(form.rdDish, false, "Seleccione al menos un plato.");
-        } else {
-            showFeedBack(form.rdDish, true, "Correcto.");
+            return;
         }
-        if (isValid) {
-            handler();
+
+        // Obtener el nombre del plato seleccionado
+        const dishName = selectedDishes[0].value;
+
+        // Ejecutar el handler y obtener el nombre del plato eliminado
+        const deletedDishName = handler(dishName.dish);
+
+        // Mostrar la retroalimentación basada en si se eliminó el plato o no
+        if (deletedDishName) {
+            showFeedBack(form.rdDish, true, "Plato eliminado correctamente: " + deletedDishName);
         } else {
-            //console.log(this.ndName.value, this.ndDescription.value, this.ndIngredients.value, this.ndImg.value);
-            handler(this.ndName.value, this.ndDescription.value, this.ndIngredients.value, this.ndImg.value);
+            showFeedBack(form.rdDish, false, "Error al eliminar el plato.");
         }
-        event.preventDefault();
+
         event.stopPropagation();
+        event.preventDefault();
     });
 }
+
 
 
 

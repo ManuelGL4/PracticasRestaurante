@@ -15,7 +15,81 @@ const RestaurantsManager = (function () {
     //Constructor de RestaurantManager
     constructor(systemName) {
       this.#systemName = systemName;
-    }
+      //GETTERS ACTUALIZADOS
+      Object.defineProperty(this, 'categories', {
+        enumerable: true,
+        get() {
+            const array = this.#categories;
+
+            return {
+                *[Symbol.iterator]() {
+                    for (const arrayCategories of array) {
+                        yield arrayCategories;
+                    }
+                },
+            };
+        },
+    });
+
+
+    Object.defineProperty(this, 'menus', {
+        enumerable: true,
+        get() {
+            const array = this.#menus;
+            return {
+                *[Symbol.iterator]() {
+                    for (const arrayMenu of array) {
+                        yield arrayMenu;
+                    }
+                },
+            };
+        },
+    });
+    Object.defineProperty(this, 'allergens', {
+        enumerable: true,
+        get() {
+            const array = this.#allergens;
+            return {
+                *[Symbol.iterator]() {
+                    for (const arrayAllergen of array) {
+                        yield arrayAllergen;
+                    }
+                },
+            };
+        },
+    });
+
+    Object.defineProperty(this, 'restaurants', {
+        enumerable: true,
+        get() {
+            const array = this.#restaurants;
+            return {
+                *[Symbol.iterator]() {
+                    for (const arrayRestaurant of array) {
+                        yield arrayRestaurant;
+                    }
+                },
+            };
+        },
+    });
+
+    
+    Object.defineProperty(this, 'dishes', {
+        enumerable: true,
+        get() {
+            const array = this.#dishes;
+            return {
+                *[Symbol.iterator]() {
+                    for (const arrayDish of array) {
+                        yield arrayDish;
+                    }
+                },
+            };
+        },
+    });
+
+}
+
 
     //Getters
     getCategories() {
@@ -190,39 +264,28 @@ const RestaurantsManager = (function () {
     }
     
 
-    //Metodo removeDish
-    removeDish(...dishesToRemove) {
-      dishesToRemove.forEach(function (dishToRemove) {
-        if (!dishToRemove || !(dishToRemove instanceof Dish) || !this.#dishes.includes(dishToRemove)) {
-          throw new Error('El plato no está registrado.');
+      //Metodo removeDish
+      removeDish(...dishesToRemove) {
+        for (const dishToRemove of dishesToRemove) {
+            if (!dishToRemove || !(dishToRemove instanceof Dish) || !this.#dishes.includes(dishToRemove)) {
+                throw new Error('El plato no está registrado.');
+            }
+    
+            // Desasignar el plato de todos los menús
+            this.#menus.forEach(menu => {
+                const index = menu.dishes.findIndex(d => d.dish.name === dishToRemove.name);
+                if (index !== -1) {
+                    this.deassignDishToMenu(menu.menu, menu.dishes[index].dish);
+                }
+            });
+    
+            // Eliminar el plato de la lista de platos
+            const index = this.#dishes.findIndex(d => d.name === dishToRemove.name);
+            this.#dishes.splice(index, 1);
         }
-
-        // Desasignar platos de categorías, menús y alérgenos
-        this.#categories.forEach(function (category) {
-          category.setDishes(category.getDishes().filter(function (d) {
-            return d !== dishToRemove;
-          }));
-        });
-
-        this.#menus.forEach(function (menu) {
-          menu.setDishes(menu.getDishes().filter(function (d) {
-            return d !== dishToRemove;
-          }));
-        });
-
-        this.#allergens.forEach(function (allergen) {
-          allergen.setDishes(allergen.getDishes().filter(function (d) {
-            return d !== dishToRemove;
-          }));
-        });
-
-        // Eliminar el plato
-        const index = this.#dishes.indexOf(dishToRemove);
-        this.#dishes.splice(index, 1);
-      }, this);
-
-      return this;
+        return this;
     }
+    
 
     //Metodo addRestaurant
     addRestaurant(...newRestaurants) {
@@ -578,6 +641,64 @@ assignCategoryToDish(category, ...dishs) {
         this.#restaurants.push(newRestaurant);
         return newRestaurant;
       }
+    }
+        // Método getAllergenByName
+        getAllergenByName(name) {
+          const allergen = this.#allergens.find(function (allergen) {
+            return allergen.getName() === name;
+          });
+    
+          if (allergen) {
+            return allergen;
+          } else {
+            throw new Error('El alérgeno especificado no está registrado.');
+          }
+        }
+    
+// Método getCategoryByName
+getCategoryByName(name) {
+  const category = this.#categories.find(function (category) {
+    return category.getName() === name;
+  });
+
+  if (category) {
+    return category;
+  } else {
+    throw new Error('La categoría especificada no está registrada.');
+  }
+}
+removeDishByName(...dishNames) {
+  for (const dishName of dishNames) {
+      // Buscar el plato por su nombre
+      const dishToRemove = this.#dishes.find(dish => dish.name === dishName);
+      console.log(dishName);
+      // Verificar si el plato existe y está registrado en el restaurante
+      if (!dishToRemove || !this.#dishes.includes(dishToRemove)) {
+          throw new Error('El plato no está registrado.');
+      }
+
+      // Desasignar el plato de todos los menús
+      this.#menus.forEach(menu => {
+          const index = menu.dishes.findIndex(d => d.dish.name === dishToRemove.name);
+          if (index !== -1) {
+              this.deassignDishToMenu(menu.menu, menu.dishes[index].dish);
+          }
+      });
+
+      // Eliminar el plato de la lista de platos
+      const index = this.#dishes.findIndex(d => d.name === dishToRemove.name);
+      this.#dishes.splice(index, 1);
+  }
+  return this;
+}
+    getDishByName(name) {    
+      const dish = this.#dishes.find(d => d.name === name);
+    
+      if (!dish) {
+        throw new Error(`No existe un plato con el nombre "${name}".`);
+      }
+    
+      return dish;
     }
 
   }
