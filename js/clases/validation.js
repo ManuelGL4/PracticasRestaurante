@@ -198,6 +198,57 @@ function assignDTMValidation(handler) {
         this.amdD.focus();
     });
 }
+function unassignDishFromMenuValidation(handler) {
+    const form = document.forms.fDesMenu;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+        let firstInvalidElement = null;
+
+        if (!this.ddmenu.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.ddmenu, false, "Seleccione un menu.");
+            if (!firstInvalidElement) firstInvalidElement = this.ddmenu;
+        } else {
+            showFeedBack(this.ddmenu, true, "Correcto.");
+        }
+
+        if (!this.ddDish.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.ddDish, false, "Seleccione un menú.");
+            if (!firstInvalidElement) firstInvalidElement = this.ddDish;
+        } else {
+            showFeedBack(this.ddDish, true, "Correcto.");
+        }
+
+        if (!isValid) {
+            if (firstInvalidElement) {
+                firstInvalidElement.focus();
+            }
+        } else {
+            const menuName = this.ddmenu.value;
+            const dishName = this.ddDish.value;
+            console.log(menuName,dishName);
+            handler(dishName, menuName);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    // Restablecer la validación al hacer reset
+    form.addEventListener('reset', function (event) {
+        for (const div of this.querySelectorAll('div.valid-feedback, div.invalid-feedback')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
+        for (const input of this.querySelectorAll('input, select, textarea')) {
+            input.classList.remove('is-valid');
+            input.classList.remove('is-invalid');
+        }
+        this.udmDish.focus();
+    });
+}
 
 
 
@@ -247,4 +298,4 @@ function newCategoryValidation(handler) {
     }
 }
 
-export { newDishValidation, deleteDishValidator,assignDTMValidation, newCategoryValidation };
+export { newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation };

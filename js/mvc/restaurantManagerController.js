@@ -246,7 +246,9 @@ class RestaurantManagerController {
         const dishesIterator = manager.dishes;
         this[VIEW].showAssignMenuToDish(menusIterator, dishesIterator);
         this[VIEW].bindAssignDishToMenu(this.handleAssignDishToMenu);
+        this[VIEW].bindUnassignDishFromMenu(this.handleUnassignDishFromMenu);
     }
+
     
 
     handleCDCategory = () => {
@@ -295,8 +297,26 @@ class RestaurantManagerController {
         this[VIEW].showAssignMenuToDishModal(done, error);
         
     };
-    
-    
+    handleUnassignDishFromMenu = (dishName, selectedMenuName) => {
+        const manager = RestaurantsManager.getInstance();
+        console.log("-------------------DESASIGNACIÓN DE PLATO DE MENÚ--------------");
+        let done;
+        let error;
+        let dish;
+        let menu;
+      
+        try {
+            dish = manager.getDishByName(dishName);
+            menu = manager.getMenuByName(selectedMenuName);
+            console.log(dish +" " + menu);
+            const success = manager.deassignDishToMenu(menu, dish);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+        this[VIEW].showDesassignMenuToDishModal(done,dish,error);
+    };    
 
 
 

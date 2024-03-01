@@ -441,26 +441,31 @@ assignCategoryToDish(category, ...dishs) {
     //Metodo deassignDishToMenu
     deassignDishToMenu(menu, dish) {
       // Verificar si menu es nulo o no es una instancia de Menu
-      if (!menu || !(menu instanceof Menu) || !this.#menus.includes(menu)) {
+      let menuPosit = this.#menus.findIndex(m => m.menu.name === menu.name);
+      if (menuPosit === -1) {
         throw new Error('El menú no está registrado.');
       }
 
       // Verificar si dish es nulo o no está registrado
-      if (!dish || !(dish instanceof Dish) || !this.#dishes.includes(dish)) {
+      let dishPosit = this.#dishes.findIndex(d => d.dish.name === dish.name);
+      if (dishPosit === -1){
         throw new Error('El plato no está registrado.');
       }
 
-      // Obtener el array de platos del menú
-      const updatedDishes = menu.getDishes().filter(function (d) {
-        return d !== dish;
-      });
-
-      // Establecer el array de platos actualizado en el menú
-      menu.setDishes(updatedDishes);
+      let menB = this.#menus[menuPosit];
+      let index = menB.dishes.findIndex(d => d.dish.name === dish.name);
+      if (index === -1){
+        throw new Error('El plato no está registrado en este menú.');
+      
+      } 
+      menB.dishes.splice(index, 1);
 
       return this;
+  
     }
+            
 
+              
     //Metodo changeDishesPositionsInMenu
     changeDishesPositionsInMenu(menu, dish1, dish2) {
       // Verificar si menu es nulo o no es una instancia de Menu

@@ -1,4 +1,4 @@
-import { newDishValidation, deleteDishValidator,assignDTMValidation, newCategoryValidation } from '../clases/validation.js';
+import { newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
 import {
 	RestaurantsManager
 } from '../clases/resturantManager.js';
@@ -171,6 +171,10 @@ value="" required></textarea>
 		assignDTMValidation(handler);
 	}
 
+	bindUnassignDishFromMenu(handler) {
+		unassignDishFromMenuValidation(handler);
+	}
+
 	showNewDishModal(done, dish, error) {
 		const messageModalContainer = document.getElementById('messageModal');
 		const messageModal = new bootstrap.Modal('#messageModal');
@@ -339,6 +343,65 @@ value="" required></textarea>
 		// FALTA EL ORDENAR LOS PLATOS
 		container.append(form);
 		this.main.append(container);
+
+		//Formulario para desasignar
+		const removeForm = document.createElement('form');
+    removeForm.name = 'fDesMenu';
+    removeForm.setAttribute('role', 'form');
+    removeForm.setAttribute('novalidate', '');
+    removeForm.classList.add('row');
+    removeForm.classList.add('g-3');
+
+    removeForm.insertAdjacentHTML(
+        'afterbegin',
+        '<h1 class="display-5">Desasignar un plato de un menú</h1>',
+    );
+
+    removeForm.insertAdjacentHTML(
+        'beforeend',
+        `<div class="col-md-6 mb-3">
+            <label class="form-label" for="ddmenu">Seleccione el menú del que desea desasignar el plato:</label>
+            <select class="form-select" id="ddmenu" name="ddmenu" required>
+            </select>
+            <div class="invalid-feedback">Seleccione al menos un menú.</div>
+            <div class="valid-feedback">Correcto.</div>
+        </div>`,
+    );
+
+    const ddmenu = removeForm.querySelector('#ddmenu');
+    for (const menuObj of menus) {
+        const menu = menuObj.menu;
+        ddmenu.insertAdjacentHTML('beforeend', `<option value="${menu.name}">${menu.name}</option>`);
+    }
+
+    removeForm.insertAdjacentHTML(
+        'beforeend',
+        `<div class="col-md-6 mb-3">
+            <label class="form-label" for="ddDish">Seleccione el plato que desea desasignar:</label>
+            <select class="form-select" id="ddDish" name="ddDish" required>
+            </select>
+            <div class="invalid-feedback">Seleccione un plato.</div>
+            <div class="valid-feedback">Correcto.</div>
+        </div>`,
+    );
+
+    const ddDish = removeForm.querySelector('#ddDish');
+    for (const dishObj of dishes) {
+        const dish = dishObj.dish;
+        ddDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.name}</option>`);
+    }
+
+    removeForm.insertAdjacentHTML(
+        'beforeend',
+        `<div class="mb-3">
+            <button class="btn btn-danger" type="submit">Desasignar</button>
+        </div>
+        </form>`,
+    );
+
+    container.append(removeForm);
+
+    this.main.append(container);
 	}
 
 	showAssignMenuToDishModal(done, error){
@@ -354,6 +417,33 @@ value="" required></textarea>
 			body.insertAdjacentHTML(
 				'afterbegin',
 				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato no se ha podido añadir. <strong>${error}</strong></div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				document.fNewDish.reset();
+			}
+			document.fNewDish.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+	}
+	
+	showDesassignMenuToDishModal(done, dish, error){
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Desasignar menu a plato';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dish.name}</strong> ha sido desasignado correctamente.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${dish.name}</strong> no se ha desasignado correctamente.Compruebe que el plato <strong>${dish.name}</strong> pertenece a este menu</strong></div>`,
 			);
 		}
 		messageModal.show();
