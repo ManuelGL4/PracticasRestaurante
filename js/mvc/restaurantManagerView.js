@@ -1,4 +1,4 @@
-import { newRestaurantValidation,removeCategoryValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
+import { changeCategoryValidation,newRestaurantValidation,removeCategoryValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
 import {
 	RestaurantsManager
 } from '../clases/resturantManager.js';
@@ -29,7 +29,7 @@ class RestaurantManagerView {
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lassignMenu" class="dropdown-item" href="#new-product">Asignar-Desasignar Menú</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Crear-Eliminar Categorias</a></li>')
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewRestaurante" class="dropdown-item" href="#new-product">Crear Restaurante</a></li>');
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="cCatDish" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>');
 		menuOption.append(suboptions);
 		const menu = document.querySelector('.menu');
 		menu.appendChild(menuOption);
@@ -136,7 +136,7 @@ value="" required></textarea>
 		this.main.append(container);
 	}
 
-	bindAdminMenu(hNewDish, hRemoveDish, hAssignMenuDish, hCDCategory,hNewRestaurant) {
+	bindAdminMenu(hNewDish, hRemoveDish, hAssignMenuDish, hCDCategory,hNewRestaurant,hChangeCatDish) {
 		const newCategoryLink = document.getElementById('lnewDish');
 		newCategoryLink.addEventListener('click', (event) => {
 			hNewDish();
@@ -157,6 +157,11 @@ value="" required></textarea>
 		restaurantLink.addEventListener('click', (event) => {
 			hNewRestaurant();
 		});
+		const changeCatDish = document.getElementById('cCatDish');
+		changeCatDish.addEventListener('click', (event) => {
+			hChangeCatDish();
+		});
+		
 	}
 
 
@@ -183,6 +188,89 @@ value="" required></textarea>
 	}
 	bindNewRestaurant(handler) {
 		newRestaurantValidation(handler);
+	}
+	bindChangeCategory(handler){
+		changeCategoryValidation(handler);
+	}
+
+	showChangeCategoryForm(cat,dishes){
+		const container = document.createElement('div');
+		container.insertAdjacentHTML(
+			'afterbegin',
+			'<h1 class="display-5">Modificar categorias a plato</h1>',
+		);
+		this.main.replaceChildren();
+		const form = document.createElement('form');
+		form.name = 'fChangeCat';
+		form.setAttribute('role', 'form');
+		form.setAttribute('novalidate', '');
+		form.classList.add('row');
+		form.classList.add('g-3');
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="col-md-6 mb-3">
+      <label class="form-label" for="ccCategorie">Categorías</label>
+      <select class="form-select" id="ccCategorie" name="ccCategorie" multiple required>
+      </select>
+      <div class="invalid-feedback">Seleccione al menos una categoría.</div>
+	  <div class="valid-feedback">Correcto.</div>
+	  </div>
+    <div class="col-md-6 mb-3">
+      <label class="form-label" for="ccDish">Plato</label>
+      <select class="form-select" id="ccDish" name="ccDish" multiple required>
+      </select>
+      <div class="invalid-feedback">Seleccione al menos un alergeno.</div>
+	  <div class="valid-feedback">Correcto.</div>
+    </div>
+		
+		`,
+		);
+		const ccCategorie = form.querySelector('#ccCategorie');
+		for (const category of cat) {
+			ccCategorie.insertAdjacentHTML('beforeend', `<option value="${category.name}">${category.name}</option>`);
+		}
+		const ccDish = form.querySelector('#ccDish');
+		for (const dishObj of dishes) {
+			const dish = dishObj.dish;
+			console.log(dish);
+			ccDish.insertAdjacentHTML('beforeend', `<option value="${dish.name}">${dish.name}</option>`);
+		}
+
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="mb-12">
+		<button class="btn btn-primary" type="submit" id="btnAssignCategory">Asignar</button>
+		<button class="btn btn-primary" type="submit" id="btnDesassignCategory">Desasignar</button>
+		<button class="btn btn-primary" type="reset">Cancelar</button>
+
+		</div>
+		</form>`,
+		);
+		container.append(form);
+		this.main.append(container);
+	}
+
+	showChangeCatModal(categoria,plato,done){
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Nuevo Plato';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${plato}</strong> ahora si/no pertenece a la categoria <strong>${categoria}</strong> .</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${plato}</strong> no se ha podido asignar/desasignar</div>`,
+			);
+		}
+		messageModal.show();
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
 	}
 
 	showNewDishModal(done, dish, error) {
@@ -430,12 +518,6 @@ value="" required></textarea>
 			);
 		}
 		messageModal.show();
-		const listener = (event) => {
-			if (done) {
-				document.fNewDish.reset();
-			}
-			document.fNewDish.ncTitle.focus();
-		};
 		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
 			once: true
 		});
@@ -457,12 +539,6 @@ value="" required></textarea>
 			);
 		}
 		messageModal.show();
-		const listener = (event) => {
-			if (done) {
-				document.fNewDish.reset();
-			}
-			document.fNewDish.ncTitle.focus();
-		};
 		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
 			once: true
 		});
@@ -624,12 +700,6 @@ value="" required></textarea>
 			);
 		}
 		messageModal.show();
-		const listener = (event) => {
-			if (done) {
-				document.fNewDish.reset();
-			}
-			document.fNewDish.ncTitle.focus();
-		};
 		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
 			once: true
 		});

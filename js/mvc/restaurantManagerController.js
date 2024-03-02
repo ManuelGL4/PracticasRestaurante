@@ -17,7 +17,7 @@ class RestaurantManagerController {
     onLoad = () => {
         this.initApp();
         this[VIEW].showAdminMenu();
-        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenuForm, this.handleCDCategory,this.handleNewRestaurantForm);
+        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenuForm, this.handleCDCategory,this.handleNewRestaurantForm,this.handleChangeCategoryForm);
     }
 
     initApp() {
@@ -260,6 +260,58 @@ class RestaurantManagerController {
         this[VIEW].showNewRestaurantForm();
         this[VIEW].bindNewRestaurant(this.handleAddRestaurant)
     }
+    handleChangeCategoryForm= () => {
+        const manager = RestaurantsManager.getInstance();
+        const catIterator = manager.categories;
+        const dishesIterator = manager.dishes;
+        console.log(catIterator,dishesIterator);
+
+        this[VIEW].showChangeCategoryForm(catIterator,dishesIterator);
+        this[VIEW].bindChangeCategory(this.handleChangeCategory);
+    }
+
+    handleChangeCategory(categoria, plato, action) {
+        //ACTION SOLO PUEDE SER:asignar/desasignar
+        console.log(categoria, plato, action);
+        const manager = RestaurantsManager.getInstance();
+        let done;
+        let error;
+    
+        try {
+            let cat = manager.getCategoryByName(categoria);
+            let dis = manager.getDishByName(plato);
+            console.log(cat);
+            console.log(dis);
+    
+            if (action === "asignar") {
+                console.log("ENTRA EN EL BUCLE ASIGNAR");
+                try {
+                    const success = manager.assignCategoryToDish(cat, dis);
+                    done = success ? true : false;
+                    console.log(done);
+                } catch (assignError) {
+                    throw new Error(`Error al asignar la categoría al plato: ${assignError.message}`);
+                }
+            }
+    
+            if (action === "desasignar") {
+                console.log("ENTRA EN EL BUCLE DESASIGNAR");
+                try {
+                    const success = manager.deassignCategoryToDish(cat, dis);
+                    done = success ? true : false;
+                    console.log(done);
+                } catch (deassignError) {
+                    throw new Error(`Error al desasignar la categoría al plato: ${deassignError.message}`);
+                }
+            }
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+    
+        //this[VIEW].showChangeCatModal(categoria, plato, done, error);
+    }
+    
 
     handleAddRestaurant(nombre,descripcion,latitud,longitud){
         console.log(nombre,descripcion,latitud,longitud);
@@ -286,11 +338,11 @@ class RestaurantManagerController {
 		const body = messageModalContainer.querySelector('.modal-body');
 		body.replaceChildren();
 		if (done) {
-			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${nombre}</strong> ha sido creado correctamente.</div>`);
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El restaurante <strong>${nombre}</strong> ha sido creado correctamente.</div>`);
 		} else {
 			body.insertAdjacentHTML(
 				'afterbegin',
-				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${nombre}</strong> ya estaba creado. <strong>${error}</strong></div>`,
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El restaurante <strong>${nombre}</strong> ya estaba creado. <strong>${error}</strong></div>`,
 			);
 		}
 		messageModal.show();

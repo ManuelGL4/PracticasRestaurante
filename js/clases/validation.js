@@ -417,4 +417,80 @@ function newRestaurantValidation(handler) {
     }
 }
 
-export { newRestaurantValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation,removeCategoryValidation };
+
+function changeCategoryValidation(handler) {
+    const form = document.forms.fChangeCat;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+        let firstInvalidElement = null;
+
+        // Validación de la categoría
+        if (!this.ccCategorie.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.ccCategorie, false, "Seleccione al menos una categoría.");
+            if (!firstInvalidElement) firstInvalidElement = this.ccCategorie;
+        } else {
+            showFeedBack(this.ccCategorie, true, "Correcto.");
+        }
+
+        // Validación del plato
+        if (!this.ccDish.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.ccDish, false, "Seleccione al menos un plato.");
+            if (!firstInvalidElement) firstInvalidElement = this.ccDish;
+        } else {
+            showFeedBack(this.ccDish, true, "Correcto.");
+        }
+
+        // Verificar si se ha pulsado el btn de asignar o desasignar
+        const btnAsignar = form.querySelector('[type="submit"]');
+        const btnDesasignar = form.querySelector('#btnDesassignCategory');
+        let action;
+        if (btnAsignar.hasAttribute('clicked')) {
+            action = 'asignar';
+        } else if (btnDesasignar.hasAttribute('clicked')) {
+            action = 'desasignar';
+        }
+
+        if (!isValid) {
+            firstInvalidElement.focus();
+        } else {
+            const categoria = this.ccCategorie.value;
+            const plato = this.ccDish.value;
+            handler(categoria, plato, action);
+            //console.log(categoria,plato,action);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+        // Agregar eventos a los botones de asignar y desasignar
+        const btnAsignar = form.querySelector('[type="submit"]');
+        const btnDesasignar = form.querySelector('#btnDesassignCategory');
+        btnAsignar.addEventListener('click', () => {
+            btnAsignar.setAttribute('clicked', true);
+            btnDesasignar.removeAttribute('clicked');
+        });
+        btnDesasignar.addEventListener('click', () => {
+            btnDesasignar.setAttribute('clicked', true);
+            btnAsignar.removeAttribute('clicked');
+        });
+
+    // Restablecer la validación al hacer reset
+    form.addEventListener('reset', function (event) {
+        for (const div of this.querySelectorAll('div.valid-feedback, div.invalid-feedback')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
+        for (const input of this.querySelectorAll('input, select')) {
+            input.classList.remove('is-valid');
+            input.classList.remove('is-invalid');
+        }
+        this.ccCategorie.focus();
+    });
+
+}
+
+
+export { changeCategoryValidation,newRestaurantValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation,removeCategoryValidation };

@@ -341,7 +341,6 @@ assignCategoryToDish(category, ...dishs) {
           this.addCategory(category);
           cat = this.#categories.indexOf(category);
       }
-      // recoge la categoria del array para añadir la ya existente
       cat = this.#categories[cat];
       this.#dishes[posi].categories.push(cat);
   }
