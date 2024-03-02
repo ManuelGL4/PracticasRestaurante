@@ -476,7 +476,29 @@ class RestaurantManagerController {
             done = false;
             error = exception.message;
         }
-        this[VIEW].showAssignMenuToDishModal(done, error);
+        console.log(done);
+        
+        if (done) {
+            const messageModalContainer = document.getElementById('messageModal');
+            const messageModal = new bootstrap.Modal('#messageModal');
+            const title = document.getElementById('messageModalTitle');
+            title.innerHTML = 'Asignar Plato a categoria';
+            const body = messageModalContainer.querySelector('.modal-body');
+            body.replaceChildren();
+            body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dishName}</strong> ha sido añadido correctamente al <strong>${selectedMenuName}</strong> .</div>`);
+            messageModal.show();
+        }else{
+            const messageModalContainer = document.getElementById('messageModal');
+            const messageModal = new bootstrap.Modal('#messageModal');
+            const title = document.getElementById('messageModalTitle');
+            title.innerHTML = 'DesAsignar Plato a categoria';
+            const body = messageModalContainer.querySelector('.modal-body');
+            body.replaceChildren();
+            body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dishName}</strong> no se ha podido añadir a <strong>${selectedMenuName}</strong> .Compruebe si el menu esta ya incluido</div>`);
+            messageModal.show();
+        }
+
+        //this[VIEW].showAssignMenuToDishModal(done, error);
         
     };
     handleUnassignDishFromMenu = (dishName, selectedMenuName) => {
@@ -486,7 +508,7 @@ class RestaurantManagerController {
         let error;
         let dish;
         let menu;
-      
+    
         try {
             dish = manager.getDishByName(dishName);
             menu = manager.getMenuByName(selectedMenuName);
@@ -497,8 +519,30 @@ class RestaurantManagerController {
             done = false;
             error = exception.message;
         }
-        this[VIEW].showDesassignMenuToDishModal(done,dish,error);
-    };    
+        console.log(done);
+    
+        if (done) {
+            const messageModalContainer = document.getElementById('messageModal');
+            const messageModal = new bootstrap.Modal('#messageModal');
+            const title = document.getElementById('messageModalTitle');
+            title.innerHTML = 'DesAsignar Plato a categoria';
+            const body = messageModalContainer.querySelector('.modal-body');
+            body.replaceChildren();
+            body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dishName}</strong> ha sido quitado correctamente del <strong>${selectedMenuName}</strong> .</div>`);
+            messageModal.show();
+        }else{
+            const messageModalContainer = document.getElementById('messageModal');
+            const messageModal = new bootstrap.Modal('#messageModal');
+            const title = document.getElementById('messageModalTitle');
+            title.innerHTML = 'DesAsignar Plato a categoria';
+            const body = messageModalContainer.querySelector('.modal-body');
+            body.replaceChildren();
+            body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dishName}</strong> no se ha podido quitar de <strong>${selectedMenuName}</strong> .Compruebe que el plato este en el menú</div>`);
+            messageModal.show();
+        }
+        //this[VIEW].showDesassignMenuToDishModal(done,dish,error);
+    };  
+    
 
 
 
@@ -518,6 +562,28 @@ class RestaurantManagerController {
             done = false;
             error = exception.message;
         }
+
+        if (done) {
+            const messageModalContainer = document.getElementById('messageModal');
+            const messageModal = new bootstrap.Modal('#messageModal');
+            const title = document.getElementById('messageModalTitle');
+            title.innerHTML = 'Borrar plato del sistema';
+            const body = messageModalContainer.querySelector('.modal-body');
+            body.replaceChildren();
+            body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dishName}</strong> ha sido eliminado correctamente .</div>`);
+            messageModal.show();
+        }else{
+            const messageModalContainer = document.getElementById('messageModal');
+            const messageModal = new bootstrap.Modal('#messageModal');
+            const title = document.getElementById('messageModalTitle');
+            title.innerHTML = 'Borrar plato del sistema';
+            const body = messageModalContainer.querySelector('.modal-body');
+            body.replaceChildren();
+            body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${dishName}</strong> no se ha podido eliminar</div>`);
+            messageModal.show();
+        }
+
+
         //VOLVER A MOSTRAR EL FORMULARIO ACTUALIZADO
         for (const dish of manager.getDishes()) {
             console.log(dish);
