@@ -1,4 +1,4 @@
-import { removeCategoryValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
+import { newRestaurantValidation,removeCategoryValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
 import {
 	RestaurantsManager
 } from '../clases/resturantManager.js';
@@ -180,6 +180,9 @@ value="" required></textarea>
 
 	bindUnassignDishFromMenu(handler) {
 		unassignDishFromMenuValidation(handler);
+	}
+	bindNewRestaurant(handler) {
+		newRestaurantValidation(handler);
 	}
 
 	showNewDishModal(done, dish, error) {
@@ -605,6 +608,33 @@ value="" required></textarea>
 		});
 	}
 
+	showNewRestaurantModal(nombre,done,error){
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Nuevo Restaurante';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${nombre}</strong> ha sido creado correctamente.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${nombre}</strong> ya estaba creado. <strong>${error}</strong></div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				document.fNewDish.reset();
+			}
+			document.fNewDish.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+	}
+
 	showRemoveCategoryModal(done,cat){
 		const messageModalContainer = document.getElementById('messageModal');
 		const messageModal = new bootstrap.Modal('#messageModal');
@@ -651,39 +681,52 @@ value="" required></textarea>
 		form.setAttribute('novalidate', '');
 		form.classList.add('row');
 		form.classList.add('g-3');
-		//name B, description = '' B, location de objeto Coordinate
 		form.insertAdjacentHTML(
 			'beforeend',
 			`
 		<div class="col-md-6 mb-3">
-			<label class="form-label" for="ndName">Nombre del nuevo restaurante</label>
+			<label class="form-label" for="nrName">Nombre del nuevo restaurante</label>
 			<div class="input-group">
 				<span class="input-group-text"><i class="bi bi-type"></i></span>
-				<input type="text" class="form-control" id="ndName"
-					name="ndName"
+				<input type="text" class="form-control" id="nrName"
+					name="nrName"
 					placeholder="Nombre del restaurante" value="" required>
-				<div class="invalid-feedback">El nombre del restaurante.</div>
+				<div class="invalid-feedback">El nombre del restaurante es obligatorio.</div>
 				<div class="valid-feedback">Correcto.</div>
 			</div>
 		</div>
-		<div class="col-md-12 mb-3">
-			<label class="form-label" for="ndImg">Descripcion del restaurante</label>
+		<div class="col-md-6 mb-3">
+			<label class="form-label" for="nrDesc">Descripcion del restaurante</label>
 			<div class="input-group">
 				<span class="input-group-text"><i class="bi bi-fileimage"></i></span>
-				<input type="text" class="form-control" id="ndName"
-					name="ndName"
+				<input type="text" class="form-control" id="nrDesc"
+					name="nrDesc"
 					placeholder="Este restaurante cuenta con......" value="" required>
 				<div class="invalid-feedback"></div>
 				<div class="valid-feedback">Correcto.</div>
 			</div>
 		</div>
 		<div class="col-md-6 mb-3">
-			<label class="form-label" for="ndDescription">Ubicacion</label>
+			<label class="form-label" for="nrLatitude">Latitud</label>
 			<div class="input-group">
-			<span class="input-group-text">Latitud y longitud</span>
-			<input type="text" aria-label="First name" class="form-control">
-			<input type="text" aria-label="Last name" class="form-control">
-		  </div>
+				<span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+				<input type="text" class="form-control" id="nrLatitude"
+					name="nrLatitude"
+					placeholder="Latitud" value="" required>
+				<div class="invalid-feedback"></div>
+				<div class="valid-feedback">Correcto.</div>
+			</div>
+		</div>
+		<div class="col-md-6 mb-3">
+			<label class="form-label" for="nrLongitude">Longitud</label>
+			<div class="input-group">
+				<span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+				<input type="text" class="form-control" id="nrLongitude"
+					name="nrLongitude"
+					placeholder="Longitud" value="" required>
+				<div class="invalid-feedback"></div>
+				<div class="valid-feedback">Correcto.</div>
+			</div>
 		</div>
 		`,
 		);
@@ -692,15 +735,16 @@ value="" required></textarea>
 			'beforeend',
 			`
 		<div class="mb-12">
-		<button class="btn btn-primary" type="submit">Enviar</button>
-		<button class="btn btn-primary" type="reset">Cancelar</button>
+			<button class="btn btn-primary" type="submit">Enviar</button>
+			<button class="btn btn-primary" type="reset">Resetear</button>
 		</div>
 		</form>`,
 		);
 		container.append(form);
-
+	
 		this.main.append(container);
 	}
+	
 
 
 

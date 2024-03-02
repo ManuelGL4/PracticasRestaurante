@@ -258,7 +258,54 @@ class RestaurantManagerController {
 
     handleNewRestaurantForm= () => {
         this[VIEW].showNewRestaurantForm();
+        this[VIEW].bindNewRestaurant(this.handleAddRestaurant)
     }
+
+    handleAddRestaurant(nombre,descripcion,latitud,longitud){
+        console.log(nombre,descripcion,latitud,longitud);
+        const manager = RestaurantsManager.getInstance();
+        let done;
+        let error;
+        try {
+            let coord=new Coordinate(latitud,longitud);
+            console.log(coord);
+            let rest=new Restaurant(nombre, descripcion, coord);
+            console.log(rest);
+            const success = manager.addRestaurant(rest);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+        console.log(done);
+
+        const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Nuevo Restaurante';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${nombre}</strong> ha sido creado correctamente.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${nombre}</strong> ya estaba creado. <strong>${error}</strong></div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				document.fNewDish.reset();
+			}
+			document.fNewDish.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+        //this[VIEW].showNewRestaurantModal(nombre,done,error);
+    }
+
 
     handleRemoveCategory(cat) {
         console.log(cat);
@@ -275,9 +322,37 @@ class RestaurantManagerController {
             error = exception.message;
         }
         console.log(done);
-        /*this[VIEW].showRemoveCategoryModal(done, cat);
-        this[VIEW].showCategoryForm();
-        this[VIEW].bindRemoveCategoryForm(this.handleRemoveCategory);*/
+        const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Crear categoria';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">Categoria ${cat} eliminada.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i>La categoria no se ha podido borrar.ERROR: ${error}</div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				const form = document.forms['fNewCategory'];
+				if (form) {
+					form.reset();
+				}
+			}
+			const inputName = document.getElementById('ncName');
+			if (inputName) {
+				inputName.focus();
+			}
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+        //this[VIEW].showRemoveCategoryModal(done,cat) MIRAR HABER PORQUE NO FUNCIONA
     }
     
     handleCreateCategory(name, description) {
@@ -296,6 +371,36 @@ class RestaurantManagerController {
             error = exception.message;
         }
         console.log(done);
+        const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Crear categoria';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">Categoria  ${name} añadida correctamente.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i>La categoria no se ha podido crear.Revise si ya existe.Para mas informacion compruebe esto: ${error}</div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				const form = document.forms['fNewCategory'];
+				if (form) {
+					form.reset();
+				}
+			}
+			const inputName = document.getElementById('ncName');
+			if (inputName) {
+				inputName.focus();
+			}
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
 //        this[VIEW].showNewCategoryModal(done); MIRAR PORQUE NO VA ESTO SI SE DESCOMENTA
 }
 

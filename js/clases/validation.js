@@ -350,5 +350,71 @@ function removeCategoryValidation(handler) {
     }
 }
 
+function newRestaurantValidation(handler) {
+    const form = document.forms.fNewRest;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+        let firstInvalidElement = null;
 
-export { newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation,removeCategoryValidation };
+        if (!this.nrName.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.nrName, false, "El nombre del restaurante es obligatorio.");
+            if (!firstInvalidElement) firstInvalidElement = this.nrName;
+        } else {
+            showFeedBack(this.nrName, true, "Correcto.");
+        }
+
+        if (!this.nrDesc.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.nrDesc, false, "La descripcion del restaurante es obligatoria.");
+            if (!firstInvalidElement) firstInvalidElement = this.nrDesc;
+        } else {
+            showFeedBack(this.nrDesc, true, "Correcto.");
+        }
+
+        if (!this.nrLatitude.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.nrLatitude, false, "Introduzca una latitud.");
+            if (!firstInvalidElement) firstInvalidElement = this.nrLatitude;
+        } else {
+            showFeedBack(this.nrLatitude, true, "Correcto.");
+        }
+
+        if (!this.nrLongitude.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.nrLongitude, false, "Introduzca una longitud.");
+            if (!firstInvalidElement) firstInvalidElement = this.nrLongitude;
+        } else {
+            showFeedBack(this.nrLongitude, true, "Correcto.");
+        }
+
+        if (!isValid) {
+            firstInvalidElement.focus();
+        } else {
+            handler(this.nrName.value, this.nrDesc.value, this.nrLatitude.value, this.nrLongitude.value);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    // Restablecer la validación al hacer reset
+    form.addEventListener('reset', function (event) {
+        for (const div of this.querySelectorAll('div.valid-feedback, div.invalid-feedback')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
+        for (const input of this.querySelectorAll('input, select, textarea')) {
+            input.classList.remove('is-valid');
+            input.classList.remove('is-invalid');
+        }
+        this.nrName.focus();
+    });
+
+    for (const element of form.querySelectorAll('input, select, textarea')) {
+        element.addEventListener('change', defaultCheckElement);
+    }
+}
+
+export { newRestaurantValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation,removeCategoryValidation };
