@@ -1,4 +1,4 @@
-import { newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
+import { removeCategoryValidation,newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation } from '../clases/validation.js';
 import {
 	RestaurantsManager
 } from '../clases/resturantManager.js';
@@ -165,6 +165,9 @@ value="" required></textarea>
 
 	bindNewCategoryForm(handler) {
 		newCategoryValidation(handler);
+	}
+	bindRemoveCategoryForm(handler) {
+		removeCategoryValidation(handler);
 	}
 
 	bindAssignDishToMenu(handler){
@@ -513,6 +516,56 @@ value="" required></textarea>
 		container.append(form);
 
 		this.main.append(container);
+
+		//Formulario para eliminar
+		const removeForm = document.createElement('form');
+    removeForm.name = 'fRCat';
+    removeForm.setAttribute('role', 'form');
+    removeForm.setAttribute('novalidate', '');
+    removeForm.classList.add('row');
+    removeForm.classList.add('g-3');
+
+    removeForm.insertAdjacentHTML(
+        'afterbegin',
+        '<h1 class="display-5">Desasignar un plato de un menú</h1>',
+    );
+
+    removeForm.insertAdjacentHTML(
+        'beforeend',
+        `<div class="col-md-6 mb-3">
+            <label class="form-label" for="rCat">Seleccione la categoria que quiere eliminar:</label>
+            <select class="form-select" id="rCat" name="rCat" required>
+            </select>
+            <div class="invalid-feedback">Seleccione al menos una categoria.</div>
+            <div class="valid-feedback">Correcto.</div>
+        </div>`,
+    );
+	//FALTA QUE SE ACTUALICE AL AÑADIR LA CATEGORIA PORQUE ESTO SE HACE ANTES DE AÑADIR LA CATEGORIA
+	const rCat = removeForm.querySelector('#rCat');
+	let rm = RestaurantsManager.getInstance();
+	let catsIterator = rm.getCategories();
+	let cats = Array.from(catsIterator);
+	console.log(cats);
+	
+	for (const catObj of cats) {
+		const category = catObj;
+		console.log(category);
+		rCat.insertAdjacentHTML('beforeend', `<option value="${category.name}">${category.name}</option>`);
+	}
+	
+	
+
+    removeForm.insertAdjacentHTML(
+        'beforeend',
+        `<div class="mb-3">
+            <button class="btn btn-danger" type="submit">Desasignar</button>
+        </div>
+        </form>`,
+    );
+
+    container.append(removeForm);
+
+    this.main.append(container);
 	}
 
 	showNewCategoryModal(done){
@@ -547,7 +600,39 @@ value="" required></textarea>
 			once: true
 		});
 	}
-	
+
+	showRemoveCategoryModal(done,cat){
+		const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Crear categoria';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">Categoria ${cat.name} eliminada.</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i>La categoria no se ha podido borrar.</div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				const form = document.forms['fNewCategory'];
+				if (form) {
+					form.reset();
+				}
+			}
+			const inputName = document.getElementById('ncName');
+			if (inputName) {
+				inputName.focus();
+			}
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+	}
 
 
 	showDishesInCentralZone(dishesInCategory) {

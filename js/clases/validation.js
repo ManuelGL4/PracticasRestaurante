@@ -306,4 +306,49 @@ function newCategoryValidation(handler) {
     }
 }
 
-export { newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation };
+function removeCategoryValidation(handler) {
+    const form = document.forms.fRCat;
+    form.setAttribute('novalidate', true);
+    form.addEventListener('submit', function (event) {
+        let isValid = true;
+        let firstInvalidElement = null;
+
+        // Validación del nombre del plato
+        this.rCat.value = this.rCat.value.trim();
+        if (!this.rCat.checkValidity()) {
+            isValid = false;
+            showFeedBack(this.rCat, false, "Seleccione una categoria a eliminar.");
+            if (!firstInvalidElement) firstInvalidElement = this.rCat;
+        } else {
+            showFeedBack(this.rCat, true, "Correcto.");
+        }
+        
+        if (!isValid) {
+            firstInvalidElement.focus();
+        } else {
+            handler(this.rCat.value);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    });
+
+    form.addEventListener('reset', function (event) {
+        for (const div of this.querySelectorAll('div.valid-feedback,div.invalid-feedback')) {
+            div.classList.remove('d-block');
+            div.classList.add('d-none');
+        }
+        for (const input of this.querySelectorAll('input, textarea, select')) {
+            input.classList.remove('is-valid');
+            input.classList.remove('is-invalid');
+        }
+        this.ncName.focus();
+    });
+
+    for (const input of form.querySelectorAll('input, textarea, select')) {
+        input.addEventListener('change', defaultCheckElement);
+    }
+}
+
+
+export { newDishValidation, deleteDishValidator,assignDTMValidation,unassignDishFromMenuValidation, newCategoryValidation,removeCategoryValidation };

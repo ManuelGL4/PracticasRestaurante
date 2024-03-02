@@ -136,19 +136,24 @@ const RestaurantsManager = (function () {
         if (!categoryToRemove || !(categoryToRemove instanceof Category) || !this.#categories.includes(categoryToRemove)) {
           throw new Error('La categoría no está registrada.');
         }
-
+    
         // Desasignar platos de la categoría
-        this.#dishes.forEach((dish) => {
-          dish.setCategories(dish.getCategories().filter((cat) => cat !== categoryToRemove));
+        this.#dishes.forEach(dish => {
+          dish.categories.forEach(cat => {
+            if (cat === categoryToRemove) {
+              this.deassignCategoryToDish(cat, dish.dish);
+            }
+          });
         });
-
+    
         // Eliminar la categoría
         const index = this.#categories.indexOf(categoryToRemove);
         this.#categories.splice(index, 1);
       });
-
+    
       return this;
     }
+    
 
     //Metodo addMenu
     addMenu(...newMenus) {
@@ -345,25 +350,22 @@ assignCategoryToDish(category, ...dishs) {
 
     //Metodo deassignCategoryToDish
     deassignCategoryToDish(category, dish) {
-      // Verificar si category es nulo o no está registrada
-      if (!category || !(category instanceof Category) || !this.#categories.includes(category)) {
-        throw new Error('La categoría no está registrada.');
-      }
 
+
+      let positionDish = this.#dishes.findIndex(d => d.dish === dish);
       // Verificar si dish es nulo o no está registrado
-      if (!dish || !(dish instanceof Dish) || !this.#dishes.includes(dish)) {
+      if (positionDish === -1) {
         throw new Error('El plato no está registrado.');
       }
 
-      // Obtener el array de platos de la categoría
-      const categoryDishes = category.getDishes();
-
-      // Encontrar y eliminar la relación con el plato
-      for (let i = 0; i < categoryDishes.length; i++) {
-        if (categoryDishes[i] === dish) {
-          categoryDishes.splice(i, 1);
-        }
+      let cat = this.#categories.indexOf(category);
+      let categorias = this.#dishes[positionDish].categories;
+      let index = categorias.findIndex((categ) => categ.name === category.name);
+      // Verificar si category es nulo o no está registrada
+      if (cat === -1 || index === -1) {
+        throw new Error('La categoría no está registrada.');
       }
+      categorias.splice(index, 1);
 
       return this;
     }
@@ -709,6 +711,16 @@ getMenuByName(name) {
 
   return menuObject.menu;
 }
+getCategoryByName(name) {
+  const category = this.#categories.find(category => category.getName() === name);
+
+  if (category) {
+    return category;
+  } else {
+    throw new Error('La categoría especificada no está registrada.');
+  }
+}
+
 
 
   }

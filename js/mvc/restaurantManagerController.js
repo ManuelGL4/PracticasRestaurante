@@ -254,8 +254,29 @@ class RestaurantManagerController {
     handleCDCategory = () => {
         this[VIEW].showCategoryForm();
         this[VIEW].bindNewCategoryForm(this.handleCreateCategory);
+        this[VIEW].bindRemoveCategoryForm(this.handleRemoveCategory);
     }
 
+    handleRemoveCategory(cat) {
+        console.log(cat);
+        const manager = RestaurantsManager.getInstance();
+        let done;
+        let error;
+        try {
+            const category = manager.getCategoryByName(cat);
+            console.log(category);
+            const success = manager.removeCategory(category);
+            done = success ? true : false;
+        } catch (exception) {
+            done = false;
+            error = exception.message;
+        }
+        console.log(done);
+        /*this[VIEW].showRemoveCategoryModal(done, cat);
+        this[VIEW].showCategoryForm();
+        this[VIEW].bindRemoveCategoryForm(this.handleRemoveCategory);*/
+    }
+    
     handleCreateCategory(name, description) {
         const cat = new Category(name, description);
         console.log(name + description);
@@ -273,7 +294,7 @@ class RestaurantManagerController {
         }
         console.log(done);
 //        this[VIEW].showNewCategoryModal(done); MIRAR PORQUE NO VA ESTO SI SE DESCOMENTA
-    }
+}
 
     handleAssignDishToMenu = (dishName, selectedMenuName) => {
         const manager = RestaurantsManager.getInstance();
