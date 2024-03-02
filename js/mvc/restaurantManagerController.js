@@ -17,8 +17,7 @@ class RestaurantManagerController {
     onLoad = () => {
         this.initApp();
         this[VIEW].showAdminMenu();
-        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenuForm, this.handleCDCategory);
-
+        this[VIEW].bindAdminMenu(this.handleNewDishForm, this.handleRemoveDishForm, this.handleAssignDishToMenuForm, this.handleCDCategory,this.handleNewRestaurantForm);
     }
 
     initApp() {
@@ -255,6 +254,10 @@ class RestaurantManagerController {
         this[VIEW].showCategoryForm();
         this[VIEW].bindNewCategoryForm(this.handleCreateCategory);
         this[VIEW].bindRemoveCategoryForm(this.handleRemoveCategory);
+    }
+
+    handleNewRestaurantForm= () => {
+        this[VIEW].showNewRestaurantForm();
     }
 
     handleRemoveCategory(cat) {

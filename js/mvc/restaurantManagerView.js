@@ -28,7 +28,7 @@ class RestaurantManagerView {
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelDish" class="dropdown-item" href="#del-category">Eliminar Plato</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lassignMenu" class="dropdown-item" href="#new-product">Asignar-Desasignar Menú</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="ldelCategory" class="dropdown-item" href="#del-category">Crear-Eliminar Categorias</a></li>')
-		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Crear Restaurante</a></li>');
+		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewRestaurante" class="dropdown-item" href="#new-product">Crear Restaurante</a></li>');
 		suboptions.insertAdjacentHTML('beforeend', '<li><a id="lnewProduct" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>');
 		menuOption.append(suboptions);
 		const menu = document.querySelector('.menu');
@@ -136,7 +136,7 @@ value="" required></textarea>
 		this.main.append(container);
 	}
 
-	bindAdminMenu(hNewDish, hRemoveDish, hAssignMenuDish, hCDCategory) {
+	bindAdminMenu(hNewDish, hRemoveDish, hAssignMenuDish, hCDCategory,hNewRestaurant) {
 		const newCategoryLink = document.getElementById('lnewDish');
 		newCategoryLink.addEventListener('click', (event) => {
 			hNewDish();
@@ -152,6 +152,10 @@ value="" required></textarea>
 		const categoryCDMenuLink = document.getElementById('ldelCategory');
 		categoryCDMenuLink.addEventListener('click', (event) => {
 			hCDCategory();
+		});
+		const restaurantLink = document.getElementById('lnewRestaurante');
+		restaurantLink.addEventListener('click', (event) => {
+			hNewRestaurant();
 		});
 	}
 
@@ -633,6 +637,72 @@ value="" required></textarea>
 			once: true
 		});
 	}
+
+	showNewRestaurantForm() {
+		const container = document.createElement('div');
+		container.insertAdjacentHTML(
+			'afterbegin',
+			'<h1 class="display-5">Nuevo Restaurante</h1>',
+		);
+		this.main.replaceChildren();
+		const form = document.createElement('form');
+		form.name = 'fNewRest';
+		form.setAttribute('role', 'form');
+		form.setAttribute('novalidate', '');
+		form.classList.add('row');
+		form.classList.add('g-3');
+		//name B, description = '' B, location de objeto Coordinate
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="col-md-6 mb-3">
+			<label class="form-label" for="ndName">Nombre del nuevo restaurante</label>
+			<div class="input-group">
+				<span class="input-group-text"><i class="bi bi-type"></i></span>
+				<input type="text" class="form-control" id="ndName"
+					name="ndName"
+					placeholder="Nombre del restaurante" value="" required>
+				<div class="invalid-feedback">El nombre del restaurante.</div>
+				<div class="valid-feedback">Correcto.</div>
+			</div>
+		</div>
+		<div class="col-md-12 mb-3">
+			<label class="form-label" for="ndImg">Descripcion del restaurante</label>
+			<div class="input-group">
+				<span class="input-group-text"><i class="bi bi-fileimage"></i></span>
+				<input type="text" class="form-control" id="ndName"
+					name="ndName"
+					placeholder="Este restaurante cuenta con......" value="" required>
+				<div class="invalid-feedback"></div>
+				<div class="valid-feedback">Correcto.</div>
+			</div>
+		</div>
+		<div class="col-md-6 mb-3">
+			<label class="form-label" for="ndDescription">Ubicacion</label>
+			<div class="input-group">
+			<span class="input-group-text">Latitud y longitud</span>
+			<input type="text" aria-label="First name" class="form-control">
+			<input type="text" aria-label="Last name" class="form-control">
+		  </div>
+		</div>
+		`,
+		);
+	
+		form.insertAdjacentHTML(
+			'beforeend',
+			`
+		<div class="mb-12">
+		<button class="btn btn-primary" type="submit">Enviar</button>
+		<button class="btn btn-primary" type="reset">Cancelar</button>
+		</div>
+		</form>`,
+		);
+		container.append(form);
+
+		this.main.append(container);
+	}
+
+
 
 
 	showDishesInCentralZone(dishesInCategory) {
