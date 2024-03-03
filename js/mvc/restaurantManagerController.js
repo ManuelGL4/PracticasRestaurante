@@ -32,12 +32,16 @@ class RestaurantManagerController {
       this[VIEW].showCookiesMessage();
     }
 
-    if (getCookie('username')) {
-        this[VIEW].displayGreeting(getCookie('username'));
+    if (getCookie("username")) {
+      this[VIEW].displayGreeting(getCookie("username"));
+      const usernameCookie = getCookie("username");
+      this[VIEW].showAuthUserProfileWCookie(usernameCookie);
     } else {
       this[VIEW].showIdentificationLink();
       this[VIEW].bindIdentificationLink(this.handleLoginForm);
+      this.onCloseSession();
     }
+    this[VIEW].bindCloseSession(this.handleCloseSession);
 
     this[VIEW].showAdminMenu();
     this[VIEW].bindAdminMenu(
@@ -314,19 +318,33 @@ class RestaurantManagerController {
   handleLogin = (username, password) => {
     if (this[AUTH].validateUser(username, password)) {
       this[USER] = this[AUTH].getUser(username);
-     
+
       this.onOpenSession();
     } else {
       this[VIEW].showInvalidUserMessage();
     }
   };
-  onOpenSession(){
+  onOpenSession() {
     console.log("HAS INICIADO SESION");
-    const usernameCookie = getCookie('username');
+    const usernameCookie = getCookie("username");
 
     this[VIEW].showAuthUserProfile(this[USER]);
     this[VIEW].displayGreeting(usernameCookie);
-}
+    this[VIEW].bindCloseSession(this.handleCloseSession);
+  }
+
+  handleCloseSession = () => {
+    this.onCloseSession();
+  };
+
+  onCloseSession() {
+    this[USER] = null;
+    this[VIEW].deleteUserCookie();
+    this[VIEW].showIdentificationLink();
+    this[VIEW].bindIdentificationLink(this.handleLoginForm);
+    this[VIEW].removeDisplayGretting();
+    //this[VIEW].removeAdminMenu(); DESCOMENTAR CUANDO SE HAGA LO DEL ADMIN MENU
+  }
 
   handleCategoryClick(category) {
     const manager = RestaurantsManager.getInstance();

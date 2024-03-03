@@ -95,7 +95,7 @@ class RestaurantManagerView {
   bindIdentificationLink(handler) {
     const login = document.getElementById("login");
     login.addEventListener("click", (event) => {
-		console.log("INCIA SESION");
+      console.log("INCIA SESION");
       handler();
     });
   }
@@ -162,32 +162,71 @@ type="submit">Acceder</button>
   }
 
   showAuthUserProfile(user) {
-	const userArea = document.getElementById('userArea');
-	userArea.replaceChildren();
-	userArea.insertAdjacentHTML('afterbegin', `<div class="account d-flex
+    const userArea = document.getElementById("userArea");
+    userArea.replaceChildren();
+    userArea.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="account d-flex
 	mx-2 flex-column" style="text-align: right">
 	${user.username} <a id="aCloseSession" href="#">Cerrar sesión</a>
 	</div>
 	<div class="image">
 	<img alt="${user.username}" src="../img/user.png" />
-	</div>`);
-	//AÑADIR LA COOKIE
-	setCookie('username', user.username, 1);
-	}
+	</div>`
+    );
+    //AÑADIR LA COOKIE
+    setCookie("username", user.username, 1);
+  }
+  showAuthUserProfileWCookie(username) {
+    const userArea = document.getElementById("userArea");
+    userArea.replaceChildren();
+    userArea.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="account d-flex
+		mx-2 flex-column" style="text-align: right">
+		${username} <a id="aCloseSession" href="#">Cerrar sesión</a>
+		</div>
+		<div class="image">
+		<img alt="${username}" src="../img/user.png" />
+		</div>`
+    );
+  }
 
-	displayGreeting(username) {
+  displayGreeting(username) {
     if (username) {
-		console.log(username);
-		this.main.insertAdjacentHTML(
-			"beforeend",
-			`<div class="container my3"><div class="alert alert-success" role="alert">
+      console.log(username);
+      this.main.insertAdjacentHTML(
+        "beforeend",
+        `<div class="container my3"><div class="alert alert-success" role="alert">
 			Bienvenido  ${username}.
 		  </div></div>`
-		  );
+      );
     }
-}
+  }
 
+  deleteUserCookie() {
+    setCookie("username", "", 0);
+  }
 
+  bindCloseSession(handler) {
+    document.getElementById("aCloseSession").addEventListener("click", (event) => {
+        console.log("CERRANDO SESION");
+        handler();
+        event.preventDefault();
+      });
+  }
+  /*removeAdminMenu() {
+    const adminMenu = document.getElementById('adminMenu');
+    if (adminMenu) adminMenu.parentElement.remove();
+    }
+    */
+
+  removeDisplayGretting() {
+    const greetingAlert = document.querySelector(".alert.alert-success");
+    if (greetingAlert) {
+      greetingAlert.parentElement.remove();
+    }
+  }
   showAdminMenu() {
     const menuOption = document.createElement("li");
     menuOption.classList.add("nav-item");
