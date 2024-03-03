@@ -81,6 +81,113 @@ class RestaurantManagerView {
     });
   }
 
+  showIdentificationLink() {
+    const userArea = document.getElementById("userArea");
+    userArea.replaceChildren();
+    userArea.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="account d-flex
+	mx-2 flex-column" style="text-align: right; height: 40px">
+	<a id="login" href="#"><i class="bi bi-person-circle" ariahidden="true"></i> Identificate</a>
+	</div>`
+    );
+  }
+  bindIdentificationLink(handler) {
+    const login = document.getElementById("login");
+    login.addEventListener("click", (event) => {
+		console.log("INCIA SESION");
+      handler();
+    });
+  }
+
+  showLogin() {
+    this.main.replaceChildren();
+    const login = `<div class="container h-100">
+		<div class="d-flex justify-content-center h-100">
+		<div class="user_card">
+		<div class="d-flex justify-content-center form_container">
+		<form name="fLogin" role="form" novalidate>
+		<div class="input-group mb-3">
+		<div class="input-group-append">
+		<span class="input-group-text"><i class="bi bi-personcircle"></i></span>
+		</div>
+		<input type="text" name="username" class="form-control
+		input_user" value="" placeholder="Usuario">
+		</div>
+		<div class="input-group mb-2">
+		<div class="input-group-append">
+		<span class="input-group-text"><i class="bi bi-keyfill"></i></span>
+		</div>
+		<input type="password" name="password" class="form-control
+		input_pass" value="" placeholder="Contraseña">
+		</div>
+		<div class="form-group">
+		<div class="custom-control custom-checkbox">
+		<input name="remember" type="checkbox" class="customcontrol-input" id="customControlInline">
+		<label class="custom-control-label"
+for="customControlInline">Recuerdame</label>
+</div>
+</div>
+<div class="d-flex justify-content-center mt-3
+login_container">
+<button class="btn login_btn"
+type="submit">Acceder</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>`;
+    this.main.insertAdjacentHTML("afterbegin", login);
+  }
+
+  bindLogin(handler) {
+    const form = document.forms.fLogin;
+    form.addEventListener("submit", (event) => {
+      handler(form.username.value, form.password.value);
+      event.preventDefault();
+    });
+  }
+
+  showInvalidUserMessage() {
+    this.main.insertAdjacentHTML(
+      "beforeend",
+      `<div class="container my3"><div class="alert alert-warning" role="alert">
+	<strong>El usuario y la contraseña no son válidos. Inténtelo
+	nuevamente.</strong>
+	</div></div>`
+    );
+    document.forms.fLogin.reset();
+    document.forms.fLogin.username.focus();
+  }
+
+  showAuthUserProfile(user) {
+	const userArea = document.getElementById('userArea');
+	userArea.replaceChildren();
+	userArea.insertAdjacentHTML('afterbegin', `<div class="account d-flex
+	mx-2 flex-column" style="text-align: right">
+	${user.username} <a id="aCloseSession" href="#">Cerrar sesión</a>
+	</div>
+	<div class="image">
+	<img alt="${user.username}" src="../img/user.png" />
+	</div>`);
+	//AÑADIR LA COOKIE
+	setCookie('username', user.username, 1);
+	}
+
+	displayGreeting(username) {
+    if (username) {
+		console.log(username);
+		this.main.insertAdjacentHTML(
+			"beforeend",
+			`<div class="container my3"><div class="alert alert-success" role="alert">
+			Bienvenido  ${username}.
+		  </div></div>`
+		  );
+    }
+}
+
+
   showAdminMenu() {
     const menuOption = document.createElement("li");
     menuOption.classList.add("nav-item");

@@ -1,3 +1,4 @@
+import AuthenticationService from "../authentication/authentication.js";
 import { getCookie } from "../clases/util.js";
 import { RestaurantsManager } from "../clases/resturantManager.js";
 import {
@@ -12,19 +13,29 @@ import RestaurantManagerView from "./restaurantManagerView.js";
 
 const MODEL = Symbol("RestaurantsManager");
 const VIEW = Symbol("RestaurantManagerView");
+const AUTH = Symbol("AUTH");
+const USER = Symbol("USER");
 
 class RestaurantManagerController {
-  constructor() {
-    this[MODEL] = RestaurantsManager.getInstance();
-    this[VIEW] = new RestaurantManagerView();
+  constructor(model, view, auth) {
+    this[MODEL] = model;
+    this[VIEW] = view;
+    this[AUTH] = auth;
+    this[USER] = null;
     this[VIEW].bindInit(this.handleInit);
     this.onLoad();
   }
   onLoad = () => {
     this.initApp();
-    
+
     if (getCookie("accetedCookieMessage") !== "true") {
       this[VIEW].showCookiesMessage();
+    }
+
+    if (getCookie("activeUser")) {
+    } else {
+      this[VIEW].showIdentificationLink();
+      this[VIEW].bindIdentificationLink(this.handleLoginForm);
     }
 
     this[VIEW].showAdminMenu();
@@ -293,6 +304,28 @@ class RestaurantManagerController {
     this[VIEW].showAllCategories(categories);
     this[VIEW].showRandomDishes(dishes);
   } //Fin InitApp
+
+  handleLoginForm = () => {
+    this[VIEW].showLogin();
+    this[VIEW].bindLogin(this.handleLogin);
+  };
+
+  handleLogin = (username, password) => {
+    if (this[AUTH].validateUser(username, password)) {
+      this[USER] = this[AUTH].getUser(username);
+     
+      this.onOpenSession();
+    } else {
+      this[VIEW].showInvalidUserMessage();
+    }
+  };
+  onOpenSession(){
+    console.log("HAS INICIADO SESION");
+    const usernameCookie = getCookie('username');
+
+    this[VIEW].showAuthUserProfile(this[USER]);
+    this[VIEW].displayGreeting(usernameCookie);
+}
 
   handleCategoryClick(category) {
     const manager = RestaurantsManager.getInstance();
