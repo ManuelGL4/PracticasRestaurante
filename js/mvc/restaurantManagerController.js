@@ -32,7 +32,8 @@ class RestaurantManagerController {
       this[VIEW].showCookiesMessage();
     }
 
-    if (getCookie("activeUser")) {
+    if (getCookie('username')) {
+        this[VIEW].displayGreeting(getCookie('username'));
     } else {
       this[VIEW].showIdentificationLink();
       this[VIEW].bindIdentificationLink(this.handleLoginForm);
