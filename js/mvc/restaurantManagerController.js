@@ -308,6 +308,32 @@ class RestaurantManagerController {
             done = false;
             error = exception.message;
         }
+
+        const messageModalContainer = document.getElementById('messageModal');
+		const messageModal = new bootstrap.Modal('#messageModal');
+		const title = document.getElementById('messageModalTitle');
+		title.innerHTML = 'Modificacion categoria';
+		const body = messageModalContainer.querySelector('.modal-body');
+		body.replaceChildren();
+		if (done) {
+			body.insertAdjacentHTML('afterbegin', `<div class="p-3">El plato <strong>${plato}</strong> ha sido <strong>${action}</strong> de la categoria <strong>${categoria}</strong> .</div>`);
+		} else {
+			body.insertAdjacentHTML(
+				'afterbegin',
+				`<div class="error text-danger p-3"><i class="bi bi-exclamationtriangle"></i> El plato <strong>${plato}</strong> no ha sido <strong>${action}</strong> posible de la categoria <strong>${categoria}</strong>.ERROR:<strong>${error}</strong> .</div>`,
+			);
+		}
+		messageModal.show();
+		const listener = (event) => {
+			if (done) {
+				document.fNewDish.reset();
+			}
+			document.fNewDish.ncTitle.focus();
+		};
+		messageModalContainer.addEventListener('hidden.bs.modal', listener, {
+			once: true
+		});
+
     
         //this[VIEW].showChangeCatModal(categoria, plato, done, error);
     }
