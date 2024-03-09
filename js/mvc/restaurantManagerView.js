@@ -1102,7 +1102,7 @@ value="" required></textarea>
 
   showDishesInCentralZone(dishesInCategory) {
     const centralZone = document.getElementById("central-zone");
-
+  
     // Iterar sobre los platos usando el iterador
     for (const dish of dishesInCategory) {
       const dishElement = document.createElement("div");
@@ -1113,13 +1113,29 @@ value="" required></textarea>
       dishElement.appendChild(dishImage);
       dishElement.textContent = dish.dish.name;
 
+      const addToFavoritesButton = document.createElement("button");
+      addToFavoritesButton.textContent = "Añadir a favoritos";
+      addToFavoritesButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.addToFavorites(dish);
+      });
+      dishElement.appendChild(addToFavoritesButton);
+  
       // Agregar evento de clic para mostrar los detalles del plato
       dishElement.addEventListener("click", () => this.showDishDetails(dish));
-      console.log(dish);
+  
       centralZone.appendChild(dishElement);
     }
   }
-
+  
+  addToFavorites(dish) {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    favorites.push({ dish });
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  
+    console.log("Platos favoritos:", favorites);
+  }
+  
   showAllergenInCentralZone(dishesWithAllergen) {
     const centralZone = document.getElementById("central-zone");
 
