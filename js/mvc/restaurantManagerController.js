@@ -44,7 +44,8 @@ class RestaurantManagerController {
         this.handleAssignDishToMenuForm,
         this.handleCDCategory,
         this.handleNewRestaurantForm,
-        this.handleChangeCategoryForm
+        this.handleChangeCategoryForm,
+        this.handleFavDish
       );
     } else {
       this[VIEW].showIdentificationLink();
@@ -418,6 +419,10 @@ class RestaurantManagerController {
     this[VIEW].showChangeCategoryForm(catIterator, dishesIterator);
     this[VIEW].bindChangeCategory(this.handleChangeCategory);
   };
+
+  handleFavDish = () => {
+    this[VIEW].showFavoriteDishes();
+  }
 
   handleChangeCategory(categoria, plato, action) {
     //ACTION SOLO PUEDE SER:asignar/desasignar

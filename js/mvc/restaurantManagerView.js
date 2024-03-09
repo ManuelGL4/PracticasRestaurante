@@ -1,4 +1,4 @@
-import { setCookie } from "../clases/util.js";
+import { setCookie,getCookie } from "../clases/util.js";
 import {
   changeCategoryValidation,
   newRestaurantValidation,
@@ -261,6 +261,10 @@ type="submit">Acceder</button>
       "beforeend",
       '<li><a id="cCatDish" class="dropdown-item" href="#new-product">Modificar Categorias Plato</a></li>'
     );
+    suboptions.insertAdjacentHTML(
+      "beforeend",
+      '<li><a id="vFavDish" class="dropdown-item" href="#favourite-dish">Platos Favoritos</a></li>'
+    );
     menuOption.append(suboptions);
     const menu = document.querySelector(".menu");
     menu.appendChild(menuOption);
@@ -379,7 +383,8 @@ value="" required></textarea>
     hAssignMenuDish,
     hCDCategory,
     hNewRestaurant,
-    hChangeCatDish
+    hChangeCatDish,
+    hFavDish
   ) {
     const newCategoryLink = document.getElementById("lnewDish");
     newCategoryLink.addEventListener("click", (event) => {
@@ -404,6 +409,10 @@ value="" required></textarea>
     const changeCatDish = document.getElementById("cCatDish");
     changeCatDish.addEventListener("click", (event) => {
       hChangeCatDish();
+    });
+    const favDish = document.getElementById("vFavDish");
+    favDish.addEventListener("click", (event) => {
+      hFavDish();
     });
   }
 
@@ -1112,7 +1121,7 @@ value="" required></textarea>
       dishImage.alt = dish.dish.getName();
       dishElement.appendChild(dishImage);
       dishElement.textContent = dish.dish.name;
-
+      if (getCookie("username")) {
       const addToFavoritesButton = document.createElement("button");
       addToFavoritesButton.textContent = "Añadir a favoritos";
       addToFavoritesButton.addEventListener("click", (event) => {
@@ -1120,7 +1129,7 @@ value="" required></textarea>
         this.addToFavorites(dish);
       });
       dishElement.appendChild(addToFavoritesButton);
-  
+    }
       // Agregar evento de clic para mostrar los detalles del plato
       dishElement.addEventListener("click", () => this.showDishDetails(dish));
   
@@ -1135,6 +1144,74 @@ value="" required></textarea>
   
     console.log("Platos favoritos:", favorites);
   }
+  
+  removeFromFavorites(dishIndex) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    favorites.splice(dishIndex, 1);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+    console.log("Platos favoritos:", favorites);
+
+    // Llama a la función para actualizar la vista
+    this.showFavoriteDishes();
+}
+
+  showFavoriteDishes() {
+    const container = document.createElement("div");
+    container.insertAdjacentHTML(
+      "afterbegin",
+      '<h1 class="display-5">Platos Favoritos</h1>'
+    );
+    this.main.replaceChildren();
+    
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    console.log(favorites);
+    console.log("MOSTRANDO FAV");
+    let favoriteDishesContainer = document.getElementById("favorite-dishes-container");
+    if (!favoriteDishesContainer) {
+        favoriteDishesContainer = document.createElement("div");
+        favoriteDishesContainer.id = "favorite-dishes-container";
+    } else {
+        favoriteDishesContainer.innerHTML = ""; // Limpiar el contenedor si ya existe
+    }
+
+    favorites.forEach((favorite, index) => {
+        const dish = favorite.dish;
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.style.width = "18rem";
+
+        const image = document.createElement("img");
+        image.src = "../img/" + dish.dish.image;
+        image.classList.add("card-img-top");
+        image.alt = dish.name;
+
+        const cardBody = document.createElement("div");
+        cardBody.classList.add("card-body");
+
+        const cardText = document.createElement("p");
+        cardText.classList.add("card-text");
+        cardText.textContent = dish.dish.name;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("btn", "btn-danger");
+        deleteButton.textContent = "Eliminar";
+        deleteButton.addEventListener("click", () => this.removeFromFavorites(index));
+
+        cardBody.appendChild(cardText);
+        cardBody.appendChild(deleteButton);
+        card.appendChild(image);
+        card.appendChild(cardBody);
+
+        favoriteDishesContainer.appendChild(card);
+    });
+
+    // Agrega favoriteDishesContainer al main
+    this.main.appendChild(container);
+    this.main.appendChild(favoriteDishesContainer);
+}
+
+
   
   showAllergenInCentralZone(dishesWithAllergen) {
     const centralZone = document.getElementById("central-zone");
