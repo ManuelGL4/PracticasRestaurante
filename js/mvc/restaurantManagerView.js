@@ -215,12 +215,12 @@ type="submit">Acceder</button>
         event.preventDefault();
       });
   }
-  /*removeAdminMenu() {
-    const adminMenu = document.getElementById('adminMenu');
-    if (adminMenu) adminMenu.parentElement.remove();
+  removeAdminMenu() {
+    console.log("QUITANDO ADMIN MENU...");
+    const adminMenu = document.getElementById('navServices');
+    adminMenu.parentElement.remove();
     }
-    */
-
+  
   removeDisplayGretting() {
     const greetingAlert = document.querySelector(".alert.alert-success");
     if (greetingAlert) {

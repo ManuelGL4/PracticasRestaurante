@@ -36,6 +36,16 @@ class RestaurantManagerController {
       this[VIEW].displayGreeting(getCookie("username"));
       const usernameCookie = getCookie("username");
       this[VIEW].showAuthUserProfileWCookie(usernameCookie);
+
+      this[VIEW].showAdminMenu();
+      this[VIEW].bindAdminMenu(
+        this.handleNewDishForm,
+        this.handleRemoveDishForm,
+        this.handleAssignDishToMenuForm,
+        this.handleCDCategory,
+        this.handleNewRestaurantForm,
+        this.handleChangeCategoryForm
+      );
     } else {
       this[VIEW].showIdentificationLink();
       this[VIEW].bindIdentificationLink(this.handleLoginForm);
@@ -43,15 +53,6 @@ class RestaurantManagerController {
     }
     this[VIEW].bindCloseSession(this.handleCloseSession);
 
-    this[VIEW].showAdminMenu();
-    this[VIEW].bindAdminMenu(
-      this.handleNewDishForm,
-      this.handleRemoveDishForm,
-      this.handleAssignDishToMenuForm,
-      this.handleCDCategory,
-      this.handleNewRestaurantForm,
-      this.handleChangeCategoryForm
-    );
   };
 
   initApp() {
@@ -331,6 +332,7 @@ class RestaurantManagerController {
     this[VIEW].showAuthUserProfile(this[USER]);
     this[VIEW].displayGreeting(usernameCookie);
     this[VIEW].bindCloseSession(this.handleCloseSession);
+    this.onLoad();
   }
 
   handleCloseSession = () => {
@@ -343,7 +345,7 @@ class RestaurantManagerController {
     this[VIEW].showIdentificationLink();
     this[VIEW].bindIdentificationLink(this.handleLoginForm);
     this[VIEW].removeDisplayGretting();
-    //this[VIEW].removeAdminMenu(); DESCOMENTAR CUANDO SE HAGA LO DEL ADMIN MENU
+    this[VIEW].removeAdminMenu();
   }
 
   handleCategoryClick(category) {
