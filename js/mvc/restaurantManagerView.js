@@ -10,8 +10,8 @@ import {
   newCategoryValidation,
 } from "../clases/validation.js";
 import { RestaurantsManager } from "../clases/resturantManager.js";
+const EXCECUTE_HANDLER = Symbol('excecuteHandler');
 
-const EXECUTE_HANDLER = Symbol("executeHandler");
 
 class RestaurantManagerView {
   constructor() {
@@ -20,6 +20,15 @@ class RestaurantManagerView {
     this.openedWindows = []; // Array de ventanas abiertas
     this.bindCloseAllWindows(this.handleCloseAllWindows.bind(this));
   }
+
+
+	[EXCECUTE_HANDLER](handler, handlerArguments, scrollElement, data, url,event) {
+		handler(...handlerArguments);
+		const scroll = document.querySelector(scrollElement);
+		if (scroll) scroll.scrollIntoView();
+		history.pushState(data, null, url);
+		event.preventDefault();
+	}
 
   showCookiesMessage() {
     const toast = `<div class="fixed-top p-5 mt-5">
@@ -122,11 +131,6 @@ class RestaurantManagerView {
 		input_pass" value="" placeholder="Contraseña">
 		</div>
 		<div class="form-group">
-		<div class="custom-control custom-checkbox">
-		<input name="remember" type="checkbox" class="customcontrol-input" id="customControlInline">
-		<label class="custom-control-label"
-for="customControlInline">Recuerdame</label>
-</div>
 </div>
 <div class="d-flex justify-content-center mt-3
 login_container">
@@ -1172,7 +1176,7 @@ value="" required></textarea>
         favoriteDishesContainer = document.createElement("div");
         favoriteDishesContainer.id = "favorite-dishes-container";
     } else {
-        favoriteDishesContainer.innerHTML = ""; // Limpiar el contenedor si ya existe
+        favoriteDishesContainer.innerHTML = "";
     }
 
     favorites.forEach((favorite, index) => {
@@ -1230,6 +1234,8 @@ value="" required></textarea>
       dishElement.addEventListener("click", () => this.showDishDetails(dish));
 
       centralZone.appendChild(dishElement);
+      const handler = this.showAllergenInCentralZone.bind(this, dishesWithAllergen);
+    this[EXCECUTE_HANDLER](handler, [], "#central-zone", dishesWithAllergen, "", null);
     }
   }
 
@@ -1447,20 +1453,7 @@ value="" required></textarea>
     });
   }
 
-  [EXECUTE_HANDLER](
-    handler,
-    handlerArguments,
-    scrollElement,
-    data,
-    url,
-    event
-  ) {
-    handler(...handlerArguments);
-    const scroll = document.querySelector(scrollElement);
-    if (scroll) scroll.scrollIntoView();
-    history.pushState(data, null, url);
-    event.preventDefault();
-  }
+
 
   bindInit(handler) {
     const logoElements = document.getElementsByClassName("menu__logo");

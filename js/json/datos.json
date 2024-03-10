@@ -1,0 +1,167 @@
+{
+    "dishes": [
+      {
+        "name": "Ensalada",
+        "description": "Descripción ensalada",
+        "ingredients": "Ingredientes de ensalada",
+        "image": "ensalada.jpg",
+        "categories": ["Platos Rapidos"],
+        "allergens": ["Gluten", "Mariscos"]
+      },
+      {
+        "name": "Pasta Carbonara",
+        "description": "Descripción pasta carbonara",
+        "ingredients": "Ingredientes de pasta carbonara",
+        "image": "carbonara.jpg",
+        "categories": ["Platos Rapidos"],
+        "allergens": ["Lactosa"]
+      },
+      {
+        "name": "Pizza Margarita",
+        "description": "Descripción pizza margarita",
+        "ingredients": "Ingredientes de pizza margarita",
+        "image": "margarita.jpg",
+        "categories": ["Platos Rapidos"],
+        "allergens": ["Gluten"]
+      },
+      {
+        "name": "Hamburguesa",
+        "description": "Descripción hamburguesa",
+        "ingredients": "Ingredientes de hamburguesa",
+        "image": "hamburguesa.jpg",
+        "categories": ["Platos Rapidos"],
+        "allergens": ["Gluten", "Lactosa"]
+      },
+      {
+        "name": "Sushi",
+        "description": "Descripción sushi",
+        "ingredients": "Ingredientes de sushi",
+        "image": "sushi.jpg",
+        "categories": ["Platos con sabor a Mar"],
+        "allergens": ["Lactosa"]
+      },
+      {
+        "name": "Tacos",
+        "description": "Descripción tacos",
+        "ingredients": "Ingredientes de tacos",
+        "image": "tacos.jpg",
+        "categories": ["Platos con sabor a Mar"],
+        "allergens": ["Lactosa"]
+      },
+      {
+        "name": "Filete de Salmón",
+        "description": "Descripción filete de salmón",
+        "ingredients": "Ingredientes de filete de salmón",
+        "image": "salmon.jpg",
+        "categories": ["Platos con sabor a Mar"],
+        "allergens": ["Nueces"]
+      },
+      {
+        "name": "Paella",
+        "description": "Descripción paella",
+        "ingredients": "Ingredientes de paella",
+        "image": "paella.jpg",
+        "categories": ["Platos con sabor a Mar"],
+        "allergens": ["Lactosa", "Nueces"]
+      },
+      {
+        "name": "Filete",
+        "description": "Descripción filete",
+        "ingredients": "Ingredientes de filete",
+        "image": "filete.jpg",
+        "categories": ["Platos de carne"],
+        "allergens": ["Gluten"]
+      },
+      {
+        "name": "Curry de Pollo",
+        "description": "Descripción curry de pollo",
+        "ingredients": "Ingredientes de curry de pollo",
+        "image": "curry.jpg",
+        "categories": ["Platos de carne"],
+        "allergens": ["Gluten"]
+      },
+      {
+        "name": "Lasagna",
+        "description": "Descripción lasagna",
+        "ingredients": "Ingredientes de lasagna",
+        "image": "lasagna.jpg",
+        "categories": ["Platos de carne"],
+        "allergens": ["Mariscos"]
+      },
+      {
+        "name": "Sopa",
+        "description": "Descripción sopa",
+        "ingredients": "Ingredientes de sopa",
+        "image": "sopa.jpg",
+        "categories": ["Platos de carne"],
+        "allergens": ["Mariscos"]
+      }
+    ],
+    "categories": [
+      {
+        "name": "Platos Rapidos",
+        "description": "Variedad de ensaladas frescas"
+      },
+      {
+        "name": "Platos con sabor a Mar",
+        "description": "Deliciosos platos tradicionales italianos"
+      },
+      {
+        "name": "Platos de carne",
+        "description": "Sabores auténticos de Asia"
+      }
+    ],
+    "allergens": [
+      {
+        "name": "Gluten",
+        "description": "Contiene gluten"
+      },
+      {
+        "name": "Lactosa",
+        "description": "Contiene lactosa"
+      },
+      {
+        "name": "Nueces",
+        "description": "Puede contener trazas de nueces"
+      },
+      {
+        "name": "Mariscos",
+        "description": "Contiene mariscos"
+      }
+    ],
+    "menus": [
+      {
+        "name": "Menú Degustación",
+        "description": "platos destacados.",
+        "dishes": ["Ensalada", "Pasta Carbonara", "Pizza Margarita"]
+      },
+      {
+        "name": "Menú Infantil",
+        "description": "para los más pequeños.",
+        "dishes": ["Hamburguesa", "Sushi", "Tacos"]
+      },
+      {
+        "name": "Menú Vegetariano",
+        "description": "Para aquellos que prefieren una opción sin carne.",
+        "dishes": ["Filete de Salmón", "Paella", "Filete"]
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "Restaurante Italiano",
+        "description": "Ofrecemos auténtica comida italiana en un ambiente acogedor.",
+        "coordinate": { "latitude": 41.9028, "longitude": 12.4964 }
+      },
+      {
+        "name": "Restaurante Mexicano",
+        "description": "Disfruta de la vibrante cocina mexicana con auténticos sabores y especias.",
+        "coordinate": { "latitude": 23.6345, "longitude": -102.5528 }
+      },
+      {
+        "name": "Restaurante Asiático",
+        "description": "Sumérgete en la exótica comida asiática con una amplia variedad de platos y sabores.",
+        "coordinate": { "latitude": 35.6895, "longitude": 139.6917 }
+      }
+    ]
+  }
+  

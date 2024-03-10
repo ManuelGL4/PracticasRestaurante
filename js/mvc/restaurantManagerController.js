@@ -58,194 +58,137 @@ class RestaurantManagerController {
 
   initApp() {
     const manager = RestaurantsManager.getInstance();
-    //12 PLATOS
-    const dish1 = new Dish(
-      "Ensalada",
-      "Descripción ensalada",
-      "Ingredientes de ensalada",
-      "ensalada.jpg"
-    );
-    const dish2 = new Dish(
-      "Pasta Carbonara",
-      "Descripción pasta carbonara",
-      "Ingredientes de pasta carbonara",
-      "carbonara.jpg"
-    );
-    const dish3 = new Dish(
-      "Pizza Margarita",
-      "Descripción pizza margarita",
-      "Ingredientes de pizza margarita",
-      "margarita.jpg"
-    );
-    const dish4 = new Dish(
-      "Hamburguesa",
-      "Descripción hamburguesa",
-      "Ingredientes de hamburguesa",
-      "hamburguesa.jpg"
-    );
-    const dish5 = new Dish(
-      "Sushi",
-      "Descripción sushi",
-      "Ingredientes de sushi",
-      "sushi.jpg"
-    );
-    const dish6 = new Dish(
-      "Tacos",
-      "Descripción tacos",
-      "Ingredientes de tacos",
-      "tacos.jpg"
-    );
-    const dish7 = new Dish(
-      "Filete de Salmón",
-      "Descripción filete de salmón",
-      "Ingredientes de filete de salmón",
-      "salmon.jpg"
-    );
-    const dish8 = new Dish(
-      "Paella",
-      "Descripción paella",
-      "Ingredientes de paella",
-      "paella.jpg"
-    );
-    const dish9 = new Dish(
-      "Filete",
-      "Descripción filete",
-      "Ingredientes de filete",
-      "filete.jpg"
-    );
-    const dish10 = new Dish(
-      "Curry de Pollo",
-      "Descripción curry de pollo",
-      "Ingredientes de curry de pollo",
-      "curry.jpg"
-    );
-    const dish11 = new Dish(
-      "Lasagna",
-      "Descripción lasagna",
-      "Ingredientes de lasagna",
-      "lasagna.jpg"
-    );
-    const dish12 = new Dish(
-      "Sopa",
-      "Descripción sopa",
-      "Ingredientes de sopa",
-      "sopa.jpg"
-    );
-    //manager.addDish(dish4,dish5,dish6,dish7,dish8,dish9,dish10,dish11,dish12);
-    //3 CATEGORIAS
-    const category1 = new Category(
-      "Platos Rapidos",
-      "Variedad de ensaladas frescas"
-    );
-    const category2 = new Category(
-      "Platos con sabor a Mar",
-      "Deliciosos platos tradicionales italianos"
-    );
-    const category3 = new Category(
-      "Platos de carne",
-      "Sabores auténticos de Asia"
-    );
 
-    manager.assignCategoryToDish(category1, dish1);
-    manager.assignCategoryToDish(category1, dish2);
-    manager.assignCategoryToDish(category1, dish3);
-    manager.assignCategoryToDish(category1, dish4);
-    manager.assignCategoryToDish(category2, dish5);
-    manager.assignCategoryToDish(category2, dish6);
-    manager.assignCategoryToDish(category2, dish7);
-    manager.assignCategoryToDish(category2, dish8);
-    manager.assignCategoryToDish(category3, dish9);
-    manager.assignCategoryToDish(category3, dish10);
-    manager.assignCategoryToDish(category3, dish11);
-    manager.assignCategoryToDish(category3, dish12);
+    fetch('http://127.0.0.1:5500/js/json/datos.json')
+    .then(response => response.json())
+    .then(data => {
+        const { dishes, categories, allergens, menus, restaurants } = data;
 
-    //4 ALERGENOS
-    const allergen1 = new Allergen("Gluten", "Contiene gluten");
-    const allergen2 = new Allergen("Lactosa", "Contiene lactosa");
-    const allergen3 = new Allergen("Nueces", "Puede contener trazas de nueces");
-    const allergen4 = new Allergen("Mariscos", "Contiene mariscos");
-    manager.assignAllergenToDish(allergen1, dish1);
-    manager.assignAllergenToDish(allergen2, dish2);
-    manager.assignAllergenToDish(allergen1, dish3);
-    manager.assignAllergenToDish(allergen1, dish4);
-    manager.assignAllergenToDish(allergen2, dish5);
-    manager.assignAllergenToDish(allergen3, dish7);
-    manager.assignAllergenToDish(allergen2, dish6);
-    manager.assignAllergenToDish(allergen3, dish8);
-    manager.assignAllergenToDish(allergen1, dish9);
-    manager.assignAllergenToDish(allergen1, dish10);
-    manager.assignAllergenToDish(allergen4, dish11);
-    manager.assignAllergenToDish(allergen4, dish12);
-    manager.assignAllergenToDish(allergen4, dish1);
+        for (const dish of dishes) {
+            const newDish = new Dish(dish.name, dish.description, dish.ingredients, dish.image);
+            manager.addDish(newDish);
+        }
+        
+        for (const category of categories) {
+            const newCategory = new Category(category.name, category.description);
+            manager.addCategory(newCategory);
+        }
 
-    //3 MENUS
-    const menu1 = new Menu("Menú Degustación", "platos destacados.");
-    const menu2 = new Menu("Menú Infantil", "para los más pequeños.");
-    const menu3 = new Menu(
-      "Menú Vegetariano",
-      "Para aquellos que prefieren una opción sin carne."
-    );
-    manager.assignDishToMenu(menu1, dish1);
-    manager.assignDishToMenu(menu1, dish2);
-    manager.assignDishToMenu(menu1, dish3);
-    manager.assignDishToMenu(menu2, dish4);
-    manager.assignDishToMenu(menu2, dish5);
-    manager.assignDishToMenu(menu2, dish6);
-    manager.assignDishToMenu(menu3, dish7);
-    manager.assignDishToMenu(menu3, dish8);
-    manager.assignDishToMenu(menu3, dish9);
+        const category1 = manager.getCategoryByName("Platos Rapidos");
+        const category2 = manager.getCategoryByName("Platos con sabor a Mar");
+        const category3 = manager.getCategoryByName("Platos de carne");
 
-    //3 RESTAURANTES
-    const restaurant1 = new Restaurant(
-      "Restaurante Italiano",
-      "Ofrecemos auténtica comida italiana en un ambiente acogedor.",
-      new Coordinate(41.9028, 12.4964)
-    );
-    const restaurant2 = new Restaurant(
-      "Restaurante Mexicano",
-      "Disfruta de la vibrante cocina mexicana con auténticos sabores y especias.",
-      new Coordinate(23.6345, -102.5528)
-    );
-    const restaurant3 = new Restaurant(
-      "Restaurante Asiático",
-      "Sumérgete en la exótica comida asiática con una amplia variedad de platos y sabores.",
-      new Coordinate(35.6895, 139.6917)
-    );
-    manager.addRestaurant(restaurant1, restaurant2, restaurant3);
+        manager.assignCategoryToDish(category1, manager.getDishByName("Ensalada"));
+        manager.assignCategoryToDish(category1, manager.getDishByName("Pasta Carbonara"));
+        manager.assignCategoryToDish(category1, manager.getDishByName("Pizza Margarita"));
+        manager.assignCategoryToDish(category1, manager.getDishByName("Hamburguesa"));
+        manager.assignCategoryToDish(category2, manager.getDishByName("Sushi"));
+        manager.assignCategoryToDish(category2, manager.getDishByName("Tacos"));
+        manager.assignCategoryToDish(category2, manager.getDishByName("Filete de Salmón"));
+        manager.assignCategoryToDish(category2, manager.getDishByName("Paella"));
+        manager.assignCategoryToDish(category3, manager.getDishByName("Filete"));
+        manager.assignCategoryToDish(category3, manager.getDishByName("Curry de Pollo"));
+        manager.assignCategoryToDish(category3, manager.getDishByName("Lasagna"));
+        manager.assignCategoryToDish(category3, manager.getDishByName("Sopa"));
+        
+        console.log('CATEGORÍAS INICIALIZADAS:');
+        for (const category of manager.categories) {
+            console.log(category);
+        }
+
+        console.log('PLATOS INICIALIZADOS:');
+        for (const dish of manager.dishes) {
+            console.log(dish);
+        }
+
+        for (const allergen of allergens) {
+            const newAllergen = new Allergen(allergen.name, allergen.description);
+            manager.addAllergen(newAllergen);
+        }
+        const allergen1 = manager.getAllergenByName("Gluten");
+        const allergen2 = manager.getAllergenByName("Lactosa");
+        const allergen3 = manager.getAllergenByName("Nueces");
+        const allergen4 =manager.getAllergenByName("Mariscos");
+        manager.assignAllergenToDish(allergen1, manager.getDishByName("Ensalada"));
+        manager.assignAllergenToDish(allergen2, manager.getDishByName("Pasta Carbonara"));
+        manager.assignAllergenToDish(allergen1, manager.getDishByName("Pizza Margarita"));
+        manager.assignAllergenToDish(allergen1, manager.getDishByName("Hamburguesa"));
+        manager.assignAllergenToDish(allergen2, manager.getDishByName("Sushi"));
+        manager.assignAllergenToDish(allergen3, manager.getDishByName("Tacos"));
+        manager.assignAllergenToDish(allergen2, manager.getDishByName("Filete de Salmón"));
+        manager.assignAllergenToDish(allergen3,  manager.getDishByName("Paella"));
+        manager.assignAllergenToDish(allergen1, manager.getDishByName("Filete"));
+        manager.assignAllergenToDish(allergen1, manager.getDishByName("Curry de Pollo"));
+        manager.assignAllergenToDish(allergen4, manager.getDishByName("Lasagna"));
+        manager.assignAllergenToDish(allergen4, manager.getDishByName("Sopa"));
+        manager.assignAllergenToDish(allergen4, manager.getDishByName("Ensalada"));
+
+        console.log('ALERGENOS INICIALIZADOS:');
+        for (const allergen of manager.allergens) {
+            console.log(allergen);
+        }
+        for (const dish of manager.dishes) {
+          console.log(dish);
+      }
+
+        for (const menuData of menus) {
+            const newMenu = new Menu(menuData.name, menuData.description);
+            manager.addMenu(newMenu);
+            for (const dishName of menuData.dishes) {
+                const dish = manager.getDishByName(dishName);
+                if (dish) {
+                    manager.assignDishToMenu(newMenu, dish);
+                }
+            }
+        }
+        console.log('MENUS INICIALIZADOS:');
+        for (const menu of manager.menus) {
+            console.log(menu);
+        }
+
+        for (const restaurantData of restaurants) {
+            const newRestaurant = new Restaurant(restaurantData.name, restaurantData.description, restaurantData.coordinate);
+            manager.addRestaurant(newRestaurant);
+        }
+        console.log('RESTAURANTES INICIALIZADOS:');
+        for (const restaurant of manager.restaurants) {
+            console.log(restaurant);
+        }
 
     //Pasar las categorias a array
-    let categories = [];
+    let categoriesArra = [];
     for (const category of manager.getCategories()) {
-      categories.push(category);
+      categoriesArra.push(category);
     }
+
     //Pasar los platos a array
-    let dishes = [];
+    let dishesArra = [];
     for (const dish of manager.getDishes()) {
-      dishes.push(dish);
+      dishesArra.push(dish);
     }
     //Pasar los alergenos a array
-    let alergens = [];
+    let alergensArra = [];
     for (const dish of manager.getAllergens()) {
-      alergens.push(dish);
+      alergensArra.push(dish);
     }
 
-    let menus = [];
+    let menusArra = [];
     for (const dish of manager.getMenus()) {
-      menus.push(dish);
+      menusArra.push(dish);
     }
 
-    console.log(menus);
-    console.log(alergens);
-    console.log(dishes);
+    console.log(menusArra);
+    console.log(alergensArra);
+    console.log(dishesArra);
 
-    console.log(categories);
+    console.log(categoriesArra);
 
     // Crear un menú de navegación con enlaces a las categorías
     const menu = document.createElement("ul");
     menu.classList.add("lista");
 
     // Crear y agregar enlaces para cada categoría al menú
-    categories.forEach((category) => {
+    categoriesArra.forEach((category) => {
       const menuItem = document.createElement("li");
       const link = document.createElement("a");
       link.href = "#";
@@ -256,7 +199,7 @@ class RestaurantManagerController {
     });
 
     // Crear y agregar enlaces para cada alergeno al menú
-    alergens.forEach((alergen) => {
+    alergensArra.forEach((alergen) => {
       const menuItem = document.createElement("li");
       const link = document.createElement("a");
       link.href = "#";
@@ -266,21 +209,21 @@ class RestaurantManagerController {
       menu.appendChild(menuItem);
     });
 
-    let restaurants = [];
+    let restaurantsArra = [];
     for (const dish of manager.getRestaurants()) {
-      restaurants.push(dish);
+      restaurantsArra.push(dish);
     }
-    console.log(restaurants);
+    console.log(restaurantsArra);
 
     const selectRestaurant = document.createElement("select");
 
-    restaurants.forEach((restaurant) => {
+    restaurantsArra.forEach((restaurant) => {
       const option = document.createElement("option");
       option.value = restaurant.getName();
       option.textContent = restaurant.getName();
       selectRestaurant.appendChild(option);
     });
-    menus.forEach((menuAct) => {
+    menusArra.forEach((menuAct) => {
       const menuItem = document.createElement("li");
       const link = document.createElement("a");
       link.href = "#";
@@ -308,8 +251,11 @@ class RestaurantManagerController {
     menuContainer.appendChild(menu);
 
     //Mostrar categorias y platos aleatorios
-    this[VIEW].showAllCategories(categories);
-    this[VIEW].showRandomDishes(dishes);
+    this[VIEW].showAllCategories(categoriesArra);
+    this[VIEW].showRandomDishes(dishesArra);
+
+    });
+
   } //Fin InitApp
 
   handleLoginForm = () => {
