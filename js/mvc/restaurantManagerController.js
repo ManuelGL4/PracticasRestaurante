@@ -32,6 +32,7 @@ class RestaurantManagerController {
     fetch("http://127.0.0.1:5500/js/json/datos.json")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         const { dishes, categories, allergens, menus, restaurants } = data;
   
         // Inicialización de platos
@@ -53,17 +54,7 @@ class RestaurantManagerController {
           );
           manager.addCategory(newCategory);
         }
-  
-        // Asignación de platos a categorías
-        for (const dishData of dishes) {
-          const dish = manager.getDishByName(dishData.name);
-          for (const categoryName of dishData.categories) {
-            const category = manager.getCategoryByName(categoryName);
-            if (category && dish) {
-              manager.assignCategoryToDish(category,dish);
-            }
-          }
-        }
+
   
         // Inicialización de alérgenos
         for (const allergenData of allergens) {
@@ -73,17 +64,23 @@ class RestaurantManagerController {
           );
           manager.addAllergen(newAllergen);
         }
-  
-        // Asignación de alérgenos a platos
-        for (const dishData of dishes) {
-          const dish = manager.getDishByName(dishData.name);
-          for (const allergenName of dishData.allergens) {
-            const allergen = manager.getAllergenByName(allergenName);
-            if (allergen && dish) {
-              manager.assignAllergenToDish(allergen,dish);
-            }
-          }
-        }
+// Asignación de platos a categorías y alérgenos
+for (const dishData of dishes) {
+  const dish = manager.getDishByName(dishData.name);
+  for (const categoryName of dishData.categories) {
+    const category = manager.getCategoryByName(categoryName);
+    if (category && dish) {
+      manager.assignCategoryToDish(category, dish);
+    }
+  }
+
+  for (const allergenName of dishData.allergens) {
+    const allergen = manager.getAllergenByName(allergenName);
+    if (allergen && dish) {
+      manager.assignAllergenToDish(allergen, dish);
+    }
+  }
+}
   
         console.log("PLATOS INICIALIZADOS:");
         for (const dish of manager.dishes) {
@@ -104,13 +101,8 @@ class RestaurantManagerController {
         for (const menuData of menus) {
           const newMenu = new Menu(menuData.name, menuData.description);
           manager.addMenu(newMenu);
-          for (const dishName of menuData.dishes) {
-            const dish = manager.getDishByName(dishName);
-            if (dish) {
-              manager.assignDishToMenu(newMenu, dish);
-            }
-          }
         }
+        
   
         console.log("MENUS INICIALIZADOS:");
         for (const menu of manager.menus) {
@@ -216,7 +208,7 @@ class RestaurantManagerController {
       option.textContent = restaurant.getName();
       selectRestaurant.appendChild(option);
     });
-    
+
     menusArr.forEach(menuAct => {
       const menuItem = document.createElement('li');
       const link = document.createElement('a');
