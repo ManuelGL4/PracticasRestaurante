@@ -30,6 +30,14 @@ class RestaurantManagerView {
 		event.preventDefault();
 	}
 
+  bindInit(handler) {
+		document.getElementById('init').addEventListener('click', (event) => {
+      console.log("init");
+      handler()
+		});
+
+	}
+
   showCookiesMessage() {
     const toast = `<div class="fixed-top p-5 mt-5">
 		<div id="cookies-message" class="toast fade show bg-dark text-white
@@ -112,37 +120,41 @@ class RestaurantManagerView {
   showLogin() {
     this.main.replaceChildren();
     const login = `<div class="container h-100">
-		<div class="d-flex justify-content-center h-100">
-		<div class="user_card">
-		<div class="d-flex justify-content-center form_container">
-		<form name="fLogin" role="form" novalidate>
-		<div class="input-group mb-3">
-		<div class="input-group-append">
-		<span class="input-group-text"><i class="bi bi-personcircle"></i></span>
-		</div>
-		<input type="text" name="username" class="form-control
-		input_user" value="" placeholder="Usuario">
-		</div>
-		<div class="input-group mb-2">
-		<div class="input-group-append">
-		<span class="input-group-text"><i class="bi bi-keyfill"></i></span>
-		</div>
-		<input type="password" name="password" class="form-control
-		input_pass" value="" placeholder="Contraseña">
-		</div>
-		<div class="form-group">
-</div>
-<div class="d-flex justify-content-center mt-3
-login_container">
-<button class="btn login_btn"
-type="submit">Acceder</button>
-</div>
-</form>
-</div>
-</div>
-</div>
-</div>`;
-    this.main.insertAdjacentHTML("afterbegin", login);
+    <div class="d-flex justify-content-center h-100">
+    <div class="user_card">
+    <div class="d-flex justify-content-center form_container">
+    <form name="fLogin" role="form" novalidate>
+    <div class="input-group mb-3">
+    <div class="input-group-append">
+    <span class="input-group-text"><i class="bi bi-personcircle"></i></span>
+    </div>
+    <input type="text" name="username" class="form-control
+    input_user" value="" placeholder="usuario">
+    </div>
+    <div class="input-group mb-2">
+    <div class="input-group-append">
+    <span class="input-group-text"><i class="bi bi-keyfill"></i></span>
+    </div>
+    <input type="password" name="password" class="form-control
+    input_pass" value="" placeholder="contraseña">
+    </div>
+    <div class="form-group">
+    <div class="custom-control custom-checkbox">
+    <input name="remember" type="checkbox" class="customcontrol-input" id="customControlInline"><label class="custom-control-label"
+    for="customControlInline">Recuerdame</label>
+    </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3
+    login_container">
+    <button class="btn login_btn"
+    type="submit">Acceder</button>
+    </div>
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>`;
+    this.main.insertAdjacentHTML('afterbegin', login);
   }
 
   bindLogin(handler) {
@@ -269,6 +281,10 @@ type="submit">Acceder</button>
       "beforeend",
       '<li><a id="vFavDish" class="dropdown-item" href="#favourite-dish">Platos Favoritos</a></li>'
     );
+    suboptions.insertAdjacentHTML(
+      "beforeend",
+      '<li><a id="backup" class="dropdown-item" href="#backup">Crear Backup</a></li>'
+    );
     menuOption.append(suboptions);
     const menu = document.querySelector(".menu");
     menu.appendChild(menuOption);
@@ -388,7 +404,8 @@ value="" required></textarea>
     hCDCategory,
     hNewRestaurant,
     hChangeCatDish,
-    hFavDish
+    hFavDish,
+    hBackup
   ) {
     const newCategoryLink = document.getElementById("lnewDish");
     newCategoryLink.addEventListener("click", (event) => {
@@ -418,7 +435,49 @@ value="" required></textarea>
     favDish.addEventListener("click", (event) => {
       hFavDish();
     });
+    const backup = document.getElementById("backup");
+    backup.addEventListener("click", (event) => {
+      hBackup();
+    });
   }
+
+  genObjectsForm() {
+    
+    this.main.replaceChildren();
+    this.main.insertAdjacentHTML('beforeend', `
+		<form class="Form" id="Form" name="fGenObjects" role="form" novalidate>
+		<button type="submit" class="btn btn-primary genButton"  name="genObjects" id="genObjects">GENERAR</button>
+		</div>
+		</form> 
+		<div id="resultado"></div>
+		`);
+	}
+
+	bindGenObjectsForm(handler) {
+		let boton = document.getElementById('genObjects');
+
+		boton.addEventListener('click', (event) => {
+			handler();
+		});
+	}
+	showGenObjectsResult(generado) {
+		let resultado = document.getElementById('resultado');
+		resultado.replaceChildren();
+		if (generado) {
+			resultado.insertAdjacentHTML('beforeend', `
+			<div class="container my3"><div class="alert alert-success" role="alert">
+		<strong>El archivo se ha creado correctamente</strong>
+		</div></div>
+			`);
+		} else {
+			resultado.insertAdjacentHTML('beforeend', `
+			<div class="container my3"><div class="alert alert-warning" role="alert">
+		<strong>El archivo json no se ha creado,intentalo de nuevo</strong>
+		</div></div>
+			`);
+		}
+	}
+
 
   bindNewDishForm(handler) {
     newDishValidation(handler);
@@ -1311,7 +1370,7 @@ value="" required></textarea>
         container.insertAdjacentHTML(
           "beforeend",
           `
-			< div id = "caja-plato" >
+			<div id = "caja-plato" >
 			<div id="dish-details-box">
 				<div class="card" style="width: 18rem;color:white; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.55));">
 					<img class="card-img-top" src="../img/${image}" alt="${name}">
@@ -1453,23 +1512,6 @@ value="" required></textarea>
     });
   }
 
-
-
-  bindInit(handler) {
-    const logoElements = document.getElementsByClassName("menu__logo");
-    for (const logoElement of logoElements) {
-      logoElement.addEventListener("click", (event) => {
-        this[EXECUTE_HANDLER](
-          handler,
-          [],
-          "body",
-          { action: "init" },
-          "#",
-          event
-        );
-      });
-    }
-  }
 
   bindNavigationButtons() {
     window.addEventListener("popstate", () => {
