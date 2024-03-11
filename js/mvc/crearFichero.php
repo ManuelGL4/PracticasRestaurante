@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: http://127.0.0.1:5500");
 if (isset($_FILES['jsonBlob'])) {
-    $ruta = 'http://127.0.0.1:5500/js/backup';
+    $ruta = 'D:\Restaurante-BOM\js\backup';
     $contenido = file_get_contents($_FILES['jsonBlob']['tmp_name']);
     $nombreArchivo = $ruta . date('Ymd_His') . '.json';
 
