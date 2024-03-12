@@ -445,6 +445,10 @@ value="" required></textarea>
     
     this.main.replaceChildren();
     this.main.insertAdjacentHTML('beforeend', `
+    <br>
+    <br>
+    <br>
+    <br>
 		<form class="Form" id="Form" name="fGenObjects" role="form" novalidate>
 		<button type="submit" class="btn btn-primary genButton"  name="genObjects" id="genObjects">GENERAR</button>
 		</div>
@@ -461,21 +465,22 @@ value="" required></textarea>
 		});
 	}
 	showGenObjectsResult(generado) {
-		let resultado = document.getElementById('resultado');
-		resultado.replaceChildren();
+    const container = document.createElement("div");
+		container.replaceChildren();
 		if (generado) {
-			resultado.insertAdjacentHTML('beforeend', `
+			container.insertAdjacentHTML('beforeend', `
 			<div class="container my3"><div class="alert alert-success" role="alert">
 		<strong>El archivo se ha creado correctamente</strong>
 		</div></div>
 			`);
 		} else {
-			resultado.insertAdjacentHTML('beforeend', `
+			container.insertAdjacentHTML('beforeend', `
 			<div class="container my3"><div class="alert alert-warning" role="alert">
 		<strong>El archivo json no se ha creado,intentalo de nuevo</strong>
 		</div></div>
 			`);
 		}
+    this.main.append(container);
 	}
 
 
@@ -957,7 +962,7 @@ value="" required></textarea>
 
     removeForm.insertAdjacentHTML(
       "afterbegin",
-      '<h1 class="display-5">Desasignar un plato de un menú</h1>'
+      '<h1 class="display-5">Eliminar categoria</h1>'
     );
 
     removeForm.insertAdjacentHTML(
@@ -1466,6 +1471,7 @@ value="" required></textarea>
   }
 
   showRestaurantInfo(restaurant) {
+    console.log(restaurant);
     const detailsBox = document.createElement("div");
     detailsBox.classList.add("dish-details-box");
     console.log(restaurant.name);
@@ -1479,7 +1485,7 @@ value="" required></textarea>
     const ingredientsElement = document.createElement("p");
     ingredientsElement.textContent = "Descripcion: " + restaurant.description;
     const allergensElement = document.createElement("p");
-    allergensElement.textContent = "Localizacion: " + restaurant.location;
+    allergensElement.textContent = "Localizacion: Latidud: " + restaurant.location.latitude+" Longitud: "+restaurant.location.longitude;
 
     // Agregar los elementos a la caja
     detailsBox.appendChild(nameElement);

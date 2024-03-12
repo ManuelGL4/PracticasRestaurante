@@ -367,7 +367,6 @@ for (const dishData of dishes) {
     try {
       jsonObj = this.crearObjToJson();
       console.log(jsonObj);
-      let this1 = this;
       let formData = new FormData();
       let blob = new Blob([jsonObj], { type: "application/json" });
       formData.append("jsonBlob", blob);
@@ -381,15 +380,29 @@ for (const dishData of dishes) {
         .then(function (data) {
           console.dir(data);
           creado = true;
-          this1[VIEW].showGenObjectsResult(creado);
         })
         .catch(function (err) {
           console.log("No se ha recibido respuesta.");
-          this1[VIEW].showGenObjectsResult(creado);
         });
     } catch (error) {
       console.log(error);
     }
+
+    if (generado) {
+      const body = messageModalContainer.querySelector(".modal-body");
+      body.replaceChildren();
+      body.insertAdjacentHTML(
+        "afterbegin",
+        `<div class="p-3">Backup creado correctamente.</div>`
+      );
+      messageModal.show();
+		} else {
+			container.insertAdjacentHTML('beforeend', `
+			<div class="container my3"><div class="alert alert-warning" role="alert">
+		<strong>El archivo json no se ha creado,intentalo de nuevo</strong>
+		</div></div>
+			`);
+		}
   };
 
 
@@ -444,15 +457,15 @@ for (const dishData of dishes) {
       });
     }
 
-    let combinedObject = {
+    let allObjts = {
       categories: [...categories.values()],
       allergens: [...allergens.values()],
       dishes: [...dishes.values()],
       menus: [...menus.values()],
       restaurants: [...restaurants.values()],
     };
-    //Pasarlo a json
-    let json = JSON.stringify(combinedObject);
+    //Pasar objetos a json
+    let json = JSON.stringify(allObjts);
 
     return json;
   };

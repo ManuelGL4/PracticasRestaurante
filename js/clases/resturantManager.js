@@ -331,10 +331,10 @@ assignCategoryToDish(category, ...dishs) {
   if (!dish || !(dish instanceof Dish)) {
     throw new Error('El plato debe ser un objeto Dish y no puede ser nulo.');
   }
-    let posi = this.#dishes.findIndex(d => d.dish === dish);
-      if (posi === -1) {
+    let posiDish = this.#dishes.findIndex(d => d.dish === dish);
+      if (posiDish === -1) {
           this.addDish(dish);
-          posi = this.#dishes.findIndex(d => d.dish.name === dish.name);
+          posiDish = this.#dishes.findIndex(d => d.dish.name === dish.name);
       }
       let cat = this.#categories.indexOf(category);
       if (cat === -1) {
@@ -342,7 +342,7 @@ assignCategoryToDish(category, ...dishs) {
           cat = this.#categories.indexOf(category);
       }
       cat = this.#categories[cat];
-      this.#dishes[posi].categories.push(cat);
+      this.#dishes[posiDish].categories.push(cat);
   }
   return this;
 }
@@ -359,7 +359,7 @@ assignCategoryToDish(category, ...dishs) {
 
       let cat = this.#categories.indexOf(category);
       let categorias = this.#dishes[positionDish].categories;
-      let index = categorias.findIndex((categ) => categ.name === category.name);
+      let index = categorias.findIndex((cat) => cat.name === category.name);
       // Verificar si category es nulo o no está registrada
       if (cat === -1 || index === -1) {
         throw new Error('La categoría no está registrada.');
@@ -372,10 +372,10 @@ assignCategoryToDish(category, ...dishs) {
     //Metodo assignAllergenToDish
     assignAllergenToDish(allergen, ...dishs) {
       for (const dish of dishs) {
-          let posi = this.#dishes.findIndex(d => d.dish === dish);
-          if (posi === -1) {
+          let positionDish = this.#dishes.findIndex(d => d.dish === dish);
+          if (positionDish === -1) {
               this.addDish(dish);
-              posi = this.#dishes.findIndex(d => d.dish === dish);
+              positionDish = this.#dishes.findIndex(d => d.dish === dish);
           }
           let ale = this.#allergens.indexOf(allergen);
           if (ale === -1) {
@@ -383,7 +383,7 @@ assignCategoryToDish(category, ...dishs) {
               ale = this.#allergens.indexOf(allergen);
           }
           ale = this.#allergens[ale];
-          this.#dishes[posi].allergens.push(ale);
+          this.#dishes[positionDish].allergens.push(ale);
       }
       return this;
   }
@@ -422,12 +422,12 @@ assignCategoryToDish(category, ...dishs) {
       if (!dish || !(dish instanceof Dish)) {
         throw new Error('El plato debe ser un objeto Dish y no puede ser nulo.');
       }
-      let dispos = this.#dishes.findIndex(d => d.dish === dish);
-      if (dispos === -1) {
+      let positionDish = this.#dishes.findIndex(d => d.dish === dish);
+      if (positionDish === -1) {
         this.addDish(dish);
-          dispos = this.#dishes.findIndex(d => d.dish === dish);
+        positionDish = this.#dishes.findIndex(d => d.dish === dish);
         }
-                  let actDish = this.#dishes[dispos];
+                  let actDish = this.#dishes[positionDish];
 
                   let menpos = this.#menus.findIndex(m => m.menu.name === menu.name);
                   if (menpos === -1) {
@@ -448,18 +448,18 @@ assignCategoryToDish(category, ...dishs) {
       }
 
       // Verificar si dish es nulo o no está registrado
-      let dishPosit = this.#dishes.findIndex(d => d.dish.name === dish.name);
-      if (dishPosit === -1){
+      let positionDish = this.#dishes.findIndex(d => d.dish.name === dish.name);
+      if (positionDish === -1){
         throw new Error('El plato no está registrado.');
       }
 
-      let menB = this.#menus[menuPosit];
-      let index = menB.dishes.findIndex(d => d.dish.name === dish.name);
+      let men = this.#menus[menuPosit];
+      let index = men.dishes.findIndex(d => d.dish.name === dish.name);
       if (index === -1){
         throw new Error('El plato no está registrado en este menú.');
       
       } 
-      menB.dishes.splice(index, 1);
+      men.dishes.splice(index, 1);
 
       return this;
   
@@ -506,7 +506,7 @@ assignCategoryToDish(category, ...dishs) {
       if (!category || !(category instanceof Category) || !this.#categories.includes(category)) {
         throw new Error('La categoría no está registrada.');
       }
-      if (this.#categories.findIndex(c => c.name === category.name) === -1) throw new CategoryNotRegisterdException();
+      if (this.#categories.findIndex(c => c.name === category.name) === -1) throw new Error("La categoria no esta registrada");
       let platos = [];
       this.#dishes.forEach(dish => {
           if (dish.categories.findIndex(cat => cat.name === category.name) !== -1) {
@@ -529,16 +529,16 @@ assignCategoryToDish(category, ...dishs) {
       if (!allergen || !(allergen instanceof Allergen) || !this.#allergens.includes(allergen)) {
         throw new Error('El alérgeno no está registrado.');
       }
-      let dsh = [];
+      let disArra = [];
       this.#dishes.forEach(dish => {
         if (dish.allergens.findIndex(al => al.name === allergen.name) !== -1) {
-          dsh.push(dish);
+          disArra.push(dish);
         }
       });
 
       return {
           *[Symbol.iterator]() {
-              for (const dishCat of dsh) {
+              for (const dishCat of disArra) {
                   yield dishCat;
               }
           }
@@ -737,20 +737,235 @@ getCategoryByName(name) {
     },
   };
 })();
-// function test() {
-//   const rm = RestaurantsManager.getInstance();
-//   const dish12 = new Dish('Sopa de Tomate', 'Descripción sopa de tomate', 'Ingredientes de sopa de tomate', 'sopa.jpg');
-//   const dish1 = new Dish('Sopa', 'Descripción sopa de tomate', 'Ingredientes de sopa de tomate', 'sopa.jpg');
 
-//   const category3 = new Category('Comida Asiática', 'Sabores auténticos de Asia');
-//   rm.addDish(dish12);
-//   rm.addCategory(category3);
-//   rm.assignCategoryToDish(category3, dish12);
-//   rm.assignCategoryToDish(category3, dish1);
+/*function test() {
+  // Crear RestaurantsManager
+const manager = RestaurantsManager.getInstance();
 
-//   rm.getCategories
+const category1 = new Category('CAT1', 'Descripcion cat 1');
+const category2 = new Category('CAT2', 'Esta es la categoria1');
+const allergen1 = new Allergen('Gluten', 'Contiene gluten');
+const allergen2 = new Allergen('Pescado', 'Contiene Pescado');
+const dish1 = new Dish('Ensalada', 'Descripcion ensalada', "Ingredientes de ensalada", "ensalada.jpg");
+const dish2 = new Dish('Pasta', 'Espagetis', "Ingredientes de espagetis", "foto.jpg");
+const coord = new Coordinate(140.40, -140.40);
+const menu1 = new Menu('Primer Menu', 'Nuestro mejor menu');
+const menu2 = new Menu('SEGUNDO Menu', 'Nuestro peor menu');
 
-// }
-// test();
+const restaurant1 = new Restaurant('Restaurante1', 'El mejor restaurante', coord);
+
+// Pruebas de las funciones
+try {
+  // Añadir categorías
+  console.log("------------------AÑADIR CATEGORIAS------------------");
+  manager.addCategory(category1, category2);
+  // Obtener y mostrar las categorías
+  for (const category of manager.getCategories()) {
+    console.log(category);
+  }
+
+
+  // Eliminar categorias
+  console.log("------------------ELIMINAR CATEGORIAS------------------");
+  manager.removeCategory(category1, category2);
+  for (const category of manager.getCategories()) {
+    console.log(category);
+  }
+
+  console.log("------------------AÑADIR CATEGORIA 1 DE NUEVO------------------");
+  manager.addCategory(category1)
+  for (const category of manager.getCategories()) {
+    console.log(category);
+  }
+
+  // Añadir alérgenos
+  console.log("------------------AÑADIR ALERGENOS------------------");
+  manager.addAllergen(allergen1, allergen2);
+  // Obtener y mostrar los alérgenos
+  for (const allergen of manager.getAllergens()) {
+    console.log(allergen);
+  }
+
+  // Eliminar alergeno
+  manager.removeAllergen(allergen1, allergen2);
+  console.log("------------------ELIMINAR ALERGENOS------------------");
+  for (const allergen of manager.getAllergens()) {
+    console.log(allergen);
+  }
+
+  console.log("------------------AÑADIR ALERGENO 1 DE NUEVO------------------");
+  manager.addAllergen(allergen1);
+  for (const allergen of manager.getAllergens()) {
+    console.log(allergen);
+  }
+
+  // Añadir platos
+  console.log("------------------AÑADIR PLATOS------------------");
+  manager.addDish(dish1, dish2);
+  for (const dish of manager.getDishes()) {
+    console.log(dish);
+  }
+
+  // Eliminar platos
+  console.log("------------------ELIMINAR PLATOS------------------");
+  manager.removeDish(dish1, dish2);
+  for (const dish of manager.getDishes()) {
+    console.log(dish);
+  }
+
+  // Añadir platos
+  console.log("------------------AÑADIR PLATOS DE NUEVO------------------");
+  manager.addDish(dish1, dish2);
+  for (const dish of manager.getDishes()) {
+    console.log(dish);
+  }
+  
+  // Añadir menú
+  console.log("------------------AÑADIR MENUS------------------");
+  manager.addMenu(menu1, menu2);
+    // Obtener y mostrar los menús
+    for (const menu of manager.getMenus()) {
+      console.log(menu);
+    }
+
+  //Eliminar menu
+  console.log("------------------ELIMINAR MENU 1------------------");
+  manager.removeMenu(menu1);
+  for (const menu of manager.getMenus()) {
+    console.log(menu);
+  }
+
+  console.log("------------------AÑADIR MENU DE NUEVO------------------");
+  manager.addMenu(menu1);
+  for (const menu of manager.getMenus()) {
+    console.log(menu);
+  }
+
+  // Añadir restaurante
+  console.log("------------------AÑADIR RESTAURANTE------------------");
+  manager.addRestaurant(restaurant1);
+  // Obtener y mostrar los restaurantes
+  for (const restaurant of manager.getRestaurants()) {
+    console.log(restaurant);
+  }
+
+  // Elminiar restaurante
+  console.log("------------------ELIMINAR RESTAURANTE------------------");
+  manager.removeRestaurant(restaurant1);
+  for (const restaurant of manager.getRestaurants()) {
+    console.log(restaurant);
+  }
+
+    // Añadir restaurante
+    console.log("------------------AÑADIR RESTAURANTE DE NUEVO------------------");
+    manager.addRestaurant(restaurant1);
+    // Obtener y mostrar los restaurantes
+    for (const restaurant of manager.getRestaurants()) {
+      console.log(restaurant);
+    }
+
+  //Asignar categorie al plato
+  console.log("------------------ASIGNAR CATEGORIA1 AL PLATO1------------------");
+  manager.assignCategoryToDish(category1, dish1);
+  for (const category of manager.getCategories()) {
+    console.log(category);
+  }
+
+  console.log("------------------DESASIGNAR CATEGORIA1 AL PLATO1------------------");
+  manager.deassignCategoryToDish(category1,dish1);
+  for (const category of manager.getCategories()) {
+    console.log(category);
+  }
+
+  console.log("------------------ASIGNAR ALERGENO1 AL PLATO1------------------");
+  manager.assignAllergenToDish(allergen1,dish1);
+  for (const allergen of manager.getAllergens()) {
+    console.log(allergen);
+  }
+
+  console.log("------------------DESASIGNAR ALERGENO1 AL PLATO1------------------");
+  manager.deassignAllergenToDish(allergen1,dish1);
+  for (const allergen of manager.getAllergens()) {
+    console.log(allergen);
+  }
+
+  console.log("------------------ASIGNAR PLATOS AL MENU1------------------");
+  manager.assignDishToMenu(menu1,dish1);
+  manager.assignDishToMenu(menu1,dish2);
+  for (const menu of manager.getMenus()) {
+    console.log(menu);
+  }
+  console.log("------------------DESASIGNAR PLATOS AL MENU1------------------");
+  manager.deassignDishToMenu(menu1,dish1);
+  for (const menu of manager.getMenus()) {
+    console.log(menu);
+  }
+
+  console.log("------------------CAMBIAR POSICION PLATOS EN MENU------------------");
+  manager.changeDishesPositionsInMenu(menu1,dish1,dish2);
+  for (const menu of manager.getMenus()) {
+    console.log(menu);
+  }
+  
+  const dishesIterator = manager.getDishesInCategory(category1);
+
+  console.log('Dishes in Category:');
+  for (const dish of dishesIterator) {
+    console.log(dish.getName());
+  }
+
+  const dishFilterCallback = function (dish) {
+  // Filtrar platos que contengan "Ensalada" en el nombre
+    return dish.getName().toLowerCase().includes('ensalada');
+  };
+
+  const dishSortFunction = function (dish1, dish2) {
+  // Ordenar por el nombre del plato
+    return dish1.getName().localeCompare(dish2.getName());
+  };
+
+  const filteredDishesIterator = manager.findDishes(dishFilterCallback, dishSortFunction);
+
+  // Mostrar los platos filtrados y ordenados
+  console.log("Metodo FindDishes,buscando por ensalada y ordenado alfabeticamente");
+  for (const dish of filteredDishesIterator) {
+    console.log(dish.getName());
+  }
+
+// Ejemplo de createDish
+console.log("------------------CREAR PLATO------------------");
+const dish3 = manager.createDish('Ensalada Cesar', 'Descripción ensalada Cesar', ['Lechuga', 'Tomate'], 'ensalada.jpg');
+const dish4 = manager.createDish('Pasta 2', 'Descripción pasta', ['Espaguetis', 'Salsa'], 'pasta.jpg');
+console.log(dish3,dish4);
+
+// Ejemplo de createMenu
+console.log("------EL MENÚ YA ESTA CREADO Y AL TENER EL MISMO NOMBRE DEVUELVE EL QUE YA HABIA-------");
+const menu3 = manager.createMenu('Primer Menu', 'Nuestro mejor menu');
+console.log(menu3);
+
+// Ejemplo de createAllergen
+console.log("------------------CREAR ALÉRGENO------------------");
+const allergen3 = manager.createAllergen('Gluten', 'Contiene gluten');
+console.log(allergen3);
+
+console.log("------------------CREAR CATEGORÍA------------------");
+const category3 = manager.createCategory('Entradas', 'Categoría de entradas');
+console.log(category3);
+
+// Ejemplo de createRestaurant
+console.log("------------------CREAR RESTAURANTE------------------");
+const restaurant2 = manager.createRestaurant('Restaurante A', 'Descripción del restaurante A', coord);
+console.log(restaurant2);
+
+console.log("------------------CREAR RESTAURANTE QUE YA HABIA SIDO CREADO Y DEVUELVE ESE MISMO RESTAURANTE,EN LA INSTANCIACION HAY UNA NUEVA DESCRIPCION PERO EN EL OBJETO ESTA LA OTRA DESCRICPCION DE RESTAURANTE1------------------");
+const restaurant3 = manager.createRestaurant('Restaurante1', 'El mejor restaurante 2', coord);
+console.log(restaurant3);
+
+} catch (error) {
+  console.error('Error:', error.message);
+}
+}
+
+test();*/
 
 export { RestaurantsManager };

@@ -1,7 +1,7 @@
 {
     "dishes": [
       {
-        "name": "Ensalada",
+        "name": "Plato Modificado del json",
         "description": "Descripción ensalada",
         "ingredients": "Ingredientes de ensalada",
         "image": "ensalada.jpg",
