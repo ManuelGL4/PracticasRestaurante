@@ -323,7 +323,7 @@ class RestaurantManagerView {
 		<label class="form-label" for="ndImg">Imagen del plato</label>
 		<div class="input-group">
 		<span class="input-group-text"><i class="bi bi-fileimage"></i></span>
-		<input type="url" class="form-control" id="ndImg" name="ndImg"
+		<input type="file" class="form-control" id="ndImg" name="ndImg"
 		placeholder="Imagen del plato"
 		value="" required>
 		<div class="invalid-feedback"></div>
