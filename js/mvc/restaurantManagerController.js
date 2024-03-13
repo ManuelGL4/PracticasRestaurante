@@ -181,38 +181,7 @@ for (const dishData of dishes) {
     showMapButton.textContent = "Mostrar Mapa con Todas las Ubicaciones";
     main.appendChild(showMapButton);
 
-    // Crear un contenedor para el mapa
-    const mapContainer = document.createElement("div");
-    mapContainer.id = "map";
-    mapContainer.style.height = "600px";
-    mapContainer.style.display = "none"; // Ocultar el mapa inicialmente
-    main.appendChild(mapContainer);
 
-    // Función para manejar el clic del botón
-    showMapButton.addEventListener("click", () => {
-        // Mostrar el mapa
-        mapContainer.style.display = "block";
-
-        // Inicializar el mapa con Leaflet
-        const map = L.map("map").setView([0, 0], 2);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18
-        }).addTo(map);
-
-        // Iterar sobre los restaurantes y agregar marcadores con popup
-        restaurantsArr.forEach((restaurant) => {
-            const marker = L.marker([restaurant.location.latitude, restaurant.location.longitude]).addTo(map);
-            const popupContent = `
-                <div>
-                    <h3>${restaurant.name}</h3>
-                    <p><strong>Descripción:</strong> ${restaurant.description}</p>
-                    <p><strong>Ubicación:</strong> Latitud: ${restaurant.location.latitude}, Longitud: ${restaurant.location.longitude}</p>
-                </div>
-            `;
-            marker.bindPopup(popupContent);
-        });
-    });
 
     const manager = RestaurantsManager.getInstance();
     // Pasar las categorias a array
@@ -297,6 +266,38 @@ for (const dishData of dishes) {
     // Mostrar categorias y platos aleatorios
     this[VIEW].showAllCategories(categoriesArr);
     this[VIEW].showRandomDishes(dishesArr);
+        // Crear un contenedor para el mapa
+        const mapContainer = document.createElement("div");
+        mapContainer.id = "map";
+        mapContainer.style.height = "600px";
+        mapContainer.style.display = "none"; // Ocultar el mapa inicialmente
+        main.appendChild(mapContainer);
+    
+        // Función para manejar el clic del botón
+        showMapButton.addEventListener("click", () => {
+            // Mostrar el mapa
+            mapContainer.style.display = "block";
+    
+            // Inicializar el mapa con Leaflet
+            const map = L.map("map").setView([0, 0], 2);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                maxZoom: 18
+            }).addTo(map);
+    
+            // Iterar sobre los restaurantes y agregar marcadores con popup
+            restaurantsArr.forEach((restaurant) => {
+                const marker = L.marker([restaurant.location.latitude, restaurant.location.longitude]).addTo(map);
+                const popupContent = `
+                    <div>
+                        <h3>${restaurant.name}</h3>
+                        <p><strong>Descripción:</strong> ${restaurant.description}</p>
+                        <p><strong>Ubicación:</strong> Latitud: ${restaurant.location.latitude}, Longitud: ${restaurant.location.longitude}</p>
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+            });
+        });
 }
 
 
