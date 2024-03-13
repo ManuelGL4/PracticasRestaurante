@@ -156,7 +156,64 @@ for (const dishData of dishes) {
   };
 
   initApp() {
-    
+    // Vaciar el contenido del elemento main
+    const main = document.querySelector("main");
+    main.innerHTML = '';
+
+    // Añadir el HTML proporcionado al elemento main
+    const mainHTML = `
+        <div id="breadcrumbs-container"></div>
+        <h1>PRESTAURANTE CARTA</h1>
+        <hr class="separator">
+        <div id="random-dish"></div>
+        <hr class="separator">
+        <div id="lista-container">
+            <div id="dropdown-container"></div>
+            <div id="central-zone"></div>
+        </div>
+        <div id="caja-plato"></div>
+        <button id="close-all-windows">Cerrar ventanas emergentes</button>
+    `;
+    main.innerHTML = mainHTML;
+
+    // Crear un botón para mostrar el mapa con todas las ubicaciones de los restaurantes
+    const showMapButton = document.createElement("button");
+    showMapButton.textContent = "Mostrar Mapa con Todas las Ubicaciones";
+    main.appendChild(showMapButton);
+
+    // Crear un contenedor para el mapa
+    const mapContainer = document.createElement("div");
+    mapContainer.id = "map";
+    mapContainer.style.height = "600px";
+    mapContainer.style.display = "none"; // Ocultar el mapa inicialmente
+    main.appendChild(mapContainer);
+
+    // Función para manejar el clic del botón
+    showMapButton.addEventListener("click", () => {
+        // Mostrar el mapa
+        mapContainer.style.display = "block";
+
+        // Inicializar el mapa con Leaflet
+        const map = L.map("map").setView([0, 0], 2);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Iterar sobre los restaurantes y agregar marcadores con popup
+        restaurantsArr.forEach((restaurant) => {
+            const marker = L.marker([restaurant.location.latitude, restaurant.location.longitude]).addTo(map);
+            const popupContent = `
+                <div>
+                    <h3>${restaurant.name}</h3>
+                    <p><strong>Descripción:</strong> ${restaurant.description}</p>
+                    <p><strong>Ubicación:</strong> Latitud: ${restaurant.location.latitude}, Longitud: ${restaurant.location.longitude}</p>
+                </div>
+            `;
+            marker.bindPopup(popupContent);
+        });
+    });
+
     const manager = RestaurantsManager.getInstance();
     // Pasar las categorias a array
     const categoriesArr = Array.from(manager.getCategories());
@@ -179,55 +236,55 @@ for (const dishData of dishes) {
 
     // Crear y agregar enlaces para cada categoría al menú
     categoriesArr.forEach((category) => {
-      const menuItem = document.createElement("li");
-      const link = document.createElement("a");
-      link.href = "#";
-      link.textContent = category.getName();
-      link.addEventListener("click", () => this.handleCategoryClick(category));
-      menuItem.appendChild(link);
-      menu.appendChild(menuItem);
+        const menuItem = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = "#";
+        link.textContent = category.getName();
+        link.addEventListener("click", () => this.handleCategoryClick(category));
+        menuItem.appendChild(link);
+        menu.appendChild(menuItem);
     });
 
     // Crear y agregar enlaces para cada alergeno al menú
     allergensArr.forEach((alergen) => {
-      const menuItem = document.createElement("li");
-      const link = document.createElement("a");
-      link.href = "#";
-      link.textContent = alergen.getName();
-      link.addEventListener("click", () => this.handleAllergenClick(alergen));
-      menuItem.appendChild(link);
-      menu.appendChild(menuItem);
+        const menuItem = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = "#";
+        link.textContent = alergen.getName();
+        link.addEventListener("click", () => this.handleAllergenClick(alergen));
+        menuItem.appendChild(link);
+        menu.appendChild(menuItem);
     });
 
     // Crear un menú desplegable para seleccionar restaurantes
     const selectRestaurant = document.createElement("select");
 
     restaurantsArr.forEach((restaurant) => {
-      const option = document.createElement("option");
-      option.value = restaurant.getName();
-      option.textContent = restaurant.getName();
-      selectRestaurant.appendChild(option);
+        const option = document.createElement("option");
+        option.value = restaurant.getName();
+        option.textContent = restaurant.getName();
+        selectRestaurant.appendChild(option);
     });
 
     menusArr.forEach(menuAct => {
-      const menuItem = document.createElement('li');
-      const link = document.createElement('a');
-      link.href = '#';
-      link.textContent = menuAct.menu.getName();
-      link.addEventListener('click', () => this.handleMenuClick(menuAct));
-      menuItem.appendChild(link);
-      menu.appendChild(menuItem);
-  });
+        const menuItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = menuAct.menu.getName();
+        link.addEventListener('click', () => this.handleMenuClick(menuAct));
+        menuItem.appendChild(link);
+        menu.appendChild(menuItem);
+    });
 
     // Agregar eventos para mostrar información del restaurante seleccionado
     selectRestaurant.addEventListener("change", (event) => {
-      const selectedRestaurantName = event.target.value;
-      const selectedRestaurant = restaurantsArr.find(
-        (restaurant) => restaurant.getName() === selectedRestaurantName
-      );
-      if (selectedRestaurant) {
-        this[VIEW].showRestaurantInfo(selectedRestaurant);
-      }
+        const selectedRestaurantName = event.target.value;
+        const selectedRestaurant = restaurantsArr.find(
+            (restaurant) => restaurant.getName() === selectedRestaurantName
+        );
+        if (selectedRestaurant) {
+            this[VIEW].showRestaurantInfo(selectedRestaurant);
+        }
     });
 
     // Agregar el menú desplegable al contenedor deseado en el HTML
@@ -240,7 +297,8 @@ for (const dishData of dishes) {
     // Mostrar categorias y platos aleatorios
     this[VIEW].showAllCategories(categoriesArr);
     this[VIEW].showRandomDishes(dishesArr);
-  }
+}
+
 
   handleLoginForm = () => {
     this[VIEW].showLogin();
@@ -388,7 +446,7 @@ for (const dishData of dishes) {
       console.log(error);
     }
 
-    if (generado) {
+    if (creado) {
       const body = messageModalContainer.querySelector(".modal-body");
       body.replaceChildren();
       body.insertAdjacentHTML(

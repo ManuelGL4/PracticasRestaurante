@@ -1,5 +1,12 @@
 // Importar las clases
-import { Dish, Coordinate, Allergen, Restaurant, Menu, Category } from './clases.js';
+import {
+  Dish,
+  Coordinate,
+  Allergen,
+  Restaurant,
+  Menu,
+  Category,
+} from "./clases.js";
 
 const RestaurantsManager = (function () {
   let instantiated;
@@ -16,80 +23,76 @@ const RestaurantsManager = (function () {
     constructor(systemName) {
       this.#systemName = systemName;
       //GETTERS ACTUALIZADOS
-      Object.defineProperty(this, 'categories', {
+      Object.defineProperty(this, "categories", {
         enumerable: true,
         get() {
-            const array = this.#categories;
+          const array = this.#categories;
 
-            return {
-                *[Symbol.iterator]() {
-                    for (const arrayCategories of array) {
-                        yield arrayCategories;
-                    }
-                },
-            };
+          return {
+            *[Symbol.iterator]() {
+              for (const arrayCategories of array) {
+                yield arrayCategories;
+              }
+            },
+          };
         },
-    });
+      });
 
-
-    Object.defineProperty(this, 'menus', {
+      Object.defineProperty(this, "menus", {
         enumerable: true,
         get() {
-            const array = this.#menus;
-            return {
-                *[Symbol.iterator]() {
-                    for (const arrayMenu of array) {
-                        yield arrayMenu;
-                    }
-                },
-            };
+          const array = this.#menus;
+          return {
+            *[Symbol.iterator]() {
+              for (const arrayMenu of array) {
+                yield arrayMenu;
+              }
+            },
+          };
         },
-    });
-    Object.defineProperty(this, 'allergens', {
+      });
+      Object.defineProperty(this, "allergens", {
         enumerable: true,
         get() {
-            const array = this.#allergens;
-            return {
-                *[Symbol.iterator]() {
-                    for (const arrayAllergen of array) {
-                        yield arrayAllergen;
-                    }
-                },
-            };
+          const array = this.#allergens;
+          return {
+            *[Symbol.iterator]() {
+              for (const arrayAllergen of array) {
+                yield arrayAllergen;
+              }
+            },
+          };
         },
-    });
+      });
 
-    Object.defineProperty(this, 'restaurants', {
+      Object.defineProperty(this, "restaurants", {
         enumerable: true,
         get() {
-            const array = this.#restaurants;
-            return {
-                *[Symbol.iterator]() {
-                    for (const arrayRestaurant of array) {
-                        yield arrayRestaurant;
-                    }
-                },
-            };
+          const array = this.#restaurants;
+          return {
+            *[Symbol.iterator]() {
+              for (const arrayRestaurant of array) {
+                yield arrayRestaurant;
+              }
+            },
+          };
         },
-    });
+      });
 
-    
-    Object.defineProperty(this, 'dishes', {
+      Object.defineProperty(this, "dishes", {
         enumerable: true,
         get() {
-            const array = this.#dishes;
-            return {
-                *[Symbol.iterator]() {
-                    for (const arrayDish of array) {
-                        yield arrayDish;
-                    }
-                },
-            };
+          const array = this.#dishes;
+          return {
+            *[Symbol.iterator]() {
+              for (const arrayDish of array) {
+                yield arrayDish;
+              }
+            },
+          };
         },
-    });
-
-}
-
+      });
+    }
 
     //Getters
     getCategories() {
@@ -116,12 +119,18 @@ const RestaurantsManager = (function () {
     addCategory(...newCategories) {
       newCategories.forEach((newCategory) => {
         if (!newCategory || !(newCategory instanceof Category)) {
-          throw new Error('La categoría debe ser un objeto Category y no puede ser nula.');
+          throw new Error(
+            "La categoría debe ser un objeto Category y no puede ser nula."
+          );
         }
 
         const categoryName = newCategory.getName();
-        if (this.#categories.some((category) => category.getName() === categoryName)) {
-          throw new Error('La categoría ya existe en el sistema.');
+        if (
+          this.#categories.some(
+            (category) => category.getName() === categoryName
+          )
+        ) {
+          throw new Error("La categoría ya existe en el sistema.");
         }
 
         this.#categories.push(newCategory);
@@ -133,69 +142,67 @@ const RestaurantsManager = (function () {
     //Metodo removeCategory
     removeCategory(...categoriesToRemove) {
       categoriesToRemove.forEach((categoryToRemove) => {
-        if (!categoryToRemove || !(categoryToRemove instanceof Category) || !this.#categories.includes(categoryToRemove)) {
-          throw new Error('La categoría no está registrada.');
+        if (
+          !categoryToRemove ||
+          !(categoryToRemove instanceof Category) ||
+          !this.#categories.includes(categoryToRemove)
+        ) {
+          throw new Error("La categoría no está registrada.");
         }
-    
+
         // Desasignar platos de la categoría
-        this.#dishes.forEach(dish => {
-          dish.categories.forEach(cat => {
+        this.#dishes.forEach((dish) => {
+          dish.categories.forEach((cat) => {
             if (cat === categoryToRemove) {
               this.deassignCategoryToDish(cat, dish.dish);
             }
           });
         });
-    
+
         // Eliminar la categoría
         const index = this.#categories.indexOf(categoryToRemove);
         this.#categories.splice(index, 1);
       });
-    
+
       return this;
     }
-    
 
     //Metodo addMenu
     addMenu(...newMenus) {
-      newMenus.forEach(newMenu => {
+      newMenus.forEach((newMenu) => {
         if (!newMenu || !(newMenu instanceof Menu)) {
-          throw new Error('El menú debe ser un objeto Menu y no puede ser nulo.');
+          throw new Error(
+            "El menú debe ser un objeto Menu y no puede ser nulo."
+          );
         }
-    
+
         const menuName = newMenu.getName();
-        if (this.#menus.some(menuObj => menuObj.menu.getName() === menuName)) {
-          throw new Error('El menú ya existe en el sistema.');
+        if (
+          this.#menus.some((menuObj) => menuObj.menu.getName() === menuName)
+        ) {
+          throw new Error("El menú ya existe en el sistema.");
         }
-    
+
         this.#menus.push({
           menu: newMenu,
-          dishes: []
+          dishes: [],
         });
       });
-    
+
       return this;
     }
-    
 
     //Metodo removeMenu
     removeMenu(menu) {
       // Verificar si menu es nulo o no es una instancia de Menu
       if (!menu || !(menu instanceof Menu)) {
-        throw new Error('El menú debe ser un objeto Menu y no puede ser nulo.');
+        throw new Error("El menú debe ser un objeto Menu y no puede ser nulo.");
       }
 
       // Verificar si el menú está registrado
       if (!this.#menus.includes(menu)) {
-        throw new Error('El menú no está registrado.');
+        throw new Error("El menú no está registrado.");
       }
-
-      // Obtener los platos del menú
-      const menuDishes = menu.getDishes();
-
-      // Desasignar el menú de los platos
-      menuDishes.forEach((dish) => {
-        menu.setDishes(menu.getDishes().filter((d) => d !== menu));
-      });
 
       // Eliminar el menú
       const index = this.#menus.indexOf(menu);
@@ -210,12 +217,18 @@ const RestaurantsManager = (function () {
     addAllergen(...newAllergens) {
       newAllergens.forEach(function (newAllergen) {
         if (!newAllergen || !(newAllergen instanceof Allergen)) {
-          throw new Error('El alérgeno debe ser un objeto Allergen y no puede ser nulo.');
+          throw new Error(
+            "El alérgeno debe ser un objeto Allergen y no puede ser nulo."
+          );
         }
 
         const allergenName = newAllergen.getName();
-        if (this.#allergens.some(function (allergen) { return allergen.getName() === allergenName; })) {
-          throw new Error('El alérgeno ya existe en el sistema.');
+        if (
+          this.#allergens.some(function (allergen) {
+            return allergen.getName() === allergenName;
+          })
+        ) {
+          throw new Error("El alérgeno ya existe en el sistema.");
         }
 
         this.#allergens.push(newAllergen);
@@ -227,15 +240,22 @@ const RestaurantsManager = (function () {
     //Metodo removeAllergen
     removeAllergen(...allergensToRemove) {
       allergensToRemove.forEach(function (allergenToRemove) {
-        if (!allergenToRemove || !(allergenToRemove instanceof Allergen) || !this.#allergens.includes(allergenToRemove)) {
-          throw new Error('El alérgeno no está registrado.');
+        if (
+          !allergenToRemove ||
+          !(allergenToRemove instanceof Allergen) ||
+          !this.#allergens.includes(allergenToRemove)
+        ) {
+          throw new Error("El alérgeno no está registrado.");
         }
 
         // Desasignar platos del alérgeno
-        this.#dishes.forEach(function (dish) {
-          dish.setAllergens(dish.getAllergens().filter(function (a) {
-            return a !== allergenToRemove;
-          }));
+        this.#dishes.forEach((dish) => {
+          let index = dish.allergens.findIndex(
+            (aler) => aler.name === allergenToRemove.name
+          );
+          if (index != -1) {
+            this.deassignAllergenToDish(dish.allergens[index], dish.dish);
+          }
         });
 
         // Eliminar el alérgeno
@@ -250,52 +270,64 @@ const RestaurantsManager = (function () {
     addDish(...newDishes) {
       newDishes.forEach(function (newDish) {
         if (!newDish || !(newDish instanceof Dish)) {
-          throw new Error('El plato debe ser un objeto Dish y no puede ser nulo.');
+          throw new Error(
+            "El plato debe ser un objeto Dish y no puede ser nulo."
+          );
         }
-    
+
         const dishName = newDish.getName();
-        if (this.#dishes.some(function (dish) { return dish.dish.name === dishName; })) {
-          throw new Error('El plato ya existe en el sistema.');
+        if (
+          this.#dishes.some(function (dish) {
+            return dish.dish.name === dishName;
+          })
+        ) {
+          throw new Error("El plato ya existe en el sistema.");
         }
-    
+
         this.#dishes.push({
           dish: newDish,
           categories: [],
-          allergens: []
+          allergens: [],
         });
       }, this);
-    
+
       return this;
     }
-    
 
-      //Metodo removeDish
-      removeDish(...dishesToRemove) {
-        for (const dishToRemove of dishesToRemove) {
-            if (!dishToRemove || !(dishToRemove instanceof Dish) || !this.#dishes.some(d => d.dish === dishToRemove)) {
-                throw new Error('El plato no está registrado.');
-            }
-    
-            // Eliminar el plato de la lista de platos
-            const index = this.#dishes.findIndex(d => d.dish === dishToRemove);
-            this.#dishes.splice(index, 1);
+    //Metodo removeDish
+    removeDish(...dishesToRemove) {
+      for (const dishToRemove of dishesToRemove) {
+        if (
+          !dishToRemove ||
+          !(dishToRemove instanceof Dish) ||
+          !this.#dishes.some((d) => d.dish === dishToRemove)
+        ) {
+          throw new Error("El plato no está registrado.");
         }
-        return this;
+
+        // Eliminar el plato de la lista de platos
+        const index = this.#dishes.findIndex((d) => d.dish === dishToRemove);
+        this.#dishes.splice(index, 1);
+      }
+      return this;
     }
-    
-    
-    
 
     //Metodo addRestaurant
     addRestaurant(...newRestaurants) {
       newRestaurants.forEach(function (newRestaurant) {
         if (!newRestaurant || !(newRestaurant instanceof Restaurant)) {
-          throw new Error('El restaurante debe ser un objeto Restaurant y no puede ser nulo.');
+          throw new Error(
+            "El restaurante debe ser un objeto Restaurant y no puede ser nulo."
+          );
         }
 
         const restaurantName = newRestaurant.getName();
-        if (this.#restaurants.some(function (restaurant) { return restaurant.getName() === restaurantName; })) {
-          throw new Error('El restaurante ya existe en el sistema.');
+        if (
+          this.#restaurants.some(function (restaurant) {
+            return restaurant.getName() === restaurantName;
+          })
+        ) {
+          throw new Error("El restaurante ya existe en el sistema.");
         }
 
         this.#restaurants.push(newRestaurant);
@@ -307,8 +339,12 @@ const RestaurantsManager = (function () {
     //Metodo removeRestaurant
     removeRestaurant(...restaurantsToRemove) {
       restaurantsToRemove.forEach(function (restaurantToRemove) {
-        if (!restaurantToRemove || !(restaurantToRemove instanceof Restaurant) || !this.#restaurants.includes(restaurantToRemove)) {
-          throw new Error('El restaurante no está registrado.');
+        if (
+          !restaurantToRemove ||
+          !(restaurantToRemove instanceof Restaurant) ||
+          !this.#restaurants.includes(restaurantToRemove)
+        ) {
+          throw new Error("El restaurante no está registrado.");
         }
 
         // Eliminar el restaurante
@@ -319,42 +355,55 @@ const RestaurantsManager = (function () {
       return this;
     }
 
-//Metodo assignCategoryToDish
-assignCategoryToDish(category, ...dishs) {
-  if (!category || !(category instanceof Category)) {
-    throw new Error('La categoría debe ser un objeto Category y no puede ser nula.');
-  }
+    //Metodo assignCategoryToDish
+    assignCategoryToDish(category, ...dishes) {
+      if (!category || !(category instanceof Category)) {
+        throw new Error(
+          "La categoría debe ser un objeto Category y no puede ser nula."
+        );
+      }
 
-  for (const dish of dishs) {
+      dishes.forEach((dish) => {
+        // Verificar si dish es nulo o no es una instancia de Dish
+        if (!dish || !(dish instanceof Dish)) {
+          throw new Error(
+            "El plato debe ser un objeto Dish y no puede ser nulo."
+          );
+        }
 
-  // Verificar si dish es nulo o no es una instancia de Dish
-  if (!dish || !(dish instanceof Dish)) {
-    throw new Error('El plato debe ser un objeto Dish y no puede ser nulo.');
-  }
-    let posiDish = this.#dishes.findIndex(d => d.dish === dish);
-      if (posiDish === -1) {
+        let posiDish = this.#dishes.findIndex((d) => d.dish === dish);
+        if (posiDish === -1) {
           this.addDish(dish);
-          posiDish = this.#dishes.findIndex(d => d.dish.name === dish.name);
-      }
-      let cat = this.#categories.indexOf(category);
-      if (cat === -1) {
+          posiDish = this.#dishes.findIndex((d) => d.dish.name === dish.name);
+        }
+
+        let catIndex = this.#categories.indexOf(category);
+        if (catIndex === -1) {
           this.addCategory(category);
-          cat = this.#categories.indexOf(category);
-      }
-      cat = this.#categories[cat];
-      this.#dishes[posiDish].categories.push(cat);
-  }
-  return this;
-}
+          catIndex = this.#categories.indexOf(category);
+        }
+
+        const cat = this.#categories[catIndex];
+        const dishCategories = this.#dishes[posiDish].categories;
+
+        if (dishCategories.includes(cat)) {
+          throw new Error(
+            `La categoría "${category.getName()}" ya está asignada al plato "${dish.getName()}".`
+          );
+        }
+
+        dishCategories.push(cat);
+      });
+
+      return this;
+    }
 
     //Metodo deassignCategoryToDish
     deassignCategoryToDish(category, dish) {
-
-
-      let positionDish = this.#dishes.findIndex(d => d.dish === dish);
+      let positionDish = this.#dishes.findIndex((d) => d.dish === dish);
       // Verificar si dish es nulo o no está registrado
       if (positionDish === -1) {
-        throw new Error('El plato no está registrado.');
+        throw new Error("El plato no está registrado.");
       }
 
       let cat = this.#categories.indexOf(category);
@@ -362,7 +411,7 @@ assignCategoryToDish(category, ...dishs) {
       let index = categorias.findIndex((cat) => cat.name === category.name);
       // Verificar si category es nulo o no está registrada
       if (cat === -1 || index === -1) {
-        throw new Error('La categoría no está registrada.');
+        throw new Error("La categoría no está registrada y/o el plato no pertenece a esa categoria.");
       }
       categorias.splice(index, 1);
 
@@ -370,185 +419,224 @@ assignCategoryToDish(category, ...dishs) {
     }
 
     //Metodo assignAllergenToDish
-    assignAllergenToDish(allergen, ...dishs) {
-      for (const dish of dishs) {
-          let positionDish = this.#dishes.findIndex(d => d.dish === dish);
-          if (positionDish === -1) {
-              this.addDish(dish);
-              positionDish = this.#dishes.findIndex(d => d.dish === dish);
-          }
-          let ale = this.#allergens.indexOf(allergen);
-          if (ale === -1) {
-              this.addAllergen(allergen);
-              ale = this.#allergens.indexOf(allergen);
-          }
-          ale = this.#allergens[ale];
-          this.#dishes[positionDish].allergens.push(ale);
-      }
-      return this;
-  }
+    assignAllergenToDish(allergen, ...dishes) {
+      dishes.forEach((dish) => {
+        let positionDish = this.#dishes.findIndex((d) => d.dish === dish);
+        if (positionDish === -1) {
+          this.addDish(dish);
+          positionDish = this.#dishes.findIndex((d) => d.dish === dish);
+        }
 
+        let allergenIndex = this.#allergens.indexOf(allergen);
+        if (allergenIndex === -1) {
+          this.addAllergen(allergen);
+          allergenIndex = this.#allergens.indexOf(allergen);
+        }
+
+        const allergenObj = this.#allergens[allergenIndex];
+        const dishAllergens = this.#dishes[positionDish].allergens;
+
+        if (dishAllergens.includes(allergenObj)) {
+          throw new Error(
+            `El alérgeno "${allergen.getName()}" ya está asignado al plato "${dish.getName()}".`
+          );
+        }
+
+        dishAllergens.push(allergenObj);
+      });
+
+      return this;
+    }
 
     //Metodo deassignAllergenToDish
     deassignAllergenToDish(allergen, dish) {
-      // Verificar si allergen es nulo o no está registrado
-      if (!allergen || !(allergen instanceof Allergen) || !this.#allergens.includes(allergen)) {
-        throw new Error('El alérgeno no está registrado.');
-      }
+      if (allergen === null) throw new Error("El alérgeno no puede ser nulo.");
+      if (dish === null) throw new Error("El plato no puede ser nulo.");
 
-      // Verificar si dish es nulo o no está registrado
-      if (!dish || !(dish instanceof Dish) || !this.#dishes.includes(dish)) {
-        throw new Error('El plato no está registrado.');
-      }
+      let dishpos = this.#dishes.findIndex((d) => d.dish === dish);
+      if (dishpos === -1) throw new Error("El plato no está registrado.");
 
-      // Desasignar el plato del alergeno
-      const updatedDishes = allergen.getDishes().filter(function (d) {
-        return d !== dish;
-      });
+      let al = this.#allergens.indexOf(allergen);
+      let index = this.#dishes[dishpos].allergens.indexOf(allergen);
+      if (al === -1 || index === -1)
+        throw new Error("El alérgeno no está asignado al plato.");
 
-      allergen.setDishes(updatedDishes);
-
+      this.#dishes[dishpos].allergens.splice(index, 1);
       return this;
     }
 
     //Metodo assignDishToMenu
-    assignDishToMenu(menu, ...dishs) {
-    // Verificar si menu es nulo o no es una instancia de Menu
+    assignDishToMenu(menu, ...dishes) {
+      // Verificar si menu es nulo o no es una instancia de Menu
       if (!menu || !(menu instanceof Menu)) {
-        throw new Error('El menú debe ser un objeto Menu y no puede ser nulo.');
+        throw new Error("El menú debe ser un objeto Menu y no puede ser nulo.");
       }
-      for (const dish of dishs) {
-      // Verificar si dish es nulo o no es una instancia de Dish
-      if (!dish || !(dish instanceof Dish)) {
-        throw new Error('El plato debe ser un objeto Dish y no puede ser nulo.');
-      }
-      let positionDish = this.#dishes.findIndex(d => d.dish === dish);
-      if (positionDish === -1) {
-        this.addDish(dish);
-        positionDish = this.#dishes.findIndex(d => d.dish === dish);
-        }
-                  let actDish = this.#dishes[positionDish];
 
-                  let menpos = this.#menus.findIndex(m => m.menu.name === menu.name);
-                  if (menpos === -1) {
-                      this.addMenu(menu);
-                      menpos = this.#menus.findIndex(m => m.menu.name === menu.name);
-                  }
-                  this.#menus[menpos].dishes.push(actDish);
-              }
-              return this;
-          }
+      dishes.forEach((dish) => {
+        // Verificar si dish es nulo o no es una instancia de Dish
+        if (!dish || !(dish instanceof Dish)) {
+          throw new Error(
+            "El plato debe ser un objeto Dish y no puede ser nulo."
+          );
+        }
+
+        let dishIndex = this.#dishes.findIndex((d) => d.dish === dish);
+        if (dishIndex === -1) {
+          this.addDish(dish);
+          dishIndex = this.#dishes.findIndex((d) => d.dish === dish);
+        }
+
+        const actualDish = this.#dishes[dishIndex];
+
+        let menuIndex = this.#menus.findIndex((m) => m.menu.name === menu.name);
+        if (menuIndex === -1) {
+          this.addMenu(menu);
+          menuIndex = this.#menus.findIndex((m) => m.menu.name === menu.name);
+        }
+
+        this.#menus[menuIndex].dishes.push(actualDish);
+      });
+
+      return this;
+    }
 
     //Metodo deassignDishToMenu
     deassignDishToMenu(menu, dish) {
       // Verificar si menu es nulo o no es una instancia de Menu
-      let menuPosit = this.#menus.findIndex(m => m.menu.name === menu.name);
+      let menuPosit = this.#menus.findIndex((m) => m.menu.name === menu.name);
       if (menuPosit === -1) {
-        throw new Error('El menú no está registrado.');
+        throw new Error("El menú no está registrado.");
       }
 
       // Verificar si dish es nulo o no está registrado
-      let positionDish = this.#dishes.findIndex(d => d.dish.name === dish.name);
-      if (positionDish === -1){
-        throw new Error('El plato no está registrado.');
+      let positionDish = this.#dishes.findIndex(
+        (d) => d.dish.name === dish.name
+      );
+      if (positionDish === -1) {
+        throw new Error("El plato no está registrado.");
       }
 
       let men = this.#menus[menuPosit];
-      let index = men.dishes.findIndex(d => d.dish.name === dish.name);
-      if (index === -1){
-        throw new Error('El plato no está registrado en este menú.');
-      
-      } 
+      let index = men.dishes.findIndex((d) => d.dish.name === dish.name);
+      if (index === -1) {
+        throw new Error("El plato no está registrado en este menú.");
+      }
       men.dishes.splice(index, 1);
 
       return this;
-  
     }
-            
 
-              
     //Metodo changeDishesPositionsInMenu
     changeDishesPositionsInMenu(menu, dish1, dish2) {
-      // Verificar si menu es nulo o no es una instancia de Menu
-      if (!menu || !(menu instanceof Menu)) {
-        throw new Error('El menú debe ser un objeto Menu y no puede ser nulo.');
+      if (menu === null) {
+        throw new Error("El menú no puede ser nulo.");
+      }
+      if (dish1 === null || dish2 === null) {
+        throw new Error("El plato no puede ser nulo.");
       }
 
-      // Verificar si dish1 es nulo o no es una instancia de Dish
-      if (!dish1 || !(dish1 instanceof Dish)) {
-        throw new Error('El primer plato debe ser un objeto Dish y no puede ser nulo.');
+      // Verificar si dish1 y dish2 están registrados
+      const dish1Index = this.#dishes.findIndex(
+        (d) => d.dish.name === dish1.name
+      );
+      const dish2Index = this.#dishes.findIndex(
+        (d) => d.dish.name === dish2.name
+      );
+      if (dish1Index === -1 || dish2Index === -1) {
+        throw new Error("El plato no está registrado.");
       }
 
-      // Verificar si dish2 es nulo o no es una instancia de Dish
-      if (!dish2 || !(dish2 instanceof Dish)) {
-        throw new Error('El segundo plato debe ser un objeto Dish y no puede ser nulo.');
+      // Verificar si el menú está registrado
+      const menuIndex = this.#menus.findIndex((m) => m.menu === menu);
+      if (menuIndex === -1) {
+        throw new Error("El menú no está registrado.");
       }
 
+      // Obtener la lista de platos del menú
+      const menuDishes = this.#menus[menuIndex].dishes;
 
-      // Obtener la posición de los platos en el array
-      const index1 = menu.getDishes().indexOf(dish1);
-      const index2 = menu.getDishes().indexOf(dish2);
+      // Verificar si dish1 y dish2 están en el menú
+      const pos1 = menuDishes.findIndex((d) => d.dish === dish1);
+      const pos2 = menuDishes.findIndex((d) => d.dish === dish2);
+      if (pos1 === -1 || pos2 === -1) {
+        throw new Error("El plato no está registrado en este menú.");
+      }
 
-      // Intercambiar las posiciones de los platos
-      const updatedDishes = [...menu.getDishes()];
-      const temp = updatedDishes[index1];
-      updatedDishes[index1] = updatedDishes[index2];
-      updatedDishes[index2] = temp;
-
-      // Actualizar el array de platos en el menú
-      menu.setDishes(updatedDishes);
+      // Intercambiar las posiciones de los platos en la lista del menú
+      const temp = menuDishes[pos1];
+      menuDishes[pos1] = menuDishes[pos2];
+      menuDishes[pos2] = temp;
 
       return this;
     }
 
     //Metodo getDishesInCategory
     getDishesInCategory(category) {
-      if (!category || !(category instanceof Category) || !this.#categories.includes(category)) {
-        throw new Error('La categoría no está registrada.');
+      if (
+        !category ||
+        !(category instanceof Category) ||
+        !this.#categories.includes(category)
+      ) {
+        throw new Error("La categoría no está registrada.");
       }
-      if (this.#categories.findIndex(c => c.name === category.name) === -1) throw new Error("La categoria no esta registrada");
-      let platos = [];
-      this.#dishes.forEach(dish => {
-          if (dish.categories.findIndex(cat => cat.name === category.name) !== -1) {
-              platos.push(dish);
-          }
+      if (
+        this.#categories.findIndex((cat) => cat.name === category.name) === -1
+      )
+        throw new Error("La categoria no esta registrada");
+      let dishInCat = [];
+      this.#dishes.forEach((dish) => {
+        if (
+          dish.categories.findIndex((cat) => cat.name === category.name) !== -1
+        ) {
+          dishInCat.push(dish);
+        }
       });
 
       return {
-          *[Symbol.iterator]() {
-              for (const dishCat of platos) {
-                  yield dishCat;
-              }
-          },
+        *[Symbol.iterator]() {
+          for (const dishCat of dishInCat) {
+            yield dishCat;
+          }
+        },
       };
-  }
-
+    }
 
     //Metodo getDishesWithAllergen
     getDishesWithAllergen(allergen) {
-      if (!allergen || !(allergen instanceof Allergen) || !this.#allergens.includes(allergen)) {
-        throw new Error('El alérgeno no está registrado.');
+      if (
+        !allergen ||
+        !(allergen instanceof Allergen) ||
+        !this.#allergens.includes(allergen)
+      ) {
+        throw new Error("El alérgeno no está registrado.");
       }
       let disArra = [];
-      this.#dishes.forEach(dish => {
-        if (dish.allergens.findIndex(al => al.name === allergen.name) !== -1) {
+      this.#dishes.forEach((dish) => {
+        if (
+          dish.allergens.findIndex((ale) => ale.name === allergen.name) !== -1
+        ) {
           disArra.push(dish);
         }
       });
 
       return {
-          *[Symbol.iterator]() {
-              for (const dishCat of disArra) {
-                  yield dishCat;
-              }
+        *[Symbol.iterator]() {
+          for (const dishCat of disArra) {
+            yield dishCat;
           }
+        },
       };
-  }
+    }
 
     //Metodo findDishes
     findDishes(callback, sortFunction) {
-      if (typeof callback !== 'function' || typeof sortFunction !== 'function') {
-        throw new Error('Las funciones de callback y ordenación deben ser proporcionadas.');
+      if (
+        typeof callback !== "function" ||
+        typeof sortFunction !== "function"
+      ) {
+        throw new Error(
+          "Las funciones de callback y ordenación deben ser proporcionadas."
+        );
       }
 
       // Filtrar los platos basados en la función de callback
@@ -564,12 +652,12 @@ assignCategoryToDish(category, ...dishs) {
           for (const dish of filteredDishes) {
             yield dish;
           }
-        }
+        },
       };
     }
 
     // Método createDish
-    createDish(name, description = '', ingredients = [], image = '') {
+    createDish(name, description = "", ingredients = [], image = "") {
       const existDish = this.#dishes.find(function (dish) {
         return dish.getName() === name;
       });
@@ -584,7 +672,7 @@ assignCategoryToDish(category, ...dishs) {
     }
 
     // Método createMenu
-    createMenu(name, description = '') {
+    createMenu(name, description = "") {
       const existMenu = this.#menus.find(function (menu) {
         return menu.getName() === name;
       });
@@ -599,7 +687,7 @@ assignCategoryToDish(category, ...dishs) {
     }
 
     // Método createAllergen
-    createAllergen(name, description = '') {
+    createAllergen(name, description = "") {
       const existAllergen = this.#allergens.find(function (allergen) {
         return allergen.getName() === name;
       });
@@ -614,7 +702,7 @@ assignCategoryToDish(category, ...dishs) {
     }
 
     // Método createCategory
-    createCategory(name, description = '') {
+    createCategory(name, description = "") {
       const existCategory = this.#categories.find(function (category) {
         return category.getName() === name;
       });
@@ -629,7 +717,7 @@ assignCategoryToDish(category, ...dishs) {
     }
 
     // Método createRestaurant
-    createRestaurant(name, description = '', location = null) {
+    createRestaurant(name, description = "", location = null) {
       const existRestaurant = this.#restaurants.find(function (restaurant) {
         return restaurant.getName() === name;
       });
@@ -642,86 +730,93 @@ assignCategoryToDish(category, ...dishs) {
         return newRestaurant;
       }
     }
-        // Método getAllergenByName
-        getAllergenByName(name) {
-          const allergen = this.#allergens.find(function (allergen) {
-            return allergen.getName() === name;
-          });
-    
-          if (allergen) {
-            return allergen;
-          } else {
-            throw new Error('El alérgeno especificado no está registrado.');
-          }
-        }
-    
-// Método getCategoryByName
-getCategoryByName(name) {
-  const category = this.#categories.find(function (category) {
-    return category.getName() === name;
-  });
-
-  if (category) {
-    return category;
-  } else {
-    throw new Error('La categoría especificada no está registrada.');
-  }
-}
-removeDishByName(...dishNames) {
-  for (const dishName of dishNames) {
-      // Buscar el plato por su nombre
-      const dishToRemove = this.#dishes.find(dish => dish.name === dishName);
-      console.log(dishName);
-      // Verificar si el plato existe y está registrado en el restaurante
-      if (!dishToRemove || !this.#dishes.includes(dishToRemove)) {
-          throw new Error('El plato no está registrado.');
-      }
-
-      // Desasignar el plato de todos los menús
-      this.#menus.forEach(menu => {
-          const index = menu.dishes.findIndex(d => d.dish.name === dishToRemove.name);
-          if (index !== -1) {
-              this.deassignDishToMenu(menu.menu, menu.dishes[index].dish);
-          }
+    // Método getAllergenByName
+    getAllergenByName(name) {
+      const allergen = this.#allergens.find(function (allergen) {
+        return allergen.getName() === name;
       });
 
-      // Eliminar el plato de la lista de platos
-      const index = this.#dishes.findIndex(d => d.name === dishToRemove.name);
-      this.#dishes.splice(index, 1);
-  }
-  return this;
-}
-getDishByName(name) {    
-  const dishObject = this.#dishes.find(d => d.dish.getName() === name);
+      if (allergen) {
+        return allergen;
+      } else {
+        throw new Error("El alérgeno especificado no está registrado.");
+      }
+    }
 
-  if (!dishObject) {
-    throw new Error(`No existe un plato con el nombre "${name}".`);
-  }
+    // Método getCategoryByName
+    getCategoryByName(name) {
+      const category = this.#categories.find(function (category) {
+        return category.getName() === name;
+      });
 
-  return dishObject.dish;
-}
+      if (category) {
+        return category;
+      } else {
+        throw new Error("La categoría especificada no está registrada.");
+      }
+    }
+    removeDishByName(...dishNames) {
+      for (const dishName of dishNames) {
+        // Buscar el plato por su nombre
+        const dishToRemove = this.#dishes.find(
+          (dish) => dish.name === dishName
+        );
+        console.log(dishName);
+        // Verificar si el plato existe y está registrado en el restaurante
+        if (!dishToRemove || !this.#dishes.includes(dishToRemove)) {
+          throw new Error("El plato no está registrado.");
+        }
 
-getMenuByName(name) {
-  const menuObject = this.#menus.find(menu => menu.menu.getName() === name);
+        // Desasignar el plato de todos los menús
+        this.#menus.forEach((menu) => {
+          const index = menu.dishes.findIndex(
+            (d) => d.dish.name === dishToRemove.name
+          );
+          if (index !== -1) {
+            this.deassignDishToMenu(menu.menu, menu.dishes[index].dish);
+          }
+        });
 
-  if (!menuObject) {
-    throw new Error(`No existe un menú con el nombre "${name}".`);
-  }
+        // Eliminar el plato de la lista de platos
+        const index = this.#dishes.findIndex(
+          (d) => d.name === dishToRemove.name
+        );
+        this.#dishes.splice(index, 1);
+      }
+      return this;
+    }
+    getDishByName(name) {
+      const dishObject = this.#dishes.find((d) => d.dish.getName() === name);
 
-  return menuObject.menu;
-}
-getCategoryByName(name) {
-  const category = this.#categories.find(category => category.getName() === name);
+      if (!dishObject) {
+        throw new Error(`No existe un plato con el nombre "${name}".`);
+      }
 
-  if (category) {
-    return category;
-  } else {
-    throw new Error('La categoría especificada no está registrada.');
-  }
-}
+      return dishObject.dish;
+    }
 
+    getMenuByName(name) {
+      const menuObject = this.#menus.find(
+        (menu) => menu.menu.getName() === name
+      );
 
+      if (!menuObject) {
+        throw new Error(`No existe un menú con el nombre "${name}".`);
+      }
 
+      return menuObject.menu;
+    }
+    getCategoryByName(name) {
+      const category = this.#categories.find(
+        (category) => category.getName() === name
+      );
+
+      if (category) {
+        return category;
+      } else {
+        throw new Error("La categoría especificada no está registrada.");
+      }
+    }
   }
 
   function init() {

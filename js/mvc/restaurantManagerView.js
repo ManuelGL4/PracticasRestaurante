@@ -847,6 +847,7 @@ value="" required></textarea>
     container.append(removeForm);
 
     this.main.append(container);
+    
   }
 
   showAssignMenuToDishModal(done, error) {
@@ -1103,8 +1104,8 @@ value="" required></textarea>
   showNewRestaurantForm() {
     const container = document.createElement("div");
     container.insertAdjacentHTML(
-      "afterbegin",
-      '<h1 class="display-5">Nuevo Restaurante</h1>'
+        "afterbegin",
+        '<h1 class="display-5">Nuevo Restaurante</h1>'
     );
     this.main.replaceChildren();
     const form = document.createElement("form");
@@ -1114,68 +1115,149 @@ value="" required></textarea>
     form.classList.add("row");
     form.classList.add("g-3");
     form.insertAdjacentHTML(
-      "beforeend",
-      `
-		<div class="col-md-6 mb-3">
-			<label class="form-label" for="nrName">Nombre del nuevo restaurante</label>
-			<div class="input-group">
-				<span class="input-group-text"><i class="bi bi-type"></i></span>
-				<input type="text" class="form-control" id="nrName"
-					name="nrName"
-					placeholder="Nombre del restaurante" value="" required>
-				<div class="invalid-feedback">El nombre del restaurante es obligatorio.</div>
-				<div class="valid-feedback">Correcto.</div>
-			</div>
-		</div>
-		<div class="col-md-6 mb-3">
-			<label class="form-label" for="nrDesc">Descripcion del restaurante</label>
-			<div class="input-group">
-				<span class="input-group-text"><i class="bi bi-fileimage"></i></span>
-				<input type="text" class="form-control" id="nrDesc"
-					name="nrDesc"
-					placeholder="Este restaurante cuenta con......" value="" required>
-				<div class="invalid-feedback"></div>
-				<div class="valid-feedback">Correcto.</div>
-			</div>
-		</div>
-		<div class="col-md-6 mb-3">
-			<label class="form-label" for="nrLatitude">Latitud</label>
-			<div class="input-group">
-				<span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-				<input type="text" class="form-control" id="nrLatitude"
-					name="nrLatitude"
-					placeholder="Latitud" value="" required>
-				<div class="invalid-feedback"></div>
-				<div class="valid-feedback">Correcto.</div>
-			</div>
-		</div>
-		<div class="col-md-6 mb-3">
-			<label class="form-label" for="nrLongitude">Longitud</label>
-			<div class="input-group">
-				<span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-				<input type="text" class="form-control" id="nrLongitude"
-					name="nrLongitude"
-					placeholder="Longitud" value="" required>
-				<div class="invalid-feedback"></div>
-				<div class="valid-feedback">Correcto.</div>
-			</div>
-		</div>
-		`
+        "beforeend",
+        `
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="nrName">Nombre del nuevo restaurante</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-type"></i></span>
+                <input type="text" class="form-control" id="nrName"
+                    name="nrName"
+                    placeholder="Nombre del restaurante" value="" required>
+                <div class="invalid-feedback">El nombre del restaurante es obligatorio.</div>
+                <div class="valid-feedback">Correcto.</div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="nrDesc">Descripción del restaurante</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-fileimage"></i></span>
+                <input type="text" class="form-control" id="nrDesc"
+                    name="nrDesc"
+                    placeholder="Este restaurante cuenta con..." value="" required>
+                <div class="invalid-feedback"></div>
+                <div class="valid-feedback">Correcto.</div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="nrAddress">Dirección</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                <input type="text" class="form-control" id="nrAddress"
+                    name="nrAddress"
+                    placeholder="Dirección" value="" required>
+                <div class="invalid-feedback"></div>
+                <div class="valid-feedback">Correcto.</div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="nrLatitude">Latitud</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                <input type="text" class="form-control" id="nrLatitude"
+                    name="nrLatitude"
+                    placeholder="Latitud" value="" required>
+                <div class="invalid-feedback"></div>
+                <div class="valid-feedback">Correcto.</div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="nrLongitude">Longitud</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                <input type="text" class="form-control" id="nrLongitude"
+                    name="nrLongitude"
+                    placeholder="Longitud" value="" required>
+                <div class="invalid-feedback"></div>
+                <div class="valid-feedback">Correcto.</div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div id="map" style="height: 400px;"></div>
+        </div>
+        `
     );
 
     form.insertAdjacentHTML(
-      "beforeend",
-      `
-		<div class="mb-12">
-			<button class="btn btn-primary" type="submit">Enviar</button>
-			<button class="btn btn-primary" type="reset">Resetear</button>
-		</div>
-		</form>`
+        "beforeend",
+        `
+        <div class="mb-12">
+            <button id="searchLocationBtn" class="btn btn-primary" type="button">Buscar Ubicación</button>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+            <button class="btn btn-primary" type="reset">Resetear</button>
+        </div>
+        </form>`
     );
     container.append(form);
 
     this.main.append(container);
-  }
+
+    // Agregar mapa interactivo
+    const map = L.map("map").setView([38.976059, -3.907013], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(map);
+
+    const marker = L.marker([0, 0], { draggable: true }).addTo(map);
+
+    map.on('click', (e) => {
+        marker.setLatLng(e.latlng);
+        document.getElementById("nrLatitude").value = e.latlng.lat.toFixed(6);  //6 decimales maximo
+        document.getElementById("nrLongitude").value = e.latlng.lng.toFixed(6);
+    });
+
+    // Agregar evento al botón de búsqueda de ubicación
+    const searchLocationBtn = document.getElementById("searchLocationBtn");
+    searchLocationBtn.addEventListener("click", () => {
+        const address = document.getElementById("nrAddress").value;
+        if (address) {
+            // Utilizar el geocodificador para obtener las coordenadas de la dirección
+            const geocoderUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURI(address)}`;
+            fetch(geocoderUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const firstResult = data[0];
+                        const latLng = [firstResult.lat, firstResult.lon];
+                        marker.setLatLng(latLng);
+                        map.setView(latLng, 20);
+                        document.getElementById("nrLatitude").value = firstResult.lat;
+                        document.getElementById("nrLongitude").value = firstResult.lon;
+                    } else {
+                        alert("No se encontraron resultados para la dirección proporcionada.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al buscar la ubicación:", error);
+                    alert("Error al buscar la ubicación. Por favor, inténtalo de nuevo más tarde.");
+                });
+        } else {
+            alert("Por favor, introduce una dirección antes de buscar.");
+        }
+    });
+
+    // Agregar evento al formulario para manejar el envío
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const restaurantName = document.getElementById("nrName").value;
+        const restaurantDesc = document.getElementById("nrDesc").value;
+        const restaurantLatitude = document.getElementById("nrLatitude").value;
+        const restaurantLongitude = document.getElementById("nrLongitude").value;
+
+        // Limpiar mapa antes de agregar nuevo marcador
+        map.eachLayer(layer => {
+            if (layer instanceof L.Marker) {
+                map.removeLayer(layer);
+            }
+        });
+
+        // Agregar marcador en la ubicación seleccionada
+        L.marker([restaurantLatitude, restaurantLongitude]).addTo(map)
+            .bindPopup(`<b>${restaurantName}</b><br>${restaurantDesc}`)
+            .openPopup();
+    });
+}
 
   showDishesInCentralZone(dishesInCategory) {
     const centralZone = document.getElementById("central-zone");
@@ -1353,6 +1435,7 @@ value="" required></textarea>
   }
 
   openNewWindowWithDetails(dish) {
+    console.log(dish);
     let name = dish.name;
     let description = dish.description;
     let image = dish.image;
@@ -1381,7 +1464,7 @@ value="" required></textarea>
 					<img class="card-img-top" src="../img/${image}" alt="${name}">
 						<div class="card-body">
 							<h5 class="card-title">${name}</h5>
-							<p class="card-text">Descripción: ${description} Ingredientes: ${ingredients} Alergenos:${allergens} </p>
+							<p class="card-text">Descripción: ${description} Ingredientes: ${ingredients}  </p>
 							<button onclick="window.close()">Cerrar ventana</button>
 						</div>
 				</div>
@@ -1471,32 +1554,96 @@ value="" required></textarea>
   }
 
   showRestaurantInfo(restaurant) {
-    console.log(restaurant);
     const detailsBox = document.createElement("div");
     detailsBox.classList.add("dish-details-box");
-    console.log(restaurant.name);
+
     const nameElement = document.createElement("h1");
     nameElement.textContent = restaurant.name;
 
     const descriptionElement = document.createElement("p");
-    descriptionElement.textContent =
-      "Nombre del restaurante: " + restaurant.name;
+    descriptionElement.textContent = "Nombre del restaurante: " + restaurant.name;
 
-    const ingredientsElement = document.createElement("p");
-    ingredientsElement.textContent = "Descripcion: " + restaurant.description;
-    const allergensElement = document.createElement("p");
-    allergensElement.textContent = "Localizacion: Latidud: " + restaurant.location.latitude+" Longitud: "+restaurant.location.longitude;
+    const locationElement = document.createElement("p");
+    locationElement.textContent = "Localización: Latitud: " + restaurant.location.latitude + ", Longitud: " + restaurant.location.longitude;
 
     // Agregar los elementos a la caja
     detailsBox.appendChild(nameElement);
     detailsBox.appendChild(descriptionElement);
-    detailsBox.appendChild(ingredientsElement);
-    detailsBox.appendChild(allergensElement);
+    detailsBox.appendChild(locationElement);
 
     const centralZone = document.getElementById("caja-plato");
     centralZone.innerHTML = "";
     centralZone.appendChild(detailsBox);
-  }
+
+    // Crear el contenedor para el mapa con el ID "map"
+    const mapContainer = document.createElement("div");
+    mapContainer.id = "map"; // Asigna el ID "map" al contenedor del mapa
+    mapContainer.style.height = "400px"; // Establece la altura del mapa
+
+    // Agregar el contenedor del mapa a la vista
+    centralZone.appendChild(mapContainer);
+
+    // Crear el contenedor para los resultados del geocoder con el ID "geocoderAddresses"
+    const addressesContainer = document.createElement("div");
+    addressesContainer.id = "geocoderAddresses"; // Asigna el ID "geocoderAddresses" al contenedor
+    centralZone.appendChild(addressesContainer); // Agrega el contenedor al DOM
+
+    // Inicializar el mapa con Leaflet
+    let map = L.map('map').setView([restaurant.location.latitude, restaurant.location.longitude], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(map);
+
+    // Agregar un marcador en la ubicación del restaurante
+    L.marker([restaurant.location.latitude, restaurant.location.longitude]).addTo(map)
+        .bindPopup(restaurant.name)
+        .openPopup();
+
+    // Agregar el geocoder para buscar ubicaciones
+    const form = document.getElementById('fGeocoder');
+    const addresses = document.getElementById('geocoderAddresses');
+
+    form.addEventListener('submit', function(event) {
+        const url = new URL('https://nominatim.openstreetmap.org/search');
+        url.searchParams.append('format', 'json');
+        url.searchParams.append('limit', 3);
+        url.searchParams.append('q', this.q.value);
+
+        fetch(url, {
+                method: 'get',
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                addresses.innerHTML = ""; // Limpiar resultados anteriores
+
+                data.forEach((address) => {
+                    const link = document.createElement('a');
+                    link.href = "#";
+                    link.dataset.lat = address.lat;
+                    link.dataset.lon = address.lon;
+                    link.classList.add('list-group-item', 'list-group-item-action');
+                    link.textContent = `${address.address.city}, ${address.address.country}, ${address.address.state}`;
+                    console.log();
+                    link.addEventListener('click', (event) => {
+                        map.setView(new L.LatLng(event.currentTarget.dataset.lat, event.currentTarget.dataset.lon), 15);
+                        L.marker([event.currentTarget.dataset.lat, event.currentTarget.dataset.lon]).addTo(map);
+                        event.preventDefault();
+                    });
+
+                    addresses.appendChild(link);
+                });
+            })
+            .catch((error) => {
+                addresses.innerHTML = `<div class="text-danger">
+                                            <i class="bi bi-exclamation-circle-fill"></i>
+                                            No se ha podido establecer la conexión con el servidor de mapas.
+                                        </div>`;
+            });
+
+        event.preventDefault();
+    });
+}
 
   showDishesInMenu(menu) {
     const centralZone = document.getElementById("central-zone");
